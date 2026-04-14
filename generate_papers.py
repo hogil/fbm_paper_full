@@ -49,21 +49,23 @@ AFFIL    = "\u00b9 반도체연구소, Samsung Electronics, 화성시, 대한민
 ABSTRACT = (
     "반도체 EDS(Electrical Die Sorting) Test 결과인 Failbit Map은 천만 픽셀 이상의 표현력으로 "
     "웨이퍼 불량의 위치·분포·밀집도·방향성을 담는 수율 관리의 핵심 데이터이나, "
-    "기존 운영 환경은 수치 임계치 기반 사후 확인 구조에 머물러 맵 상의 공간적 이상 패턴을 "
-    "조기에 탐지할 수 없는 구조적 한계를 지닌다. "
-    "본 논문은 이를 해결하기 위해 데이터 생성, 등록 불량 분류, 미등록 불량 군집화, "
-    "UI 기반 전문가 검토를 단일 흐름으로 통합하는 도메인 지식 기반 파이프라인을 제안한다. "
+    "기존 운영 환경은 임계치 위반 여부에만 의존하는 수동적 사후 감시 체계에 그쳐 "
+    "맵 상의 공간적 이상 패턴을 조기에 탐지할 수 없는 구조적 한계를 지닌다. "
+    "본 논문은 이를 해결하기 위해 데이터 생성, Known defect Supervised 분류, "
+    "Unknown defect Self-Supervised 군집화, UI 기반 전문가 검토를 단일 흐름으로 통합하는 "
+    "도메인 지식 기반 파이프라인을 제안한다. "
     "데이터 표현 계층에서는 Failbit Map이 전기적 검사 결과를 의미하는 약 20종의 이산 색상만 "
     "사용함을 활용하여 32-color palette-indexed PNG 포맷을 채택함으로써 "
     "무손실 의미 보존과 24-bit RGB 대비 65% 파일 크기 절감을 동시에 달성하였다. "
-    "등록 불량 분류 경로에서는 ConvNeXt V2 논문에서 제안된 FCMAE(Fully Convolutional Masked Autoencoder) "
-    "기반 사전학습 가중치를 사용하는 ConvNeXtV2-Base를 backbone으로 "
-    "선택하고 Optuna 기반 전역 하이퍼파라미터 탐색을 적용하여 16-class weighted F1을 0.78에서 0.92로 "
-    "향상시켰다. 나아가 low-confidence 및 difficult class에 한해 Grad-CAM 기반 동적 ROI 추출, "
+    "Known defect 분류 경로에서는 패치 복원 목표의 자기지도 사전학습으로 공간 구조 표현에 "
+    "강건한 ConvNeXtV2-Base를 backbone으로 선택하고 Optuna 기반 전역 하이퍼파라미터 탐색을 "
+    "적용하여 16-class weighted F1을 0.78에서 0.92로 향상시켰다. "
+    "나아가 low-confidence 및 difficult class에 한해 Grad-CAM 기반 동적 ROI 추출, "
     "클래스별 spatial prior α-블렌딩, YOLO cls_loss 강화 이차 검증을 선택적으로 조합하는 "
     "2-stage correction 구조를 도입하여 최종 weighted F1 0.95를 달성하였다. "
-    "미등록 불량 경로에서는 Supervised Contrastive Learning 대비 open-set 임베딩 분리도가 우수한 "
-    "InfoNCE 손실 함수를 채택하고, 웨이퍼 내 공간 위치가 공정 의미를 가진다는 도메인 지식을 반영한 "
+    "Unknown defect Self-Supervised 군집화 경로에서는 Supervised Contrastive Learning 대비 "
+    "open-set 임베딩 분리도가 우수한 InfoNCE 손실 함수를 채택하고, "
+    "웨이퍼 내 공간 위치가 공정 의미를 가진다는 도메인 지식을 반영한 "
     "grid36 structured local sampling과 HDBSCAN 밀도 기반 군집화를 결합하여 "
     "unknown defect 후보를 자동 탐지하고 전문가 검토 기반 라벨 확장 루프를 구성하였다."
 )
@@ -512,8 +514,8 @@ def build_detailed() -> Document:
         "로그는 불량의 공간 분포를 정밀하게 담고 있지만 chip-level measurement를 포함하지 않고, "
         "Bucket B의 계측 로그는 BIN, FBT, QVL과 같은 수치 정보를 제공하지만 공간 패턴 자체를 직접 "
         "보여주지 않는다. 두 소스를 정합하여 wafer image와 positions JSON을 동시에 생성하면, 동일 "
-        "wafer를 등록 불량 분류 입력, unknown defect 군집 검토, UI overlay, 향후 이미지-계측 "
-        "multimodal 학습의 공통 샘플 단위로 재사용할 수 있다.")
+        "wafer에서 chip label 생성, YOLO object detection용 ROI/annotation 관리, 사용자 분석 UI "
+        "제공, 향후 이미지-계측 multimodal 학습에 이르기까지 하나의 공통 데이터 자산으로 재사용할 수 있다.")
     add_body(doc,
         "구현 측면에서 중요한 제약은 두 로그가 동일 wafer를 가리키더라도 파일명 형식이 일치하지 않고 "
         "저장 시각에도 편차가 존재한다는 점이다. 이 때문에 단순 파일명 join이나 사후 DB 매칭에 "
@@ -734,11 +736,11 @@ if __name__ == "__main__":
 
     print("[2/2] Building 2-page compact version...")
     doc_2p = build_2page()
-    # 자동 rev 번호: paper_claude_2page_rev1.docx, rev2.docx, ...
+    # 자동 rev 번호: paper_codex_2page_rev1.docx, rev2.docx, ...
     rev = 1
-    while (OUT_DIR / f"paper_claude_2page_rev{rev}.docx").exists():
+    while (OUT_DIR / f"paper_codex_2page_rev{rev}.docx").exists():
         rev += 1
-    path_2p = OUT_DIR / f"paper_claude_2page_rev{rev}.docx"
+    path_2p = OUT_DIR / f"paper_codex_2page_rev{rev}.docx"
     doc_2p.save(str(path_2p))
     print(f"  -> saved: {path_2p}")
 
