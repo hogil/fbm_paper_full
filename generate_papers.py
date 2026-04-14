@@ -56,7 +56,8 @@ ABSTRACT = (
     "데이터 표현 계층에서는 Failbit Map이 전기적 검사 결과를 의미하는 약 20종의 이산 색상만 "
     "사용함을 활용하여 32-color palette-indexed PNG 포맷을 채택함으로써 "
     "무손실 의미 보존과 24-bit RGB 대비 65% 파일 크기 절감을 동시에 달성하였다. "
-    "등록 불량 분류 경로에서는 FCMAE 비지도 사전학습 가중치를 보유한 ConvNeXtV2-Base를 backbone으로 "
+    "등록 불량 분류 경로에서는 ConvNeXt V2 논문에서 제안된 FCMAE(Fully Convolutional Masked Autoencoder) "
+    "기반 사전학습 가중치를 사용하는 ConvNeXtV2-Base를 backbone으로 "
     "선택하고 Optuna 기반 전역 하이퍼파라미터 탐색을 적용하여 16-class weighted F1을 0.78에서 0.92로 "
     "향상시켰다. 나아가 low-confidence 및 difficult class에 한해 Grad-CAM 기반 동적 ROI 추출, "
     "클래스별 spatial prior α-블렌딩, YOLO cls_loss 강화 이차 검증을 선택적으로 조합하는 "
@@ -533,8 +534,11 @@ def build_detailed() -> Document:
         "성능 향상의 실질적 경로는 두 단계로 정리된다. 첫 단계는 백본 선택과 하이퍼파라미터 최적화이다. "
         "EfficientNetV2, MaxViT, ViT, Swin Transformer 등을 Hugging Face timm 라이브러리를 통해 "
         "동일 조건에서 fine-tuning 비교하였다. 총 약 1500개(validation 약 500개) 규모의 데이터에서 "
-        "self-attention 학습에 데이터가 부족한 ViT 계열보다, FCMAE 기반 비지도 사전학습 가중치와 "
-        "384×384 입력 해상도를 지원하는 ConvNeXtV2-Base가 val F1 0.92로 1위를 기록하였다 [5]. "
+        "self-attention 학습에 데이터가 부족한 ViT 계열보다, ConvNeXt V2에서 제안된 FCMAE "
+        "(Fully Convolutional Masked Autoencoder) 기반 사전학습과 384×384 입력 해상도를 지원하는 "
+        "ConvNeXtV2-Base가 더 적합하였다. 공식 결과에서도 ConvNeXt V2-Base 384 모델은 "
+        "ImageNet-1K 기준 87.7% top-1 accuracy를 보고하며 [5], 본 연구의 backbone 비교에서도 "
+        "val F1 0.92로 1위를 기록하였다. "
         "이후 Optuna 기반 하이퍼파라미터 탐색(LR, weight decay, scheduler, dropout, label smoothing, "
         "augmentation, batch size)까지 포함한 결과이다.")
     add_table(doc, TABLE_BACKBONE)

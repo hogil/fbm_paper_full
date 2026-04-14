@@ -5,3 +5,12 @@ __pycache__/
 .vscode/
 ~$*.docx
 Thumbs.db
+archive/
+paper_assets/
+paper_submission_*.md
+paper_submission_*.docx
+paper_v*.md
+paper_draft*.md
+fail_map_analysis.md
+mapviewer_analysis.md
+paper_word_rules.md
