@@ -724,7 +724,11 @@ if __name__ == "__main__":
 
     print("[2/2] Building 2-page compact version...")
     doc_2p = build_2page()
-    path_2p = OUT_DIR / "paper_2page.docx"
+    # 자동 rev 번호: paper_codex_2page_rev1.docx, rev2.docx, ...
+    rev = 1
+    while (OUT_DIR / f"paper_codex_2page_rev{rev}.docx").exists():
+        rev += 1
+    path_2p = OUT_DIR / f"paper_codex_2page_rev{rev}.docx"
     doc_2p.save(str(path_2p))
     print(f"  -> saved: {path_2p}")
 
