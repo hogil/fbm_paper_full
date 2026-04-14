@@ -9,6 +9,7 @@ archive/
 paper_assets/
 paper_submission_*.md
 paper_submission_*.docx
+!paper_submission_2page_v2_rev5.docx
 paper_v*.md
 paper_draft*.md
 fail_map_analysis.md
