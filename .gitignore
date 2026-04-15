@@ -7,7 +7,10 @@ __pycache__/
 Thumbs.db
 archive/
 paper_assets/
-local_archive/
+local_archive/*
+!local_archive/archive/
+!local_archive/archive/**
+local_archive/archive/~$*.docx
 paper_submission_*.md
 paper_submission_*.docx
 !paper_codex_2page_rev5.docx
