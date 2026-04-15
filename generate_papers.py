@@ -232,6 +232,12 @@ REFS = [
     "(ICML), PMLR 119, pp. 1597-1607, 2020.",
     "[7] R. J. G. B. Campello, D. Moulavi, and J. Sander, \"Density-Based Clustering Based on Hierarchical "
     "Density Estimates,\" in Advances in Knowledge Discovery and Data Mining, PAKDD 2013, pp. 160-172, 2013.",
+    "[8] Hugging Face, \"facebook/convnextv2-base-22k-384,\" model card, accessed Apr. 15, 2026. "
+    "Available: https://huggingface.co/facebook/convnextv2-base-22k-384",
+    "[9] Hugging Face timm, \"maxvit_base_tf_384.in21k_ft_in1k,\" model card, accessed Apr. 15, 2026. "
+    "Available: https://huggingface.co/timm/maxvit_base_tf_384.in21k_ft_in1k",
+    "[10] Z. Tu et al., \"MaxViT: Multi-Axis Vision Transformer,\" in Proceedings of the European "
+    "Conference on Computer Vision (ECCV), pp. 459-479, 2022.",
 ]
 
 # build_2page_claude 전용 참고문헌
@@ -1328,9 +1334,10 @@ def build_codex_revised() -> Document:
 
     add_subheading(doc, "2.2 Known 불량 분류")
     add_body(doc,
-        "Known 불량 분석은 16개 기등록 클래스를 대상으로 하며, 총 1,500개의 라벨된 Failbit Map을 사용하였다. 1차 분류기인 ConvNeXtV2-Base [4]는 wafer 전역의 위치와 "
-        "형상 문맥을 동시에 반영할 수 있어 전체 성능과 추론 속도 측면에서 주 모델로 적합하였다. baseline 대비 backbone 교체와 하이퍼파라미터 최적화 후 weighted F1은 "
-        "0.78에서 0.92까지 향상되었다.",
+        "Known 불량 분석은 16개 기등록 클래스를 대상으로 하며, 총 1,500개의 라벨된 Failbit Map을 사용하였다. Backbone 후보로는 Hugging Face에서 제공되는 "
+        "`facebook/convnextv2-base-22k-384` [8]와 `timm/maxvit_base_tf_384.in21k_ft_in1k` [9,10]를 포함한 사전학습 모델을 비교하였다. "
+        "MaxViT와 ConvNeXtV2는 분류 성능이 유사했으나, MaxViT의 추론 속도가 더 느려 본 연구에서는 성능-속도 균형이 더 우수한 ConvNeXtV2-Base [4,8]를 최종 backbone으로 채택하였다. "
+        "baseline 대비 backbone 교체와 하이퍼파라미터 최적화 후 weighted F1은 0.78에서 0.92까지 향상되었다.",
         space_after=Pt(2))
     add_body(doc,
         "다만 center, edge, local 계열처럼 wafer 내 발생 영역이 유사한 클래스에서는 전역 문맥만으로는 취약 샘플이 남았고, 이러한 샘플은 공통적으로 confidence가 낮게 나타났다. "
