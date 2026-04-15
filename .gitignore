@@ -5,7 +5,7 @@ __pycache__/
 .vscode/
 ~$*.docx
 Thumbs.db
-archive/
+# archive/ is intentionally tracked for revision history
 paper_assets/
 local_archive/*
 !local_archive/archive/
