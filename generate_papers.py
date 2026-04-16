@@ -1718,8 +1718,8 @@ def build_codex_revised() -> Document:
         width_cm=8.2,
     )
     add_body(doc,
-        "Unknown 경로에서는 운영 이미지 2,000장에 대한 grouping 결과 13개 후보 그룹이 검출되었으며, 현업 분석 엔지니어 검증 결과 이 중 7개가 실제 불량 그룹으로 판정되었다. "
-        "나머지 6개 그룹은 lot성 warning 수준의 noise이거나 chip 불량으로 이어지지 않는 패턴으로 해석되었다.",
+        "Unknown 불량 검출에서는 운영 이미지 2,000장에 대한 grouping 결과 13개 후보 그룹이 검출되었으며, 현업 분석 엔지니어 검증 결과 이 중 7개가 실제 불량 그룹으로 판정되었다. "
+        "나머지 6개 그룹은 lot성 warning 수준의 noise이거나 실제 chip 불량으로 이어지지 않는 패턴으로 해석되었다.",
         space_after=Pt(2))
 
     add_heading(doc, "3. 결론", level=1)
