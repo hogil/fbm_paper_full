@@ -125,12 +125,11 @@ TABLE1_CLAUDE = {
 
 # 2-page claude 전용 — 단순 3행 성능 요약
 TABLE_PERF_CLAUDE = {
-    "caption": "Table 1. Backbone comparison and staged improvements for known-defect classification (16-class, test Weighted F1)",
-    "headers": ["구성", "사전학습", "Test F1", "비고"],
+    "caption": "Table 1. Backbone comparison and staged improvements for known-defect classification (16 classes, test Weighted F1)",
+    "headers": ["Configuration", "Pretraining", "Test F1", "Note"],
     "font_size": 8,
     "widths_cm": [3.3, 1.9, 1.0, 1.6],
     "rows": [
-        ["Baseline CNN",         "-",            "0.78", "baseline"],
         ["ViT",                  "IN-21k",       "0.81", "fine-tune"],
         ["Swin",                 "IN-1k",        "0.84", "fine-tune"],
         ["EffNetV2",             "IN-1k",        "0.85", "fine-tune"],
@@ -246,24 +245,15 @@ REFS = [
 ]
 
 REFS_CODEX = [
-    "[1] T. Nakazawa and D. V. Kulkarni, \"Wafer Map Defect Pattern Classification and Image Retrieval "
-    "Using Convolutional Neural Network,\" IEEE Transactions on Semiconductor Manufacturing, vol. 31, "
-    "no. 2, pp. 309-314, 2018.",
-    "[2] M. B. Alawieh, D. Boning, and D. Z. Pan, \"Wafer Map Defect Patterns Classification Using Deep "
-    "Selective Learning,\" in Proceedings of the 57th ACM/IEEE Design Automation Conference (DAC), "
-    "pp. 1-6, 2020.",
-    "[3] J. Jang and G. T. Lee, \"Decision fusion approach for detecting unknown wafer bin map patterns "
-    "based on a deep multitask learning model,\" Expert Systems with Applications, vol. 215, "
-    "art. 119363, 2023.",
-    "[4] S. Woo et al., \"ConvNeXt V2: Co-Designing and Scaling ConvNets With Masked Autoencoders,\" "
+    "[1] S. Woo et al., \"ConvNeXt V2: Co-Designing and Scaling ConvNets With Masked Autoencoders,\" "
     "in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), "
     "pp. 16133-16142, 2023.",
-    "[5] T. Chen, S. Kornblith, M. Norouzi, and G. Hinton, \"A Simple Framework for Contrastive Learning "
+    "[2] T. Chen, S. Kornblith, M. Norouzi, and G. Hinton, \"A Simple Framework for Contrastive Learning "
     "of Visual Representations,\" in Proceedings of the 37th International Conference on Machine Learning "
     "(ICML), PMLR 119, pp. 1597-1607, 2020.",
-    "[6] R. J. G. B. Campello, D. Moulavi, and J. Sander, \"Density-Based Clustering Based on Hierarchical "
+    "[3] R. J. G. B. Campello, D. Moulavi, and J. Sander, \"Density-Based Clustering Based on Hierarchical "
     "Density Estimates,\" in Advances in Knowledge Discovery and Data Mining, PAKDD 2013, pp. 160-172, 2013.",
-    "[7] Z. Tu et al., \"MaxViT: Multi-Axis Vision Transformer,\" in Proceedings of the European "
+    "[4] Z. Tu et al., \"MaxViT: Multi-Axis Vision Transformer,\" in Proceedings of the European "
     "Conference on Computer Vision (ECCV), pp. 459-479, 2022.",
 ]
 
@@ -1635,7 +1625,7 @@ def build_codex_revised() -> Document:
         "Wafer 1장에는 약 1,000만 개의 block이 존재하므로, Failbit Map은 불량의 위치와 형태를 반영하는 초고해상도 데이터이자 수율 저하 원인 분석의 핵심 분석 대상이다. "
         "그러나 현업 분석은 Wafer 내 약 1,000개 Chip에서 산출된 Measure 값의 발생 개수를 기반으로 이상 여부를 판단하고 있어, "
         "Failbit Map에서만 발현되는 불량을 검출하지 못한다. 따라서 수율 개선 및 Drop 방지를 위해서는 Measure 기반 접근만으로는 충분하지 않으며, "
-        "Failbit Map 자체를 핵심 분석 단위로 삼아야 한다 [1]-[3].",
+        "Failbit Map 자체를 핵심 분석 단위로 삼아야 한다.",
         indent=True, space_after=Pt(2))
     add_body(doc,
         "실제 현업 적용에는 두 가지 제약이 있다. 첫째, 대량 Map 생성이 어렵다. 설비 Log는 Wafer당 10~50MB 수준이며, 특정 제품에서는 하루 약 2,000장의 Wafer가 발생한다. "
@@ -1687,18 +1677,14 @@ def build_codex_revised() -> Document:
         ],
         "Fig. 2. Palette-indexed PNG for failbit map compression.",
     )
-    add_body(doc,
-        "이러한 파이프라인으로 생성된 경량화 Failbit Map은 다음의 Known 불량 및 Unknown 불량 분석 AI 입력으로 사용된다.",
-        space_after=Pt(2))
-
     add_subheading(doc, "2.2 Known 불량 분류")
     add_body(doc,
-        "Known 불량 분석은 16개 기등록 클래스를 대상으로 하며, 1,500개의 라벨된 Failbit Map으로 "
-        "ConvNeXtV2[4] 기반 1단계 wafer-level 분류기와 저신뢰 샘플 대상 2단계 ROI 기반 YOLO를 구성하였다.",
+        "Known 불량 분석은 16개 등록 클래스를 대상으로 하였으며, 1,500개의 Failbit Map을 사용하여 "
+        "ConvNeXtV2[1] 기반 1단계 wafer-level 분류기와 저신뢰 샘플 대상 2단계 ROI 기반 YOLO로 이루어진 구조를 설계하였다.",
         space_after=Pt(2))
     add_body(doc,
-        "혼동되는 클래스는 wafer 내 defect chip distribution은 유사하지만 defect chip 내부 pixel morphology가 다르므로, "
-        "2단계 ROI-YOLO가 국소 pattern을 추가로 판별하도록 구성하였다(Fig. 3).",
+        "이는 wafer 내 불량 chip 분포가 유사하여 혼동되는 클래스를 구분하기 위해, 1차 분류의 confidence가 낮은 경우 "
+        "ROI 기반 YOLO로 불량 chip의 종류를 추가 판별하여 최종 wafer 불량을 구분하도록 구성한 것이다(Fig. 3).",
         space_after=Pt(2))
 
     _fig_known_path = str(OUT_DIR / "_fig_yolo_roi.png")
@@ -1711,15 +1697,15 @@ def build_codex_revised() -> Document:
     )
     add_table(doc, TABLE_PERF_CLAUDE)
     add_body(doc,
-        "전체 운영 기준 하루 약 2만 장 이상의 Wafer가 1시간 주기로 처리되므로, backbone 선택에서는 정확도와 추론 처리량을 함께 고려하였다. "
-        "MaxViT[7]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2가 1시간 주기 처리 요건을 더 안정적으로 만족할 수 있어 최종 backbone으로 선정하였다. "
-        "Baseline CNN의 test Weighted F1은 0.78에서 0.87(Ref), 0.92(Ref + Optuna), 0.95(Ref + Optuna + ROI)로 단계적으로 향상되었다.",
+        "전체 운영 기준 하루 약 2만 장 이상의 Wafer Failbit Map이 발생하므로, backbone 선택에서는 정확도와 추론 처리량을 함께 고려하였다. "
+        "MaxViT[4]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2는 더 낮은 추론 지연으로 운영 처리량 확보에 유리하여 최종 backbone으로 선정하였다. "
+        "선정된 ConvNeXtV2 (Ref)의 test Weighted F1 0.87은 Ref + Optuna에서 0.92, Ref + Optuna + ROI에서 0.95로 단계적으로 향상되었다.",
         space_after=Pt(2))
 
     add_subheading(doc, "2.3 Unknown 불량 검출")
     add_body(doc,
         "Unknown 불량은 후보 grouping 문제로 정의하였다. 5일치 운영 데이터 10,000장으로 SimCLR 계열 "
-        "contrastive learning[5] 기반 임베딩을 학습하고, 별도 1일치 2,000장에 HDBSCAN[6]을 적용하여 유사 패턴을 그룹화하였다. "
+        "contrastive learning[2] 기반 임베딩을 학습하고, 별도 1일치 2,000장에 HDBSCAN[3]을 적용하여 유사 패턴을 그룹화하였다. "
         "또한 Wafer 이미지를 N×N grid로 균등 분할하고 동일 grid cell 내 샘플을 positive pair로 구성하는 "
         "grid structured local sampling으로 발생 위치 정보를 반영하였다.",
         space_after=Pt(2))
