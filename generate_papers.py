@@ -1587,9 +1587,8 @@ def build_codex_revised() -> Document:
 
     add_subheading(doc, "2.1 데이터 파이프라인")
     add_body(doc,
-        "데이터 파이프라인은 설비 Log를 실시간 적재하고 1시간 주기로 Failbit Map을 생성하도록 구성하였다. "
-        "핵심 병목은 raw hex stream의 grade 변환 구간으로, 웨이퍼당 약 1,000만 pixel에 대해 반복 수행되므로 Python 구현만으로는 처리량 확보가 어려웠다. "
-        "이에 해당 루틴을 Cython으로 최적화하고, image encoding은 palette-indexed PNG로 구성하였다.",
+        "주요 병목은 wafer당 약 1,000만 개의 암호화된 test 결과를 grade 값으로 변환하는 처리 속도와, 4K를 초과하는 초고해상도 이미지의 저장 용량 부담이었다. "
+        "이에 Cython 최적화로 데이터 변환 속도를 약 100배 향상시켰으며(Fig. 1), palette-indexed PNG 적용으로 이미지 용량을 약 75% 절감하였다(Fig. 2).",
         space_after=Pt(2))
     add_labeled_example_block(
         doc,
@@ -1597,13 +1596,12 @@ def build_codex_revised() -> Document:
         [
             ("Raw:", "090B0C0D0E0F090A0B0C"),
             ("Decoding:", "\"0C\" -> \"C\" -> 12 (hex to decimal) -> 3 (if value != 0, subtract 9)"),
+            ("Python:", "parse, convert, and correct for each pixel"),
+            ("Cython:", "same workflow in a compiled integer loop"),
             ("Grade:", "0 2 3 4 5 6 0 1 2 3"),
         ],
-        "Fig. 1. Hex-to-grade conversion.",
+        "Fig. 1. Hex-to-grade conversion. Python은 pixel마다 parse, convert, and correct를 반복하지만, Cython은 동일 workflow를 compiled integer loop로 수행하여 변환 속도를 약 100배 향상시켰다.",
     )
-    add_body(doc,
-        "Failbit Map은 제한된 색상 집합만 사용하므로 palette-indexed PNG를 적용하였다.",
-        space_after=Pt(2))
     add_labeled_example_block(
         doc,
         "RGB PNG vs Palette-indexed PNG",
@@ -1619,7 +1617,7 @@ def build_codex_revised() -> Document:
             ]),
             ("Result:", "(123,54,24) -> (3)"),
         ],
-        "Fig. 2. Palette-indexed PNG encoding.",
+        "Fig. 2. Palette-indexed PNG encoding. RGB 값을 pixel마다 저장하는 대신 palette entry와 index 배열만 저장하여 이미지 용량을 약 75% 절감하였다.",
     )
 
     add_subheading(doc, "2.2 Known 불량 분류")
