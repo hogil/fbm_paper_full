@@ -1711,8 +1711,8 @@ def build_codex_revised() -> Document:
     )
     add_table(doc, TABLE_PERF_CLAUDE)
     add_body(doc,
-        "전체 운영 기준 하루 약 2만 장 이상의 Wafer가 1시간 주기로 처리되므로, backbone 선택에서는 성능과 처리량을 함께 고려하였다. "
-        "MaxViT[7]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2가 처리량 측면에서 더 유리하였다. "
+        "전체 운영 기준 하루 약 2만 장 이상의 Wafer가 1시간 주기로 처리되므로, backbone 선택에서는 정확도와 추론 처리량을 함께 고려하였다. "
+        "MaxViT[7]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2가 1시간 주기 처리 요건을 더 안정적으로 만족할 수 있어 최종 backbone으로 선정하였다. "
         "Baseline CNN의 test Weighted F1은 0.78에서 0.87(Ref), 0.92(Ref + Optuna), 0.95(Ref + Optuna + ROI)로 단계적으로 향상되었다.",
         space_after=Pt(2))
 
