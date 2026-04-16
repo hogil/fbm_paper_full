@@ -66,11 +66,12 @@ ABSTRACT_CLAUDE = (
 ABSTRACT_CODEX = (
     "Failbit Map은 반도체 EDS Test에서 생성되는 웨이퍼당 약 1,000만 pixel 수준의 초고해상도 데이터로, 불량 패턴 분석의 핵심 자료이다. "
     "그러나 실제 현업에서는 대량의 Failbit Map 조회가 불가능하고, 일부 Map 분석도 엔지니어의 수작업에 의존하고 있다. "
-    "본 논문은 이를 해결하기 위해 대량 Failbit Map 운영을 위한 데이터 파이프라인을 구축하고, 그 위에서 등록된 Known 불량은 2-stage supervised classification으로, 미등록 Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. "
+    "본 논문은 이를 해결하기 위해 대량 Failbit Map 운영용 데이터 파이프라인을 구축하고, 그 위에서 Known 불량은 2-stage supervised classification으로, Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. "
     "Cython 적용으로 데이터 변환 속도를 약 100배 향상시켰고, Palette PNG 적용으로 이미지 용량을 약 75% 절감하였다. "
     "Known 불량 분류는 ConvNeXtV2 기반 1차 분류와 저신뢰 샘플에 대한 ROI 기반 YOLO 2차 분류를 결합한 구조로 설계하였으며, F1-score 0.95를 달성하였다. "
     "Unknown 불량 검출은 레이블 없이 SimCLR 계열 contrastive learning 기반으로 수행하였고, wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하였다. "
-    "실제 양산 5일치 Failbit Map 10,000장을 학습한 뒤 1일치 2,000장에 대해 추론한 결과 13개 불량 그룹이 검출되었으며, 현업 분석 엔지니어의 검증 결과 이 중 7개가 실제 불량 그룹으로 판정되어, 실제 운영 환경에서의 적용 가능성을 입증하였다."
+    "실제 양산 5일치 Failbit Map 10,000장을 학습한 뒤 1일치 2,000장에 대해 추론한 결과 13개 불량 그룹이 검출되었다. "
+    "현업 분석 엔지니어 검증 결과 이 중 7개가 실제 불량 그룹으로 판정되었으며, 이를 통해 운영 환경 적용 가능성을 입증하였다."
 )
 
 # ─── 표 데이터 ───────────────────────────────────────────────
@@ -1177,7 +1178,7 @@ def build_detailed() -> Document:
     doc.styles["Normal"].font.name = F_KO
 
     # ── 1단 영역: 제목 / 저자 / 초록 ─────────────────────────
-    add_title_block(doc, TITLE_KO_CLAUDE, TITLE_EN_CLAUDE)
+    add_title_block(doc, TITLE_KO_CODEX, TITLE_EN_CODEX)
     add_author_block(doc, AUTHORS, AFFIL)
     add_abstract_block(doc, ABSTRACT_CLAUDE)
 
@@ -1610,7 +1611,7 @@ def build_codex_revised() -> Document:
     pk = doc.add_paragraph()
     rk = pk.add_run(
         "Keywords: Failbit Map, Wafer Failure Analysis, ConvNeXtV2, "
-        "Grad-CAM, YOLO, Contrastive Learning, HDBSCAN, Multimodal"
+        "YOLO, Contrastive Learning, HDBSCAN"
     )
     _apply_run_font(rk, size=PT9, italic=True)
     _set_single_spacing(pk)
@@ -1629,8 +1630,8 @@ def build_codex_revised() -> Document:
     add_body(doc,
         "실제 현업 적용에는 두 가지 제약이 있다. 첫째, 기존 시스템은 설비 Log를 대량 Failbit Map으로 변환하고 저장·조회하는 처리 성능이 부족하였다. "
         "설비 Log는 Wafer당 10~50MB 수준이며 특정 제품에서는 하루 약 2,000장의 Wafer가 발생하지만, 기존 환경에서는 속도와 메모리 제약으로 대량 처리가 어려웠고 실제 확인 가능 수량도 한 번에 48매 수준으로 제한되었다. "
-        "둘째, 생성된 Map에 대한 불량 여부 및 유형 판정이 엔지니어의 수동 판독에 의존하여 전수 자동 분석이 어려웠다. "
-        "본 논문은 이러한 한계를 해결하기 위해, 대량 Raw Data를 지속적으로 Failbit Map으로 생성·운영하는 데이터 파이프라인과, 등록된 Known 불량을 2-stage supervised classification으로 분석하고 미등록 Unknown 불량을 self-supervised 기반으로 검출하는 통합 분석 아키텍처를 제안한다. "
+        "둘째, 생성된 Map에 대한 불량 여부 및 유형 판정이 엔지니어의 수동 판독에 의존하여 전수 분석이 어려웠다. "
+        "본 논문은 이러한 한계를 해결하기 위해, 대량 Raw Data를 지속적으로 Failbit Map으로 생성 및 운영하는 데이터 파이프라인과, Known 불량을 2-stage supervised classification으로 분석하고 Unknown 불량을 self-supervised 기반으로 검출하는 통합 분석 아키텍처를 제안한다. "
         "주요 기여는 다음과 같다.",
         indent=True, space_after=Pt(2))
     add_body(doc,
@@ -1683,7 +1684,7 @@ def build_codex_revised() -> Document:
         space_after=Pt(2))
     add_body(doc,
         "ConvNeXtV2 기반 wafer-level 분류는 전반적으로 높은 정확도와 처리 속도를 보였으나, wafer 내 불량 chip의 분포가 유사한 클래스에서는 분류 성능이 저하되었다. "
-        "이를 보완하기 위해 1차 분류의 저신뢰 샘플에 대해 ROI 기반 YOLO를 적용하여 개별 chip 수준의 형태 차이를 추가 판별하는 2-stage 구조를 설계하였다(Fig. 3).",
+        "이를 보완하기 위해 1차 분류의 저신뢰 샘플에 대해 ROI 기반 YOLO를 적용하여 ROI 영역 내 불량 chip의 형태와 출현 패턴을 추가 판별하는 2-stage 구조를 설계하였다(Fig. 3).",
         space_after=Pt(2))
 
     _fig_known_path = str(OUT_DIR / "_fig_yolo_roi.png")
@@ -1696,9 +1697,9 @@ def build_codex_revised() -> Document:
     )
     add_table(doc, TABLE_PERF_CLAUDE)
     add_body(doc,
-        "전체 운영 기준 하루 약 2만 장 이상의 Wafer Failbit Map이 발생하므로, backbone 선택에서는 정확도와 추론 처리량을 함께 고려하였다. "
-        "MaxViT[4]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2는 더 낮은 추론 지연으로 운영 처리량 확보에 유리하여 최종 backbone으로 선정하였다. "
-        "선정된 ConvNeXtV2 (Ref)의 test Weighted F1은 0.87에서 Ref + Optuna로 0.92, Ref + Optuna + ROI로 0.95까지 단계적으로 향상되었다.",
+        "하루 약 2만 장 이상의 Wafer Failbit Map이 발생하므로 backbone 선택에서는 정확도와 추론 처리량을 함께 고려하였다. "
+        "MaxViT[4]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나, ConvNeXtV2는 파라미터 수 약 26% 감소(119.5M → 88.6M)와 FLOPs 약 39% 감소(74.2G → 45.1G)로 추론 처리량이 우수하여 최종 backbone으로 선정하였다. "
+        "이후 test Weighted F1은 Ref + Optuna에서 0.92, Ref + Optuna + ROI에서 0.95로 향상되었다.",
         space_after=Pt(2))
 
     add_subheading(doc, "2.3 Unknown 불량 검출")
@@ -1723,9 +1724,9 @@ def build_codex_revised() -> Document:
 
     add_heading(doc, "3. CONCLUSION", level=1)
     add_body(doc,
-        "본 연구는 Failbit Map 기반 대량 운영 파이프라인 위에 등록된 Known 불량의 2-stage 분류와 미등록 Unknown 불량의 self-supervised 기반 검출을 통합함으로써, "
-        "기존 수작업 중심 분석을 현업 적용 가능한 AI 자동화 체계로 고도화하였다. "
-        "현재 DRAM 생산 라인에서 운영 중이며, 1시간 주기 Map 생성과 등록·미등록 불량 자동 분석을 통해 FAB 품질 분석과 신규 불량 대응에 실질적으로 기여하고 있다.",
+        "본 연구는 1시간 주기의 Failbit Map 전수 생성과 자동 불량 분석을 위한 통합 아키텍처를 구현하였다. "
+        "데이터 파이프라인에서는 Cython 최적화와 palette-indexed PNG를 적용하여 대량 Map의 생성 및 저장이 가능하도록 하였고, "
+        "분석 단계에서는 Known 불량의 2-stage 분류와 Unknown 불량의 self-supervised 기반 검출을 결합하여 Failbit Map 분석을 수작업 중심 업무에서 자동화 체계로 고도화하였다.",
         indent=True, space_after=Pt(2))
 
     add_refs(doc, REFS_CODEX, title="REFERENCES")
