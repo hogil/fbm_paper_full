@@ -1704,7 +1704,7 @@ def build_codex_revised() -> Document:
 
     add_subheading(doc, "2.3 Unknown 불량 검출")
     add_body(doc,
-        "Unknown 불량은 후보 grouping 문제로 정의하였다. 5일치 운영 데이터 10,000장으로 SimCLR 계열 "
+        "Unknown 불량 검출은 유사한 형태를 그룹화하여 불량 후보 그룹을 찾는 문제로 정의하였다. 5일치 운영 데이터 10,000장으로 SimCLR 계열 "
         "contrastive learning[2] 기반 임베딩을 학습하고, 별도 1일치 2,000장에 HDBSCAN[3]을 적용하여 유사 패턴을 그룹화하였다. "
         "또한 Wafer 이미지를 N×N grid로 균등 분할하고 동일 grid cell 내 샘플을 positive pair로 구성하는 "
         "grid structured local sampling으로 발생 위치 정보를 반영하였다.",
