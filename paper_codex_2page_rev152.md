@@ -8,7 +8,7 @@
 
 (Abstract)
 
-Failbit Map은 반도체 EDS Test에서 생성되는 웨이퍼당 약 1,000만 pixel 수준의 초고해상도 데이터로, 불량 패턴 분석의 핵심 자료이다. 그러나 실제 현업에서는 대량의 Failbit Map 조회가 불가능하고, 일부 Map 분석도 엔지니어의 수작업에 의존하고 있다. 본 논문은 이를 해결하기 위해 대량 Failbit Map 운영용 데이터 파이프라인을 구축하고, 그 위에서 Known 불량은 2-stage supervised classification으로, Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. Cython 적용으로 데이터 변환 속도를 약 100배 향상시켰고, Palette PNG 적용으로 이미지 용량을 약 75% 절감하였다. Known 불량 분류는 ConvNeXtV2 기반 1차 분류와 저신뢰 샘플에 대한 ROI(Region of Interest) 기반 YOLO 2차 분류를 결합한 구조로 설계하였으며, F1-score 0.95를 달성하였다. Unknown 불량 검출은 레이블 없이 SimCLR 계열 contrastive learning 기반으로 수행하였고, wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하였다. 양산 5일치 Failbit Map 10,000장 학습 후 1일치 2,000장 적용 시 13개 불량 그룹이 검출되었고, 이 중 7개가 현업 엔지니어 검증에서 실제 불량 그룹으로 판정되어 현업 적용 가능성을 입증하였다.
+Failbit Map은 반도체 EDS Test에서 생성되는 웨이퍼당 약 1,000만 pixel 수준의 초고해상도 데이터로, 불량 패턴 분석의 핵심 자료이다. 그러나 실제 현업에서는 대량의 Failbit Map 조회가 불가능하고, 일부 Map 분석도 엔지니어의 수작업에 의존하고 있다. 본 논문은 이를 해결하기 위해 대량 Failbit Map 운영용 데이터 파이프라인을 구축하고, 그 위에서 Known 불량은 2-stage supervised classification으로, Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. Cython 적용으로 데이터 변환 속도를 약 100배 향상시켰고, Palette PNG 적용으로 이미지 용량을 약 75% 절감하였다. Known 불량 분류는 ConvNeXtV2 기반 1차 분류와 저신뢰 샘플에 대한 ROI(Region of Interest) 기반 YOLO 2차 분류를 결합한 구조로 설계하였으며, F1-score 0.95를 달성하였다. Unknown 불량 검출은 레이블 없이 SimCLR 계열 모델에 wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하여 대조학습을 수행하였다. 양산 5일치 Failbit Map 10,000장 학습 후 1일치 2,000장 적용 시 13개 불량 그룹이 검출되었고, 이 중 7개가 현업 엔지니어 검증에서 실제 불량 그룹으로 판정되어 현업 적용 가능성을 입증하였다.
 
 Keywords: Failbit Map, Wafer Failure Analysis, ConvNeXtV2, YOLO, Contrastive Learning, HDBSCAN
 
@@ -100,7 +100,7 @@ MaxViT[2]와 ConvNeXtV2 (Ref)는 동일한 test Weighted F1 0.87을 보였으나
 
 ### 2.3 Unknown 불량 검출
 
-Unknown 불량 검출은 유사한 형태를 그룹화하여 불량 후보 그룹을 찾는 문제로 정의하였다. 5일치 운영 데이터 10,000장으로 SimCLR 계열 contrastive learning[3] 기반 임베딩을 학습하고, 별도 1일치 2,000장에 HDBSCAN[4]을 적용하여 유사 패턴을 그룹화하였다. 또한 Wafer 이미지를 N×N grid로 균등 분할하고 동일 grid cell 내 샘플을 positive pair로 구성하는 grid structured local sampling으로 발생 위치 정보를 반영하였다.
+Unknown 불량 검출은 유사한 형태를 그룹화하여 불량 후보 그룹을 찾는 문제로 정의하였다. 5일치 운영 데이터 10,000장으로 SimCLR 계열 모델에 wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하여 대조학습을 수행하였고, 별도 1일치 2,000장에 HDBSCAN[4]을 적용하여 유사 패턴을 그룹화하였다.
 
 ![Fig. 4. Unknown-defect grouping on production images.](_fig_cluster.png)
 
