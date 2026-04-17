@@ -1740,7 +1740,7 @@ def build_codex_revised() -> Document:
         "본 연구는 Failbit Map 전수 생성과 자동 불량 분석을 위한 통합 아키텍처를 구현하였다. "
         "Cython 최적화와 palette-indexed PNG로 대량 Map을 생성하였고, "
         "Known 2-stage 분류와 Unknown self-supervised 검출을 결합하여 자동화 및 고도화하였다. "
-        "현재 분석용 Web App[5] 운영 중이며 DRAM 전제품 확인 가능하다.",
+        "현재 분석용 Web App[5] 운영 중이다(DRAM 특정제품 적용).",
         indent=True, space_after=Pt(2))
 
     add_refs(doc, REFS_CODEX, title="REFERENCES")
