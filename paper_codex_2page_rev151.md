@@ -8,13 +8,13 @@
 
 (Abstract)
 
-Failbit Map은 반도체 EDS Test에서 생성되는 웨이퍼당 약 1,000만 pixel 수준의 초고해상도 데이터로, 불량 패턴 분석의 핵심 자료이다. 그러나 실제 현업에서는 대량의 Failbit Map 조회가 불가능하고, 일부 Map 분석도 엔지니어의 수작업에 의존하고 있다. 본 논문은 이를 해결하기 위해 대량 Failbit Map 운영용 데이터 파이프라인을 구축하고, 그 위에서 Known 불량은 2-stage supervised classification으로, Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. Cython 적용으로 데이터 변환 속도를 약 100배 향상시켰고, Palette PNG 적용으로 이미지 용량을 약 75% 절감하였다. Known 불량 분류는 ConvNeXtV2 기반 1차 분류와 저신뢰 샘플에 대한 ROI 기반 YOLO 2차 분류를 결합한 구조로 설계하였으며, F1-score 0.95를 달성하였다. Unknown 불량 검출은 레이블 없이 SimCLR 계열 contrastive learning 기반으로 수행하였고, wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하였다. 실제 양산 5일치 Failbit Map 10,000장을 학습한 뒤 1일치 2,000장에 적용한 결과 13개 불량 그룹이 검출되었고, 이 중 7개가 현업 엔지니어 검증에서 실제 불량 그룹으로 판정되어 실전 운영 가능성을 입증하였다.
+Failbit Map은 반도체 EDS Test에서 생성되는 웨이퍼당 약 1,000만 pixel 수준의 초고해상도 데이터로, 불량 패턴 분석의 핵심 자료이다. 그러나 실제 현업에서는 대량의 Failbit Map 조회가 불가능하고, 일부 Map 분석도 엔지니어의 수작업에 의존하고 있다. 본 논문은 이를 해결하기 위해 대량 Failbit Map 운영용 데이터 파이프라인을 구축하고, 그 위에서 Known 불량은 2-stage supervised classification으로, Unknown 불량은 self-supervised 기반 검출 구조로 처리하는 통합 아키텍처를 구현하였다. Cython 적용으로 데이터 변환 속도를 약 100배 향상시켰고, Palette PNG 적용으로 이미지 용량을 약 75% 절감하였다. Known 불량 분류는 ConvNeXtV2 기반 1차 분류와 저신뢰 샘플에 대한 ROI(Region of Interest) 기반 YOLO 2차 분류를 결합한 구조로 설계하였으며, F1-score 0.95를 달성하였다. Unknown 불량 검출은 레이블 없이 SimCLR 계열 contrastive learning 기반으로 수행하였고, wafer의 zone 기반 불량 해석 특성을 반영하기 위해 grid structured local sampling을 적용하였다. 양산 5일치 Failbit Map 10,000장 학습 후 1일치 2,000장 적용 시 13개 불량 그룹이 검출되었고, 이 중 7개가 현업 엔지니어 검증에서 실제 불량 그룹으로 판정되어 현업 적용 가능성을 입증하였다.
 
 Keywords: Failbit Map, Wafer Failure Analysis, ConvNeXtV2, YOLO, Contrastive Learning, HDBSCAN
 
 ## 1. INTRODUCTION
 
-Failbit Map은 EDS Test에서 Memory Cell Block 단위의 불량 정도를 Grade 0부터 7까지로 표현한 데이터이다. Wafer 1장에는 약 1,000만 개의 block이 존재하므로, 현업의 Measure 기반 분석만으로는 Failbit Map에서만 발현되는 불량을 검출하기 어렵다. 따라서 불량 분석을 위해서는 Failbit Map을 전수 분석해야 한다.
+Failbit Map은 EDS Test에서 Memory Cell Block 단위의 불량 정도를 Grade 0부터 7까지로 표현한 데이터이다. Wafer 1장에는 약 1,000만 개의 block이 존재하므로, 이는 불량의 위치와 형태를 반영하는 초고해상도 데이터이다. 현업의 Measure 기반 분석만으로는 이러한 정보를 확인할 수 없어 Failbit Map의 전수 분석이 필요하다.
 
 실제 현업 적용에는 두 가지 제약이 있다. 첫째, 기존 시스템은 설비 Log를 대량 Failbit Map으로 변환하고 저장·조회하는 처리 성능이 부족하였다. 설비 Log는 Wafer당 10~50MB 수준이며 특정 제품에서는 하루 약 2,000장의 Wafer가 발생하지만, 기존 환경에서는 속도와 메모리 제약으로 대량 처리가 어려웠고 실제 확인 가능 수량도 한 번에 48매 수준으로 제한되었다. 둘째, 생성된 Map에 대한 불량 여부 및 유형 판정이 엔지니어의 수동 판독에 의존하여 전수 분석이 어려웠다. 본 논문은 이러한 한계를 해결하기 위해, 대량 Raw Data를 지속적으로 Failbit Map으로 생성 및 운영하는 데이터 파이프라인과, Known 불량을 2-stage supervised classification으로 분석하고 Unknown 불량을 self-supervised 기반으로 검출하는 통합 분석 아키텍처를 제안한다. 주요 기여는 다음과 같다.
 
@@ -24,7 +24,7 @@ Failbit Map은 EDS Test에서 Memory Cell Block 단위의 불량 정도를 Grade
 
 ### 2.1 DATA PIPELINE
 
-주요 병목은 wafer당 약 1,000만 개의 암호화된 test 결과를 grade 값으로 변환하는 속도와 초고해상도 이미지의 저장 용량 부담이었다. 이에 Cython 최적화로 변환 속도를 약 100배 향상시키고(Fig. 1), palette-indexed PNG로 이미지 용량을 약 75% 절감하였다(Fig. 2).
+주요 병목은 wafer당 약 1,000만 개의 암호화된 test 결과를 grade 값으로 변환하는 속도와, 4K를 초과하는 초고해상도 이미지의 저장 용량 부담이었다. 이에 Cython 최적화로 변환 속도를 약 100배 향상시켰으며(Fig. 1), 32-palette-indexed PNG를 적용하여 이미지 용량을 약 75% 절감하였다(Fig. 2).
 
 <table>
 <tr><td>
