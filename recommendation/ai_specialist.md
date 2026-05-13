@@ -24,7 +24,7 @@
 
 지원자는 13년간 메모리 QIE에서 축적한 현장 원리(웨이퍼 분포, 결함 발생 모드, 설비 노이즈, L1 trend의 물리적 의미, fleet 항상성)를 AI 모델·데이터·평가의 의사결정에 그대로 반영한다. 단순히 SOTA 백본을 가져다 쓰는 것이 아니라, "flip 증강이 왜 틀린지, BICUBIC 보간이 왜 의미를 깨뜨리는지, 작은 val set saturation 이 왜 진짜 성능 신호를 가리는지, fleet SNR 이 왜 enforcement floor 를 결정해야 하는지" 를 구현 단계까지 반영한다. 이 융합이 본 추천서의 가장 결정적인 차별 인자다.
 
-**Known-CNN 2-stage 구조 자체가 도메인 통찰에서 출발했다.** Wafer 의 center / edge 에 동일 위치로 분포하는 결함 중 chip 모양만 다른 클래스 (center_fork / center_scratch / center_donut 등) 는 wafer-level CNN 이 위치 기반 특성상 혼동하는 영역이다. 본인은 wafer-level 분류기의 confidence 가 낮을 때 chip-level 분류와 chip 배치 (obj_id map) 로 보강하는 2-stage 구조를 발의·구현하였다. 이는 도메인 지식과 AI 역량이 결합되어야만 도출되는 설계이며, 사내 일반 AI 엔지니어가 라벨만 보고는 도달하기 어렵다.
+**Known-CNN 2-stage 구조 자체가 도메인 통찰에서 출발했다.** Wafer 의 center / edge 에 동일 위치로 분포하는 결함 중 chip 모양만 다른 클래스 (center_fork / center_scratch / center_donut 등) 는 wafer-level CNN 이 위치 기반 특성상 혼동하는 영역이다. 본인은 wafer-level 분류기의 confidence 가 낮을 때 chip-level 분류와 chip 배치 (obj_id map) 로 보강하는 2-stage 구조를 발의·구현하였다. 이는 라벨만 보고 모델을 키우는 접근으로는 풀리지 않는 본질적 시각 한계를 도메인 통찰로 재정의한 결정이다.
 
 ### 3대 대표 과제 핵심 성과
 
