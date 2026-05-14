@@ -2,13 +2,13 @@
 
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|----------------|
-| Computer Vision | FBM 이미지의 single-label wafer 분류, ConvNeXtV2 backbone, ROI YOLO 2-stage 보정, chip-CNN 결과를 wafer 좌표계 obj-id map 으로 재구성하는 2차 보정 구조, chip multi-label 이미지 분류 |
-| 머신러닝 | Optuna HPO, Focal Loss, Label Smoothing, Temperature scaling, HDBSCAN clustering |
-| Self-Supervised Learning | Unknown 후보 검출용 contrastive embedding: ConvNeXtV2 TAPT, Global contrastive learning, MoCo Queue, NV-Retriever negative mining, NeCo, HDBSCAN grouping |
-| 합성 데이터 엔지니어링 | FBM / wafer-class 생성 평가셋 구성, FCM-PM (Full-Cover Mixup + Pair Mask) 기반 chip multi-label 합성 및 background loss masking, BBD/Overlay/CD 경험 기반 trend episode 합성 generator |
-| AI 시스템 엔지니어링 | FastAPI/JavaScript 기반 mapviewer, pyvips/Numba/Cython 변환 가속, RBAC/SAML SSO, WebGL2 렌더링, Web App 운영 |
-| 파이프라인 구축 | EDS Test → S3 → fail-map → mapviewer 1시간 주기 적재를 기반으로, Failbit Map 생성·저장·조회 → 이미지 분석 AI 모델 결과 (Known 2-stage / Unknown 후보) → Web App 표시까지 연결한 end-to-end 운영 파이프라인. Cython hex-to-grade 100배 가속, 32-color palette PNG 75% 절감 |
-| 모델 최적화 | categorical FBM 확대 시 nearest-neighbor 로 Grade/label 보존, ConvNeXtV2 backbone / HPO, chip-CNN → wafer obj-id map 보정 입력 재구성 (P1 2차 개발 중), Pair Mask background loss masking, val_margin / best-margin checkpoint 선택, 4-bag ensemble 성능 상한 검증, KD single-model compression |
+| Computer Vision | Image Classification, Object Detection, ROI-based Two-stage Classification, Multi-label Image Classification, Spatial Feature Map Reconstruction |
+| Self-Supervised / Unsupervised Learning | Contrastive Learning, Representation Learning, Clustering-based Novelty / Anomaly Detection, Test-Time Adaptive Pretraining (TAPT) |
+| Synthetic Data Generation / Data Augmentation | CutMix 계열 Augmentation, Full-Cover Mixup, Pair Mask 기반 Loss Masking, Image and Time-series Synthetic Dataset Generation |
+| Model Optimization / Model Selection | Bayesian Hyperparameter Optimization (Optuna), Loss Function Design, Label Smoothing, Temperature Scaling, Margin-based Checkpoint Selection, Ensemble, Knowledge Distillation |
+| MLOps / Data Pipeline Engineering | Batch Ingestion, ETL Pipeline, Object Storage Integration, Periodic Data Loading, Model Evaluation Pipeline |
+| AI System Engineering / Web Application | FastAPI Backend, JavaScript Frontend, WebGL2 Visualization, Role-Based Access Control (RBAC), SAML Single Sign-On |
+| High-Performance Data Processing | Cython Acceleration, Numba, pyvips, Large-scale Image Encoding, Palette-indexed PNG Compression |
 
 ---
 

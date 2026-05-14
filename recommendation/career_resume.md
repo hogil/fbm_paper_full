@@ -2,12 +2,13 @@
 
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|------------------------|
-| 반도체 이미지 AI 모델링 | Failbit Map wafer/chip 이미지 분류, ConvNeXtV2 기반 wafer classification, ROI YOLO 2-stage 보정, chip-CNN object-id map 보정 구조 |
-| Unknown / Unsupervised Detection | label 없는 신규 defect 후보 탐지를 위한 contrastive representation learning, clustering 기반 후보 grouping |
-| Synthetic Data Engineering | wafer-class 생성 평가셋, chip multi-label synthesis, FCM-PM 합성 및 손실 마스킹, trend episode synthesis generator |
-| AI 모델 최적화 | Bayesian Hyperparameter Optimization (Optuna), Focal Loss, Label Smoothing, Temperature Scaling, val_margin / best-margin checkpoint selection, Knowledge Distillation |
-| Data / MLOps Engineering | EDS Test raw log → S3 → fail-map → mapviewer 적재, FastAPI backend, JavaScript frontend, WebGL2 rendering, RBAC, SAML Single Sign-On |
-| High-Performance Image Pipeline | Cython hex-to-grade conversion, pyvips / Numba 기반 이미지 처리, 32-color palette-indexed PNG encoding |
+| Computer Vision | Image Classification, Object Detection, ROI-based Two-stage Classification, Multi-label Image Classification, Spatial Feature Map Reconstruction |
+| Self-Supervised / Unsupervised Learning | Contrastive Learning, Representation Learning, Clustering-based Novelty / Anomaly Detection, Test-Time Adaptive Pretraining (TAPT) |
+| Synthetic Data Generation / Data Augmentation | CutMix 계열 Augmentation, Full-Cover Mixup, Pair Mask 기반 Loss Masking, Image and Time-series Synthetic Dataset Generation |
+| Model Optimization / Model Selection | Bayesian Hyperparameter Optimization (Optuna), Loss Function Design, Label Smoothing, Temperature Scaling, Margin-based Checkpoint Selection, Ensemble, Knowledge Distillation |
+| MLOps / Data Pipeline Engineering | Batch Ingestion, ETL Pipeline, Object Storage Integration, Periodic Data Loading, Model Evaluation Pipeline |
+| AI System Engineering / Web Application | FastAPI Backend, JavaScript Frontend, WebGL2 Visualization, Role-Based Access Control (RBAC), SAML Single Sign-On |
+| High-Performance Data Processing | Cython Acceleration, Numba, pyvips, Large-scale Image Encoding, Palette-indexed PNG Compression |
 
 ## 2. 업무경력
 
