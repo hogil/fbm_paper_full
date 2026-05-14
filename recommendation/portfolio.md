@@ -28,11 +28,11 @@
 
 **ㅁ 개인별 기여 서술**
 
-본인은 Failbit Map 의 의미와 현업 사용자 분석 방식을 먼저 학습한 뒤, 대량 변환·저장·조회 파이프라인, Web App, Known 2-stage 분류, Unknown self-supervised 검출을 하나의 운영 흐름으로 연결했습니다. 본인의 핵심 기여는 **반도체 역량 → AI 적용 → 현업 문제 개선** 의 인과 chain 을 실제 운영 시스템으로 구현한 점입니다.
+본인은 Failbit Map 의 의미와 현업 사용자 분석 방식을 먼저 학습한 뒤, 대량 변환·저장·조회 파이프라인, Web App, Known 2-stage 분류, Unknown self-supervised 검출을 하나의 운영 흐름으로 연결했습니다. 반도체 분석 현장에서 쌓은 이해를 AI 모델 구조와 데이터 처리 설계에 직접 반영하고, 그 결과를 현업 분석 부담을 줄이는 운영 시스템으로 끌고 간 점이 본인의 핵심 기여입니다.
 
 데이터 처리 단에서는 Cython 기반 hex-to-grade 변환으로 wafer 당 약 1,000만 cell 변환 병목을 약 100배 가속했고, 32-color palette-indexed PNG 저장으로 Failbit Map 저장 용량을 약 75% 절감해 양산 운영의 처리량과 저장 비용을 동시에 확보했습니다.
 
-AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 sample 실전 현업 데이터에서 weighted F1 0.95 를 달성했으며, Unknown 검출은 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. ROI YOLO 의 한계를 보완하기 위해 chip-CNN 결과를 wafer 좌표계 object-id map 으로 재구성하는 2차 보정 구조를 추가 생성 chip 데이터 기반으로 개발 중에 있습니다.
+AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 sample **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했으며, Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. ROI YOLO 의 한계를 보완하기 위해 chip-CNN 결과를 wafer 좌표계 object-id map 으로 재구성하는 2차 보정 구조를 **[추가 생성 chip 데이터, 개발 중]** 기반으로 개발 중에 있습니다.
 
 **ㅁ 문제정의**
 
@@ -103,6 +103,20 @@ Backbone 선정은 Transformer 와 CNN 계열을 비교해 판단했습니다. T
 | Web App **[양산 운영]** | 12일 누적 **2,317 요청**, peak 1,801 요청 (2026-03-07) |
 | chip-CNN 보조 개발 **[추가 생성 데이터, 개발 중]** | val_f1 **0.9946** / test_f1 **0.9872** / 5-seed **0.9838±0.0092**. 2-stage 통합 성과가 아니라 chip 분류기 단독 지표입니다. |
 
+**Unknown contrastive 구성요소 성능표 [추가 생성 데이터, 개발 중 - 학습 후 정량 채움]**
+
+| # | Recipe | P1 | P2 | P3 | P4 | ARI | AMI | Sil |
+|---|--------|----|----|----|----|-----|-----|-----|
+| 1 | B0 Global InfoNCE only | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 |
+| 2 | + Local DenseCL (LW=0.5) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 3 | + MoCo Queue 4096 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 4 | + NV-Retriever NEG 0.72 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 5 | + NeCo 0.2 (B5 5-tool full) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 6 | NEW (B5 - Local, 4-tool) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 7 | NEW + tau=0.5 post-reassign | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+
+위 표는 실전 운영 성과가 아니라, Unknown contrastive 추가 생성 데이터에서 baseline B0 부터 NEW recipe 까지 구성요소 단위 성능을 단계적으로 채우는 관리 표입니다. P1-P4 / ARI / AMI / Sil 은 학습 후 정량 측정으로 갱신합니다. Known / Unknown 실전 현업 데이터 성능은 현재 프로젝트 폴더의 실전 데이터 근거를 기준으로 관리합니다.
+
 **ㅁ P2. Chip Multi-label Classification**
 
 **ㅁ 과제 기본정보**
@@ -166,6 +180,22 @@ val_margin 은 `positive bits 평균 score - negative bits 최대 score` 로 정
 | val_margin 효과 **[추가 생성 chip 데이터, PoC]** | Spearman ρ **+0.56**, val_f1 ρ **-0.10** 대비 best-model 선택 신호 개선 |
 | 4-bag ensemble **[추가 생성 chip 데이터, PoC]** | bit F1 **0.9953** / FAR **0.00%** / 약 4× inference cost |
 | KD single student **[추가 생성 chip 데이터, PoC]** | bit F1 **0.9872** / FAR **0.5%** / 1× inference cost |
+
+**Multi-label 합성 학습 recipe 성능표 [추가 생성 chip 데이터, PoC - per class 2000 학습 / 16+ class 평가셋]**
+
+| # | Recipe | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Note |
+|---|--------|--------|--------|--------|------|--------|---------|------|
+| 1 | Baseline (BCE+LS=0.30, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 2 | Focal loss (T9 sigmoid_focal, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 3 | ASL (T4 asymmetric, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 4 | CutMix only (random rect, no pair) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 5 | CutMix + Pair (random rect + masked) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 6 | FCM-PM best val_f1 (run112 ep=20) | 0.9652 | 1.0000 | 0.9517 | 0.15 | 0.00 | 0.62 | val_f1 best |
+| 7 | **FCM-PM best val_margin (run116J)** | **0.9918** | 0.9996 | 0.9892 | 0.00 | 0.00 | 0.00 | best single 후보 |
+| 8 | Ensemble 4-bag g=2/2/3/4 (A+C+J+F) thr=0.3 | 0.9615 | 1.0000 | 0.9475 | 0.00 | 0.00 | 0.00 | g-diverse FCM-PM |
+| 9 | KD distill 4-bag → student | TBD | TBD | TBD | TBD | TBD | TBD | 4-bag 후 dispatch |
+
+위 표는 Baseline / Focal / ASL / CutMix / CutMix+Pair / FCM-PM (val_f1) / **FCM-PM (val_margin, best single 후보)** / 4-bag Ensemble / KD distill 9 단계의 recipe 성능 관리 표입니다. 빈 셀은 추가 학습 후 정량 채움 예정입니다.
 
 **ㅁ P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC**
 

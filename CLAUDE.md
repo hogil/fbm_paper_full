@@ -186,6 +186,17 @@
 - ARI / capture / cross-anchor 를 실전 현업 성과처럼 앞세우거나, 실전 운영 확인보다 먼저 배치하면 안 됩니다.
 - 생성 데이터 지표 라벨은 반드시 `[추가 생성 데이터, 개발 중]` 또는 `[PoC / 생성 평가셋]` 로 둡니다.
 - Unknown recipe 비교표를 넣을 경우 전체 실험 로그를 복붙하지 말고, 대표 recipe 만 압축 표로 넣습니다. 표에는 `Global InfoNCE baseline`, `Local DenseCL`, `MoCo Queue`, `NV-Retriever NEG`, `NeCo`, `NEW recipe 3-seed avg`, `KNN-softmax 후처리`, `cross-anchor stress test` 정도만 남기고, **paper / SOTA / iter / iteration** 같은 논문 운영 표현은 추천서 제출본에서 삭제합니다.
+- 제출본에서 Unknown contrastive 추가 생성 데이터 성능표를 넣을 때는 아래 skeleton 을 사용합니다. 이는 실전 현업 성과가 아니라 **추가 개선 및 metric 측정을 위한 생성 데이터 개발 관리표**입니다. 빈 칸은 `TBD` 또는 `학습 후 채워짐` 으로 둡니다.
+
+| # | Recipe | P1 | P2 | P3 | P4 | ARI | AMI | Sil |
+|---|--------|----|----|----|----|-----|-----|-----|
+| 1 | B0 Global InfoNCE only | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 | 학습 후 채워짐 |
+| 2 | + Local DenseCL (LW=0.5) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 3 | + MoCo Queue 4096 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 4 | + NV-Retriever NEG 0.72 | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 5 | + NeCo 0.2 (B5 5-tool full) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 6 | NEW (B5 - Local, 4-tool) | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 7 | NEW + tau=0.5 post-reassign | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 
 #### ★ P1 Known 2-stage 서술 절대 규칙 — 실전 검증 구조와 생성 데이터 추가 개발 구조 분리 ★
 사용자 직접 정정: **"P1 known 은 2 stage 실전데이터로 검증 한거고 cnn -> roi-yolo 에서 현재 다양한 평가를 위해 생성한 데이터셋으로 cnn->chip-cnn obj id map 으로 분류하려한다"**
@@ -197,6 +208,25 @@
 - 추천서 본문에서는 P1 Known 을 `실전 데이터로 검증된 CNN → ROI-YOLO 2-stage 성과 → 생성 데이터셋 기반 CNN → chip-CNN obj-id map 추가 개발` 순서로 씁니다.
 - chip-CNN obj-id map 수치를 ROI-YOLO 0.95 와 동일한 실전 현업 성과처럼 쓰거나, 실전 검증 완료 수치로 표현하면 안 됩니다.
 - chip-CNN obj-id map 라벨은 반드시 `[추가 생성 chip 데이터, 개발 중]` 또는 `[PoC / 생성 평가셋]` 로 둡니다.
+
+#### ★ P2 Multi-label 생성 성능표 placeholder 규칙 ★
+- P2 생성 성능표는 `Baseline → Focal loss → ASL → CutMix only → CutMix + Pair → FCM-PM best val_f1 → FCM-PM best val_margin → Ensemble → KD` 순서로 둡니다.
+- 빈 칸은 조작하거나 임의 하향하지 말고 `TBD` 로 둡니다. 사용자가 제공한 수치가 있는 row 만 입력합니다.
+- 제출본에서는 `SOTA` 라는 표현을 쓰지 않습니다. 사용자 초안에 `SOTA single` 이 있으면 **`best single 후보`** 로 바꿉니다.
+- 제출본에서는 논문 운영처럼 보이는 `iter` 표현을 쓰지 않습니다. run 식별자가 필요하면 `run112`, `run116J` 처럼 중립 표기하거나 생략합니다.
+- 현재 placeholder 표는 아래 값으로 관리합니다.
+
+| # | Recipe | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Note |
+|---|--------|--------|--------|--------|-----|--------|---------|------|
+| 1 | Baseline (BCE+LS=0.30, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 2 | Focal loss (T9 sigmoid_focal, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 3 | ASL (T4 asymmetric, no cutmix) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 4 | CutMix only (random rect, no pair) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 5 | CutMix + Pair (random rect + masked) | TBD | TBD | TBD | TBD | TBD | TBD | ladder BG |
+| 6 | FCM-PM best val_f1 (run112 ep=20) | 0.9652 | 1.0000 | 0.9517 | 0.15 | 0.00 | 0.62 | val_f1 best |
+| 7 | FCM-PM best val_margin (run116J) | 0.9918 | 0.9996 | 0.9892 | 0.00 | 0.00 | 0.00 | best single 후보 |
+| 8 | Ensemble 4-bag g=2/2/3/4 (A+C+J+F) thr=0.3 | 0.9615 | 1.0000 | 0.9475 | 0.00 | 0.00 | 0.00 | g-diverse FCM-PM |
+| 9 | KD distill 4-bag → student | TBD | TBD | TBD | TBD | TBD | TBD | 4-bag 후 dispatch |
 
 ### Rule 10: 다이어그램은 텍스트 (이미지 새로 생성 X)
 - workflow / architecture flow 는 ASCII 또는 텍스트 박스

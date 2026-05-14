@@ -34,7 +34,7 @@
 
 **과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-본 과제 도메인은 Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level defect zone 해석, 대량 wafer image operating pipeline 입니다. 이에 따라 Computer Vision, Object Detection, Self-Supervised Representation Learning, Clustering, MLOps / Data Pipeline Engineering 을 결합해 운영 흐름을 구성했고, 핵심 모델·방법론으로 ConvNeXtV2, ROI YOLO 2-stage refinement, ConvNeXtV2 TAPT, Global InfoNCE, MoCo Queue, hard-negative mining, HDBSCAN grouping, chip-CNN object-id map reconstruction, cross-anchor robustness check 를 채택했습니다.
+본 과제 도메인은 Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level defect zone 해석, 대량 wafer image operating pipeline 입니다. 이 도메인 위에 Computer Vision, Object Detection, Self-Supervised Representation Learning, Clustering, MLOps / Data Pipeline Engineering 을 결합해 하나의 운영 흐름으로 구성했습니다. 핵심 모델·방법론으로는 ConvNeXtV2, ROI YOLO 2-stage refinement, ConvNeXtV2 TAPT, Global InfoNCE, MoCo Queue, hard-negative mining, HDBSCAN grouping, chip-CNN object-id map reconstruction, cross-anchor robustness check 를 채택했습니다.
 
 Backbone 선정 과정에서는 Transformer 계열이 wafer 전체 구조를 보는 데 강점이 있으나, 본 과제의 결함이 특정 zone 또는 국소 영역에 나타나는 경우가 많다는 점을 고려해 CNN 계열 ConvNeXtV2 의 sliding-window 기반 지역 특징 추출이 더 적합하다고 판단했습니다. 실제 비교에서도 MaxViT 와 동일한 weighted F1 0.87 을 보이면서 파라미터와 FLOPs 효율이 더 높아 최종 backbone 으로 선정했습니다.
 
@@ -70,6 +70,6 @@ Backbone 선정 과정에서는 Transformer 계열이 wafer 전체 구조를 보
 
 **과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-본 과제 도메인은 BBD/Overlay/CD trend 해석 경험, 설비 산포, 설비 hunting, 미세 drift, baseline 평탄도, spec-in 변동 사고 가능성입니다. 이에 맞춰 Synthetic Data Engineering, Time-series / Trend Episode Simulation, Baseline Model Validation 을 결합했고, 핵심 방법론으로 Region 5종 (`dense`, `sparse`, `very_sparse`, `thin`, `missing`), Noise 3종 (`Gaussian`, `Laplacian`, `correlated drift`), trend 불량 5종 (`mean_shift`, `std`, `spike`, `drift`, `context`), fleet_std 기반 enforcement floor, val-F1 median smoothing 과 val-loss spike guard 를 구성했습니다.
+본 과제 도메인은 BBD/Overlay/CD trend 해석 경험, 설비 산포, 설비 hunting, 미세 drift, baseline 평탄도, spec-in 변동 사고 가능성입니다. 이에 맞춰 Synthetic Data Engineering, Time-series / Trend Episode Simulation, Baseline Model Validation 을 결합했습니다. 구체적으로는 계측 밀도를 `dense` / `sparse` / `very_sparse` / `thin` / `missing` 5단계로 코드화하고, 설비 산포 / hunting / drift 를 `Gaussian` / `Laplacian` / `correlated drift` 3 가지 통계 분포로 매핑한 뒤, `mean_shift` / `std` / `spike` / `drift` / `context` 5종 trend 불량 형상을 구성했습니다. 여기에 fleet_std 기반 enforcement floor 로 이상 강도 하한을 보장했고, 검증용 baseline 학습은 val-F1 median smoothing 과 val-loss spike guard 로 수렴을 안정화했습니다.
 
 P3의 본질은 특별한 anomaly detection model 이 아니라, 현업 trend 이상 양상을 AI 학습 데이터로 만들 수 있게 한 domain-knowledge-driven synthetic data generation 이라는 점을 기술 판단의 출발점으로 잡았습니다.
