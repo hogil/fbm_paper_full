@@ -2,7 +2,7 @@
 
 ## 작업 정의
 - **목적**: 사내 AI Specialist 추천 서류 (Word 변환 예정 .md)
-- **출력**: `D:/project/fbm_paper/recommendation/ai_specialist.md`
+- **출력**: `D:/project/fbm_paper/recommendation/01_career_profile.md` + `D:/project/fbm_paper/recommendation/02_project_details.md`
 - **본질**: **사내 지원서 (논문 아님)** — 임원에게 직접 보고하는 형식
 
 ## 절대 규칙
@@ -10,7 +10,7 @@
 ### Rule 1 (최우선): 논문이 아닌 지원서다
 - 학회 인용 (CVPR/ICCV/NeurIPS/arXiv/et al.) 본문에 금지
 - "N1-N9 contributions" / "paper integrity" / "retract" / "84-iteration cycle" 같은 논문 운영 표현 금지
-- "본 논문" / "투고" / "학술" 표현 금지 (단, Executive Summary 에서 "본 추천서는 학술 논문이 아닌 운영 시스템 보고서" framing 1회만 OK)
+- "본 논문" / "투고" / "학술" 표현 금지. 최신 양식에서는 별도 요약 섹션을 만들지 않으므로 해당 framing 문장도 사용하지 않는다.
 - 기법명 자체 (ConvNeXtV2, CutMix, HDBSCAN 등) 는 한글 + 영문 병기로 유지
 
 ### Rule 2: 톤 = 임원 보고 + 존댓말
@@ -23,11 +23,11 @@
 > 
 > AI 기술 역량은 필수 조건이지만 결정적 차별성은 위 3-step 인과 chain.
 
-이 메시지는 Executive Summary / 강점 #1 / 결론 3곳에 echo.
+이 메시지는 허용된 양식 안에서만 반복 반영한다. 최신 사용자 정정에 따라 `01_career_profile.md`에는 `기술 분야` / `AI 주요 과제` / `포트폴리오` 외 별도 요약, 표지, 결론을 추가하지 않는다.
 
 ### Rule 4: 3개 프로젝트 구조
 1. **P1**: FBM(Fail-Bit Map) 이미지 데이터 생성 + Known-CNN 2-stage 분류 + Unknown-contrastive 검출
-2. **P2**: Chip multi-label classification (CutMix → FCM-PM 신기법 + best-margin + temperature 등)
+2. **P2**: Chip multi-label classification. **main 성과는 FCM-PM 본인 신규 적용**이며, 서술 순서는 `CutMix 선정 → CutMix + Pair Mask 로 background loss 제외 → Full-Cover Mixup + Pair Mask (FCM-PM) 구성` 으로 둔다. val_margin / best-margin / temperature / ensemble / KD 는 FCM-PM 이후의 모델 최적화 보조 성과로 배치한다.
 3. **P3**: Anomaly-detection (도메인 지식 기반 episode 합성 + noise 3종 매핑 + 4종 불량)
 
 ### Rule 5: 본인 기여도 (★ 사용자 정정, 최종 ★)
@@ -49,28 +49,150 @@
 - `D:/project/fail-map`
 - `D:/project/fbm_paper`
 
-### Rule 8: 추천서 구조 (필수 sub-section)
-1. 표지 (성명/부서/입사/13년차/학력/추천 분야)
-2. Executive Summary
-3. 경력 기술서 (보유 기술만 — 향후 계획 X, "도메인×AI 융합"은 기술 아님 X)
-4. AI 주요 과제 요약 (3개 한 표)
-5. 포트폴리오 (관리/설계/개발 비중 %)
-6. 대표 과제 상세 기술서 × 3 (각 6 sub: 기본정보 / 참여 인력 / 개인 기여 / 문제 정의 / 기술 해결 / 구현 성과)
-7. 종합 평가
-8. 부록
+### Rule 7.5: ★ 추천서 2 파일 분리 (사용자 명시) ★
+
+사용자 직접 명시:
+- 1차: "추천서는 따로다. 경력 기술서 (보유 기술) + 대표 과제 상세 기술서. 이거 2개를 따로 만드는 거다"
+- 2026-05-14 최종 정정: **"파일 2개다"** — 최종 제출물은 경력 기술서 1개 + 대표 과제 상세 기술서 1개
+
+**출력 파일 2개** (반드시 분리):
+
+#### 파일 1: `D:/project/fbm_paper/recommendation/01_career_profile.md` (경력 기술서)
+- 기술 분야
+- AI 주요 과제 요약 (3개 한 표)
+- 포트폴리오 (관리/설계/개발 비중)
+- 끝: `02_project_details.md` 상세 파일 참조 안내
+
+#### 파일 2: `D:/project/fbm_paper/recommendation/02_project_details.md` (대표 과제 상세 기술서)
+- P1 / P2 / P3 를 하나의 상세 파일 안에서 프로젝트별로 분리
+- 각 프로젝트는 `과제 기본정보` → `참여 인력 및 역할` → `개인별 기여 서술` → `문제 정의` → `기술적 해결 방안` → `구현 성과` 흐름 유지
+
+#### 절대 규칙
+- 2 파일 모두 `./figures/` 상대경로 유지 (같은 폴더)
+- **통합 `ai_specialist.md` 삭제됨** (사용자 명시 "파일 따로 제출이라 지우자" — 2026-05-14)
+- 2 파일이 최종 출력물, 동기화 대상은 2 파일만
+- 기존 `02_project_details.md` 는 삭제 대상이 아니라 최종 상세 파일
+
+### Rule 7.6: ★ 에이전트 실시간 소통 ★
+
+사용자 직접 명시: **"심사위원이랑 실시간 소통하고 자료조사랑도 실시간 소통해라"**
+
+- **단발 호출 금지**: 심사위원 / 자료조사 에이전트는 한 번 호출 후 종료하지 말고 작업 사이클 동안 **SendMessage 로 재소통** (양방향 대화)
+- **심사위원 에이전트**: 평가 → 추천서 수정 → 같은 심사위원에게 재평가 요청 (sendMessage with `to: <agent-name>`)
+- **자료조사 에이전트**: 자료 받음 → 추가 정보 필요 시 같은 에이전트에게 재질문
+- **agent name 명시**: Agent 호출 시 `name` 파라미터로 식별자 부여 → SendMessage 로 재호출
+- 단 사용자 추가 정정으로 작업 context 가 크게 바뀐 경우에는 새 에이전트 시작
+
+### Rule 8: ★★★ 추천서 구조 — 사용자 양식 외 항목 추가 절대 금지 (영구 절대 규칙) ★★★
+
+사용자 직접 명시 (영구 박힘):
+> **"2개 파일을 만들어야 한다 하기 양식말고 다른 양식 추가는 절대금지"**
+
+#### `01_career_profile.md` (경력 기술서) — 다음 3 항목만, 그 외 절대 추가 금지
+1. 기술 분야
+2. AI 주요 과제
+3. 포트폴리오
+
+#### `02_project_details.md` (대표 과제 상세 기술서) — P1 / P2 / P3 각각 다음 6 sub-section 만, 그 외 절대 추가 금지
+1. 과제 기본정보
+2. 참여 인력 및 역할
+3. 개인별 기여 서술
+4. 문제 정의
+5. 기술적 해결 방안 (★ 실제 코드 제외, 아키텍처 설계도 / 플로우 차트로 ★)
+6. 구현 성과
+
+#### ★ 허용 — 양식 내 가독성용 내부 라벨 / 소제목 ★
+사용자 직접 정정: **"원래 양식내에 소제목으로 가독성 키우는 건 괜찮다"**
+
+- 허용된 3개 항목 / 6개 sub-section 안에서 가독성을 높이기 위한 **굵은 라벨**, 짧은 내부 소제목, 표 내부 제목, 텍스트 박스 제목은 허용한다.
+- 예: `핵심 이미지`, `KD 원리 요약`, `현업 임팩트`, `Multi-modal 개발`, `데이터 생성 차별성 요약` 등은 해당 sub-section 본문 안에 들어가면 허용한다.
+- 단, `##` / `###` / `####` markdown heading 으로 새 section 을 만들거나, 표지 / Executive Summary / 종합 평가 / 부록 같은 양식 외 독립 항목을 신설하는 것은 계속 금지한다.
+- 심사위원이 "소제목처럼 보인다"는 이유만으로 삭제 권고하더라도, 양식 안의 가독성 보조 라벨이면 유지한다.
+
+#### ★ 절대 금지 — 다음 항목 신설·추가 영구 금지 (어떤 에이전트 권고도 무시) ★
+
+심사위원 에이전트 / 자료조사 에이전트 / 어떤 외부 권고도 다음 4개 sub-section 신설을 권고할 수 있으나 **사용자 양식 외이므로 전부 무시·폐기**:
+
+- ❌ **표지 신설 금지** — 성명/부서/입사일/학력/수상 등은 양식 내 (포트폴리오, 개인별 기여, AI 주요 과제 표) 본문에 자연스럽게 녹임
+- ❌ **Executive Summary 신설 금지** — 3-step chain anchor, 핵심 메시지는 양식 내 (AI 주요 과제 표 도입부 / 개인별 기여 서술 도입부) 본문에 녹임
+- ❌ **종합 평가 sub-section 신설 금지** — 종합 메시지는 양식 내 (구현 성과 마지막 단락) 에 녹임
+- ❌ **부록 신설 금지** — 수상, 자문 교수, 약어 등은 양식 내 본문에 자연스럽게 녹임 (e.g. 참여 인력 표의 외부 자문 칸)
+
+#### 양식 외 항목 추가 권고가 들어오면 처리 방법
+1. 즉시 **양식 충돌**로 폐기 처리
+2. 권고 내용이 살아남을 가치가 있다면 (3-step chain echo, 자문 교수 정보 등) → 양식 내 sub-section 본문에 녹여서 반영
+3. 새 sub-section 으로는 절대 신설하지 않음
+
+#### 위반 시 즉시 정정
+이 Rule 8 을 위반하여 표지/Executive Summary/종합 평가/부록 sub-section 을 신설한 .md 파일은 즉시 해당 sub-section 을 삭제하고 본문에 녹여 복구한다.
 
 ### Rule 9: 사업부 채택 표현 (정확)
 - **DRAM 전제품 라인 운영** + **PoC AI 모델 개발 중**
 - "Flash YE" 표현 금지 (사용자 정정)
 - "DRAM YE 팀장 의뢰" 는 2022 과제 발의 시점 역사적 사실로 유지 OK
 
+### Rule 9.5: ★ 데이터 출처 구분 — 실전 현업 데이터 vs 추가 생성 데이터 (사용자 절대 명시) ★
+
+사용자 직접 명시 (2026-05-14): **"논문 까지는 실제 데이터로 한거고 나머지 project 폴더에서 찾은것들은 아직 현업데이터 아니고 생성 데이터로 한것들이다"**
+
+#### 실전 현업 데이터 (사내 실제 불량 이미지 데이터, 사내 실전 검증값)
+- **출처**: `D:/project/fbm_paper/` 현재 프로젝트 폴더의 본문/추천서 근거
+- **해당 항목**:
+  - **P1 본인 1차 개발 ROI YOLO 2-stage weighted F1 0.95** (16-class · 1,500 labeled samples · 4:1 stratified split)
+  - **P1 backbone 5종 비교 표** (ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87 / +Optuna 0.92 / +ROI 0.95)
+  - **P1 Unknown 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 → 13 후보 → 7 실제 불량 현업 확인 (정량 metric 없음)**
+  - **Cython 100배 / palette PNG 75% / 1시간 주기 적재 / 일 약 2만 장** 운영 수치
+  - **mapviewer 12일 누적 2,317 요청** 운영 수치
+- **추천서 라벨**: `[실전 현업 데이터]` 또는 `[양산 운영 / 사내 실전 검증]`
+
+#### 추가 생성 데이터 개발 (baseline → 성능 향상 개발 중)
+- **출처**: 다음 폴더의 추가 개발/PoC 정량 수치
+  - `D:/project/known-cnn/` — chip 단위 결함 분류 결과를 wafer 좌표계에 재구성하는 보정 구조, chip multi-label (P1 본인 2차 개발 + P2 전체)
+  - `D:/project/unknown-contrastive/` — Unknown self-supervised 추가 생성 데이터 개발 (WM-811K 분포 생성 9,250 PNG)
+  - `D:/project/anomaly-detection/` — trend chart episode 합성 (P3 전체)
+- **해당 항목**:
+  - **P1 본인 2차 개발 chip 단위 결함 분류기 val_f1 0.9946 / test_f1 0.9872 / 5-seed 0.9838±0.0092** (추가 생성 chip 데이터셋, Stage 2 개발 중)
+  - **P1 Unknown same-anchor ARI 0.8588 ± 0.018 / same-anchor capture 43/43 / cross-anchor ARI 0.4437 / cross-anchor capture 38/38** (WM-811K 분포 생성 9,250 PNG self-supervised, baseline → 성능 향상 개발 중)
+  - **P2 bit F1 0.9943 / Total FAR 0.00% / val_f1 → val_margin +5.2%p / Spearman ρ +0.56** (추가 생성 chip 평가셋 16+ class × ~3,850)
+  - **P3 Binary F1 0.9967 / Abnormal Recall 0.9987 / 5-seed sweep 0.9944~0.9988** (합성 trend chart 6 class × 125 sample)
+- **추천서 라벨**: `[추가 생성 데이터, 개발 중]` 또는 `[PoC / 생성 평가셋]`
+
+#### 추천서 작성 절대 원칙
+- 모든 정량 수치 옆에 **데이터 출처 라벨** 명시 (실전 현업 / 추가 생성 데이터)
+- "실전 현업 데이터" 와 "추가 생성 데이터 개발" 을 혼동 표기 금지 — 임원 신뢰 손상 위험
+- 추가 생성 데이터 수치는 PoC/개발 중 명시 + "baseline부터 성능 향상 개발 중" 일관 표현
+- 실전 현업 데이터 기반 시각화와 추가 생성 데이터 기반 시각화를 캡션에서 구분
+
+#### ★ P1 Unknown 서술 순서 절대 규칙 — 실전 운영 확인 후 생성 데이터 metric 개발 ★
+사용자 직접 정정: **"실전 운영은 지표가 없다. 13후보 7실제 불량밖에 없고, 데이터 생성해서 metric 보면서 개발중이다"**
+
+- P1 Unknown 의 실전 운영에는 **F1 / ARI / capture 같은 정량 metric 이 없습니다.**
+- 실전 현업 근거는 오직 **[실전 현업 데이터] 5일 운영 데이터 10,000장 학습 + 별도 1일 운영 데이터 2,000장 적용 → 13 후보 → 7 실제 불량 현업 확인** 입니다.
+- `unknown-contrastive` 폴더의 ARI / capture / cross-anchor 등은 **실전 운영 확인 이후**, 추가 개선 및 정량 metric 측정을 위해 생성 데이터를 만들어 개발 중인 보조 지표입니다.
+- 추천서 본문에서는 P1 Unknown 을 `실전 운영 적용 및 현업 확인 (13 후보 / 7 실제 불량, 정량 metric 없음) → 추가 개선/metric 측정을 위한 생성 데이터 PoC` 순서로 씁니다.
+- `실전 운영 검증 완료` 라는 표현이 정량 metric 검증 완료로 오독될 수 있으면 쓰지 말고, **실전 운영 적용 및 현업 확인** 으로 표현합니다.
+- ARI / capture / cross-anchor 를 실전 현업 성과처럼 앞세우거나, 실전 운영 확인보다 먼저 배치하면 안 됩니다.
+- 생성 데이터 지표 라벨은 반드시 `[추가 생성 데이터, 개발 중]` 또는 `[PoC / 생성 평가셋]` 로 둡니다.
+- Unknown recipe 비교표를 넣을 경우 전체 실험 로그를 복붙하지 말고, 대표 recipe 만 압축 표로 넣습니다. 표에는 `Global InfoNCE baseline`, `Local DenseCL`, `MoCo Queue`, `NV-Retriever NEG`, `NeCo`, `NEW recipe 3-seed avg`, `KNN-softmax 후처리`, `cross-anchor stress test` 정도만 남기고, **paper / SOTA / iter / iteration** 같은 논문 운영 표현은 추천서 제출본에서 삭제합니다.
+
+#### ★ P1 Known 2-stage 서술 절대 규칙 — 실전 검증 구조와 생성 데이터 추가 개발 구조 분리 ★
+사용자 직접 정정: **"P1 known 은 2 stage 실전데이터로 검증 한거고 cnn -> roi-yolo 에서 현재 다양한 평가를 위해 생성한 데이터셋으로 cnn->chip-cnn obj id map 으로 분류하려한다"**
+
+- P1 Known 의 **실전 검증 완료 성과**는 반드시 **CNN → ROI-YOLO 2-stage** 로 씁니다.
+- 해당 실전 검증 성과는 추천서 제출본에서 **[실전 현업 데이터] 사내 실제 불량 이미지 데이터, 16-class · 1,500 labeled samples · 4:1 stratified split, weighted F1 0.95** 로 중립 표기합니다. BBD/Overlay/CD 경험 근거처럼 오독되지 않도록 P1 Known 데이터 출처 설명에서 BBD 표현을 반복하지 않습니다.
+- 현재 추가 개발 중인 구조는 기존 **CNN → ROI-YOLO** 구조를 대체/확장하기 위한 **CNN → chip-CNN obj-id map** 구조입니다.
+- `known-cnn` 폴더의 chip-CNN / obj-id map / chip 단위 결함 분류 수치는 **다양한 평가를 위해 생성한 데이터셋 기반의 추가 개발값**입니다.
+- 추천서 본문에서는 P1 Known 을 `실전 데이터로 검증된 CNN → ROI-YOLO 2-stage 성과 → 생성 데이터셋 기반 CNN → chip-CNN obj-id map 추가 개발` 순서로 씁니다.
+- chip-CNN obj-id map 수치를 ROI-YOLO 0.95 와 동일한 실전 현업 성과처럼 쓰거나, 실전 검증 완료 수치로 표현하면 안 됩니다.
+- chip-CNN obj-id map 라벨은 반드시 `[추가 생성 chip 데이터, 개발 중]` 또는 `[PoC / 생성 평가셋]` 로 둡니다.
+
 ### Rule 10: 다이어그램은 텍스트 (이미지 새로 생성 X)
-- 기존 hybrid_fig 6개 (./figures/) 만 활용
 - workflow / architecture flow 는 ASCII 또는 텍스트 박스
 - 새 이미지 생성 시도 금지 ("이미지는 잘 못 만드네" — 사용자 평가)
 
 ### Rule 11: 잘못 박은 표현 (영구 금지)
-- "overlay bit data 분석" — 논문에 없는 표현. **"Photo BBD/Overlay 측정·분석"** 으로 통일
+- "overlay bit data 분석" / BBD 앞에 photo 를 붙이는 표현 — 부정확한 표현. **"BBD 등 불량 / Overlay 측정·분석"** 으로 통일
+- **BBD / Overlay / CD 불량 분석 경험 적용 범위 절대 규칙**: BBD 담당, Overlay, CD 불량 분석은 본인 현업 시절의 경험 자산이며, 이 경험은 **P3 anomaly-detection 의 trend episode 생성 / noise 매핑 / 불량 trend 형상 코드화에 활용한 것**입니다. **P1/P2의 직접 근거로 쓰면 안 됩니다.** P1/P2는 Failbit Map 의미 인지, 현업 사용자 학습, 이미지 처리/모델 설계 경험을 근거로 서술합니다.
 - "wafer bit map (grade 0-7 + BIN) 의미 사전 인지" — 본인 photo 경력에 없는 표현. **"Failbit Map 의미 인지 (인접 부서 협업으로 자연 인지)"** 또는 **"본 과제 시작 시점에 현업 사용자로부터 수개월간 학습"**
 - "도메인 × AI 융합" — 기술 분류표에 들어갈 항목 아님. 강점 narrative 에서만 사용
 - "향후 계획 LLM / 강화학습 ▲" — 보유 기술표에 들어갈 항목 아님
@@ -82,25 +204,37 @@
 - 자료조사 에이전트는 폴더별 독립 병렬 (서로 보지 말 것)
 - 학술 인용 다수 금지 — 핵심 기법만 (사용자 평가: "추천서는 논문이 아니다 핵심 기법만")
 
-### Rule 13: 이미지 활용 규칙 (★★ 사용자 절대 명시 ★★)
+### Rule 13: 이미지 활용 규칙 (★★ 사용자 절대 명시 — 최종 정책 ★★)
 
 **Absolute Rule (위반 시 즉시 정정)**:
 > "chip map이나 wafer map은 절대로 생성하지마라"
-> "E:/data/images 여기서 가져와서 쓰는거다"
+> "E:/data/images 여기서 복사해와서 ./figures/ 유지"
 
-#### 13.1 Chip / Wafer 이미지 = E:/data/images 절대경로 직접 참조
+#### 13.1 ★ 최종 정책: E:/data/images 원본 → ./figures/ 복사 → 추천서 상대경로 사용 ★
+
+**원본 출처** (E:/data/images):
 - **합성 wafer 이미지**: `E:/data/images/unknown/<class>/*.png`
-  - `Center_fork`, `Edge-Ring_bank_boundary`, `Donut_scratch`, `CrossScratch`, `Starburst`, `CenterDonut` 등 wafer-class 폴더
+  - `Center_fork`, `Edge-Ring_bank_boundary`, `Donut_scratch`, `Edge-Top_scratch`, `Edge-Ring_scratch_rot`, `RingDots` 등 wafer-class 폴더
 - **chip 단일 이미지**: `E:/data/images/classification_chips/<obj>/*.png`
   - `bank_boundary`, `fork`, `scratch`, `scratch_rot`, `invalid_main`
 - **chip multi-label 평가**: `E:/data/images/chip_multilabel_v15direct/<class>/*.png`
   - single + 2-combo (`bank_boundary+fork`, `fork+scratch` 등) + Normal + Invalid + OOD (`Starburst`, `CenterDonut`, `CrossScratch`, `DiagonalSmear`)
 - **chip multi-label mega eval**: `E:/data/images/chip_multilabel_mega_eval_n200/<class>/*.png`
-  - 3-combo 까지 포함 (`bank_boundary+fork+scratch` 등)
+  - 3-combo 까지 포함
+
+**복사 destination**: `D:/project/fbm_paper/recommendation/figures/`
+
+**추천서 사용 경로**: `./figures/<filename>.png` (모든 .md 파일이 상대경로 사용)
+
+**작업 flow**:
+1. 이미지 분석 에이전트가 E:/data/images 탐색 → 적절한 wafer/chip 식별
+2. `cp` 로 D:/project/fbm_paper/recommendation/figures/ 에 복사 (파일명 단순화)
+3. 추천서 markdown 에서 `./figures/<filename>.png` 상대경로 참조
 
 #### 13.2 절대 금지
 - **chip map / wafer map 새로 생성 절대 금지** (Python plot / matplotlib / PIL 등 어떤 방법으로도 X)
-- **D 드라이브로 복사 금지** (D 가 100% 가득 참, 그리고 사용자가 "E 에서 가져와서 쓰는 거다" 명시)
+- **추천서 본문에 `E:/data/images/...` 절대경로 직접 삽입 금지**
+- **E:/data/images 에서 선별한 파일은 반드시 `D:/project/fbm_paper/recommendation/figures/` 로 복사 후 `./figures/<filename>.png` 로 참조**
 - **manager_report 의 figs / heatmap / preview 등 보조 이미지를 wafer/chip 대체로 사용 금지**
 - **이미지 파일 절대 삭제 금지** (★ 사용자 직접 명시: "이미지는 절대로 지우지마라")
   - 예외: 사용자가 특정 이미지를 직접 지시하여 삭제 요청한 경우만
@@ -113,9 +247,10 @@
 - 도식 대용 = ASCII 다이어그램 + 실제 wafer 이미지 (E:/data/images/unknown/)
 
 #### 13.3 추천서에 삽입 방식
-- 마크다운: `![캡션](E:/data/images/unknown/Center_fork/<filename>.png)`
-- 또는 `<img src="E:/data/images/.../*.png" />` HTML
-- Word 변환 시 절대경로 그대로 (사용자가 처리)
+- **`./figures/<filename>.png` 상대경로** 사용 (모든 .md 파일 통일)
+- 마크다운: `![캡션](./figures/wafer_center_fork.png)`
+- 또는 `<img src="./figures/<filename>.png" width="200" />` HTML
+- Word 변환 시 같은 폴더 내 figures/ 자동 인식
 
 #### 13.4 다이어그램 / Workflow / Architecture Flow
 - **텍스트(ASCII) 시각화** (이미지로 만들지 X)
@@ -123,8 +258,9 @@
 
 #### 13.5 이미지 분석 에이전트 역할
 - `E:/data/images/` 폴더 탐색해서 적절한 wafer / chip 이미지 식별
-- 추천서 삽입 위치 결정 + 캡션 작성
-- **복사 금지, 절대경로 직접 참조**
+- `cp` 로 `D:/project/fbm_paper/recommendation/figures/` 에 복사 (파일명 단순화)
+- 추천서 markdown 에서 `./figures/` 상대경로 참조
+- 캡션 작성 및 삽입 위치 결정
 
 ### Rule 14: 기술적 해결 방안 표현 규칙 (사용자 첫 메시지 명시)
 사용자 첫 메시지 원문:
@@ -139,7 +275,7 @@
                     ↓ confidence < τ_gate
                   [Stage 2: chip-level CNN]
                     ↓
-                  [obj_id map → G channel]
+                  [chip별 결함 종류 지도 → G channel]
                     ↓
                   [Compound CNN → 33-class]
   ```
@@ -179,7 +315,13 @@
 >
 > 2. 지원서작성 agent
 > .md 파일로 만들면 내가 word로 옮길게
-> 경력 기술서 - 기술 분야     comuter vision llmnlp  강화학습 머신러닝 ai시스템 인지니어링 파이프라인구축 모델 최적화 등
+> -------------------------------------------------------------------------------------
+>
+>
+> 2개 파일을 만들어야 한다  하기 양식말고 다른 양식 추가는 절대금지
+> 1. 경력 기술서, 2. 대표과제 상세 기술서
+> 1. 경력 기술서 - 
+> 기술 분야   예시들알려줄게 이런 형식으로한다  comuter vision llmnlp  강화학습 머신러닝 ai시스템 인지니어링 파이프라인구축 모델 최적화 등 똑같이 하지 않아도된다
 >
 > ai 주요 과제
 >
@@ -192,7 +334,7 @@
 > 각 프로젝트별로
 > 기간, 내용(과제명 리딩 규모 담당업무 과제관리, 설계 개발비중:
 >
-> 대표 과제 상세 기술서
+> 2. 대표 과제 상세 기술서
 > 나는 3개 프로젝트니까 다 적으면되는데
 > 과제 기본정보(과제명:   수행기간:
 >
@@ -204,7 +346,11 @@
 > 기술적 해결 방안( 본인이 직접 수행한 핵심 로직, 데이터 데이터 수집경로, 전처리 기법 및 피처엔지니어링 근거, 알고리즘 선정한 모델 아키텍쳐와 선택 사유(logicc flow 중심), 최적화 : 성능 향상을 위해본인이 직접 시도한 기술적 해법)
 > **실제 코드를 제외한 아키텍쳐 설계도, 플로우 차트 등으로 기술**
 >
-> 구현성과(정량적/정성적 성과, 기술지표 모델 정확도 향상 추론속도 개선 등,       현업 임팩트 수율향ㅇ상 불량률 감소 tat 단축 등 실제 기여도)
+> 구현성과(정량적/정성적 성과, 기술지표 모델 정확도 향상 추론속도 개선 등,       현업 임팩트 수율향상 불량률 감소 tat 단축 등 실제 기여도)
+>
+>
+>
+> -------------------------------------------------------------------------------------
 >
 > 심사위원 에이전트에게 전달하고 피드백 받고
 > 자료조사 에이전트를활용해서 계속 자료들을 조사받아라
@@ -237,6 +383,6 @@
 >   [OUT] D:/project/known-cnn/hybrid_match/_paper_fig_hybrid.py
 >
 > D:\project\known-cnn D:\project\mapviewer D:\project\unknown-contrastive D:\project\anomaly-detection D:\project\fail-map D:\project\fbm_paper
-> 이폴더들 ㅊ마조
+> 이폴더들 참조
 
 위 첫 메시지는 본 작업의 절대 사양이다. 어떤 항목도 빠뜨리지 말 것.
