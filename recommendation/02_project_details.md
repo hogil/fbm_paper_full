@@ -273,7 +273,7 @@ Unknown 불량은 등록 클래스가 아닌 신규 패턴이므로 supervised c
 
 **B0 → NEW 구성요소 영향 확인 (본인 직접 시도 최적화)**: Global InfoNCE baseline 에 MoCo Queue → NV-Retriever 하드 negative 필터 → NeCo 를 단계적으로 적용하여 ARI **0.823 → 0.859** 향상을 확인했습니다.
 
-아래 표는 실전 운영 지표가 아니라, 실전 운영 확인 이후 추가 개선 및 metric 측정을 위해 만든 **[추가 생성 데이터, 개발 중]** 평가 결과입니다. 전 행을 실전 성과로 보지 않고, Unknown 검출기의 구성요소 선택 근거와 후속 개선 방향을 확인하는 보조 지표로 사용합니다.
+아래 표는 실전 운영 지표가 아니라, 실전 운영 확인 이후 추가 개선 및 metric 측정을 위해 만든 **[추가 생성 데이터, 개발 중]** 평가 결과입니다. 전 행을 실전 성과로 보지 않고, Unknown 검출기의 구성요소 선택 근거와 후속 개선 방향을 확인하는 보조 지표로 사용합니다. Row 6/7 (NEW recipe 3-seed avg, NEW + KNN-softmax τ=0.5) 은 same-anchor 평가에서 P1 capture / P2 noise / P3 Completeness / P4 Homogeneity 정량 측정을 완료했고 (P3 0.9938, P4 0.9424 출처: `unknown-contrastive/docs/paper/manager_report/SUMMARY.md` SOTA 표), Row 1-5 는 단계별 구성요소 ablation 단일 측정 snapshot 이며 3-seed 재측정은 대기 상태입니다.
 
 | Recipe **[추가 생성 데이터, 개발 중]** | Capture | Noise | Comp | Hom | ARI | AMI | Sil(cos) | 의미 |
 |----------------------------------------|--------:|------:|-----:|----:|----:|----:|---------:|------|
@@ -282,8 +282,8 @@ Unknown 불량은 등록 클래스가 아닌 신규 패턴이므로 supervised c
 | Global + Local + MoCo Queue 4096 | 1.000 | 1.31% | 0.983 | 0.937 | 0.846 | 0.950 | 0.573 | queue 로 noise 감소 |
 | Global + Local + Queue + NV-Retriever NEG 0.72 | 1.000 | 0.52% | 0.985 | 0.944 | 0.861 | 0.956 | 0.611 | hard negative filtering 효과 |
 | Global + Local + Queue + NEG + NeCo 0.2 | 1.000 | 0.61% | 0.991 | 0.937 | 0.870 | 0.953 | 0.610 | NeCo 적용 시 ARI 상승 |
-| NEW recipe 3-seed avg | 1.000 | 1.48% | 0.994 | 0.942 | 0.859 ± 0.018 | 0.960 | 0.781 | seed 평균 기준 대표값 |
-| NEW + KNN-softmax post (τ=0.5) | 1.000 | 0.00% | 0.994 | 0.942 | 0.868 ± 0.013 | 0.960 | 0.781 | 후처리로 noise 제거 |
+| NEW recipe 3-seed avg | 1.000 | 1.48% | 0.9938 | 0.9424 | 0.859 ± 0.018 | 0.960 | 0.781 | seed 평균 기준 대표값 (same-anchor) |
+| NEW + KNN-softmax post (τ=0.5) | 1.000 | 0.00% | 0.9938 | 0.9424 | 0.868 ± 0.013 | 0.960 | 0.781 | 후처리로 noise 제거 (same-anchor) |
 | NEW recipe cross-anchor | 1.000 | 4.73% | 0.936 | 0.786 | 0.444 | 0.851 | 0.521 | 다른 합성 anchor 에 대한 stress test |
 
 **cross-anchor ARI 0.4437 의 의미**: cross-anchor 는 학습 anchor 와 분포가 다른 별도 생성 anchor (E, 39 class 8,354 PNG) 에 대한 ARI 로, **추가 생성 데이터 내부에서 도메인 shift 영향을 정량화** 하기 위한 stress test 수치입니다. same-anchor 0.8588 ↔ cross-anchor 0.4437 의 gap 은 anchor 분포 차이 영향을 측정한 결과이며, 후속 개선 (anchor diversification + queue tuning) 으로 본인이 2026년 내 cross-anchor ARI 개선을 목표로 추가 개발 중입니다. 본 ARI/cross-anchor 는 모두 추가 생성 데이터 평가용 보조 지표이며, 실전 운영 결과 (5일 학습 + 1일 적용 → 13 후보 → 7 실제 불량 현업 정성 확인) 와는 별도 trace 입니다.

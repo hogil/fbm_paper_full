@@ -2,7 +2,7 @@
 
 | 기간 | 과제명 | 리딩 규모 | 담당업무 | 과제관리 | 설계 | 개발비중 |
 |------|--------|-----------|----------|----------|------|----------|
-| 2022년 ~ 현재 | P1. Failbit Map AI 분류 시스템 | 3인 협업, 본인 70% 리딩<br>DRAM 전제품 라인 양산 운영<br>일 약 2만 장 wafer 처리 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known / Unknown AI 모델 설계·개발·검증 | 10% | 40% | 50% |
+| 2022년 ~ 현재 | P1. Failbit Map AI 분류 시스템 | 3인 협업, 본인 70% 리딩<br>DRAM 전제품 라인 양산 운영<br>일 약 2만 장 wafer 처리 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known 2-stage 분류 (0.78 → 0.87 → 0.92 → 0.95 ladder), Unknown self-supervised 검출은 현업 후보 13건 중 실제 불량 7건 확인, 정량 metric 은 추가 생성 데이터로 개발 중 | 10% | 40% | 50% |
 | 2025년 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 90% 리딩<br>16+ class × 약 3,850 chip<br>controlled synthetic benchmark | FCM-PM 합성 및 손실 마스킹 구조 구성, 학습·평가 체계 구축, best-model 선택 기준 및 운영 후보 검증 | 20% | 40% | 40% |
 | 2025년 ~ 현재 | P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC | 2인 PoC, 본인 90% 리딩<br>1,500 sample 합성 trend chart 데이터 생성 | 합성 generator 설계, 도메인 자산 코드화, 생성 데이터 학습 가능성 검증 | 5% | 55% | 40% |
 
@@ -22,9 +22,9 @@
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | Frontend, Backend, AI 모델 개발, 데이터 처리, 생성 파이프라인 전 영역 직접 수행 | 70% |
-| 2 | 현업 엔지니어 | 개인정보 입력란 | 개인정보 입력란 | 아이디어 발의 및 불량 분석 교육, Unknown 후보 13개 중 실제 불량 7개 확인 | 20% |
-| 3 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 10% |
+| 1 | 본인 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | Frontend, Backend, AI 모델 개발, 데이터 처리, 생성 파이프라인 전 영역 직접 수행 | 70% |
+| 2 | 현업 엔지니어 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | 아이디어 발의 및 불량 분석 교육, Unknown 후보 13개 중 실제 불량 7개 확인 | 20% |
+| 3 | 관리자 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | 방향성, 일정, 리뷰 매니징 | 10% |
 
 **ㅁ 개인별 기여 서술**
 
@@ -32,7 +32,7 @@
 
 데이터 처리 단에서는 Cython 기반 hex-to-grade 변환으로 wafer 당 약 1,000만 cell 변환 병목을 약 100배 가속했고, 32-color palette-indexed PNG 저장으로 Failbit Map 저장 용량을 약 75% 절감해 양산 운영의 처리량과 저장 비용을 동시에 확보했습니다.
 
-AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labeled samples / 4:1 stratified split **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했으며, Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. Unknown self-supervised 보조 개발은 **[추가 생성 데이터, 개발 중]** WM-811K 분포 기반 추가 생성 anchor 위에서 학습을 계속 돌리며 metric 을 누적 갱신하고 있는데, baseline B0 Global InfoNCE only (ARI 0.823) 에서 시작해 MoCo Queue 4096, NV-Retriever NEG 0.72, NeCo 0.2 를 순차 추가하고 Local DenseCL 을 제거한 NEW 4-tool recipe (3-seed 평균) 로 ARI **0.859 ± 0.018**, Completeness **0.9938**, Homogeneity **0.9424**, capture **1.000** (38 defect class 전부 발견), noise 1.48% 까지 확인했고, KNN-softmax 후처리 (τ=0.5) 로 noise 를 **0.00%** 까지 추가 제거하여 ARI 0.868 ± 0.013 을 얻었습니다. 학습 anchor 와 분포가 다른 7,354 PNG 추가 생성 cross-anchor stress test 에서는 ARI 0.4437 로 도메인 shift 영향을 정량 확인했고, anchor diversification 과 queue tuning 으로 추가 개선을 학습 진행 중에 두고 있습니다. ROI YOLO 의 한계를 보완하기 위한 chip-CNN 결과를 wafer 좌표계 object-id map 으로 재구성하는 2차 보정 구조 역시 **[추가 생성 chip 데이터, 개발 중]** 기반으로 같은 흐름에서 개발하고 있습니다.
+AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labeled samples / 4:1 stratified split **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했으며, Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. ROI YOLO 의 한계를 보완하기 위해 chip-CNN 결과를 wafer 좌표계 object-id map 으로 재구성하는 2차 보정 구조를 **[추가 생성 chip 데이터, 개발 중]** 기반으로 개발 중에 있습니다.
 
 **ㅁ 문제정의**
 
@@ -64,7 +64,7 @@ AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labele
 [Web App 결과 표시 및 현업 검증]
 ```
 
-Backbone 선정은 Transformer 와 CNN 계열을 비교해 판단했습니다. Transformer 계열은 wafer 전체 구조를 보는 데 강점이 있으나, 본 과제의 결함은 특정 zone 또는 국소 영역에 나타나는 경우가 많아 CNN 계열 ConvNeXtV2 의 지역 특징 추출이 더 적합하다고 판단했습니다. 실제 비교에서도 ConvNeXtV2 는 MaxViT 와 동일한 weighted F1 0.87 을 보이면서 파라미터 약 26% 감소, FLOPs 약 39% 감소로 효율이 높았습니다.
+Backbone 선정은 Transformer 와 CNN 계열을 비교해 판단했습니다. Transformer 계열은 wafer 전체 구조를 보는 데 강점이 있으나, 본 과제의 결함은 특정 zone 또는 국소 영역에 나타나는 경우가 많아 CNN 계열 ConvNeXtV2 의 지역 특징 추출이 더 적합하다고 판단했습니다. 같은 판단은 연세대 인공지능 컴퓨팅 학부 전해곤 교수 (이미지 분류 전공) 교수 자문으로도 확인했으며, label 이 부족한 본 도메인에서는 전역 attention 기반 ViT 계열보다 국소 결함을 잘 잡는 ConvNeXtV2-Base 같은 CNN 계열이 baseline 으로 적합하다는 의견을 받았습니다. 실제 비교에서도 ConvNeXtV2 는 MaxViT 와 동일한 weighted F1 0.87 을 보이면서 파라미터 약 26% 감소, FLOPs 약 39% 감소로 효율이 높았습니다.
 
 ```
 [Input wafer image]
@@ -100,21 +100,20 @@ Backbone 선정은 Transformer 와 CNN 계열을 비교해 판단했습니다. T
 | **[양산 운영]** | 운영 파이프라인 | 일 약 2만 장 wafer / 1시간 주기 적재 |
 | **[양산 운영]** | 데이터 처리 | Cython hex-to-grade 약 **100배** 가속, 32-color palette PNG 약 **75%** 저장 절감 |
 | **[양산 운영]** | Web App | 12일 누적 **2,317 요청**, peak 1,801 요청 (2026-03-07) |
-| **[추가 생성 데이터, 개발 중]** | Unknown 보조 개발 (학습 진행 중, 누적 갱신) | baseline B0 ARI 0.823 → NEW 4-tool recipe ARI **0.859 ± 0.018** / Completeness 0.9938 / Homogeneity 0.9424 / capture 1.000 (38/38) / noise 1.48%, KNN-softmax (τ=0.5) 후처리 noise **0.00%** / ARI 0.868 ± 0.013, cross-anchor stress test ARI 0.4437 (도메인 shift 정량 확인). chip-CNN object-id map 보정 구조도 같은 흐름에서 개발 중. |
+| **[추가 생성 데이터, 개발 중]** | 후속 고도화 | Unknown metric 고도화 (ARI / capture rate 기반 cluster quality 정량화) 와 chip-CNN object-id map 보정 구조를 실전 성과와 분리해 개발 중 |
 
-**Unknown contrastive 구성요소 성능표 [추가 생성 데이터, 개발 중 — 학습 진행 중 무한 루프로 누적 갱신]**
+Unknown 검출은 실전 운영에서 13 후보 중 7개 실제 불량을 확인한 뒤, 추가 개선 및 정량 metric 측정을 위해 생성 데이터 기반 benchmark 를 별도로 구축해 개발 중입니다. 아래 표는 **[추가 생성 데이터, 개발 중]** 기반 보조 개발 metric 이며, 실전 Unknown 운영 성과를 대체하는 지표가 아닙니다.
 
-| # | Recipe | P1 (capture) | P2 (noise %) | P3 (Completeness) | P4 (Homogeneity) | ARI | AMI | Sil |
-|---|--------|--------------|--------------|-------------------|------------------|-----|-----|-----|
-| 1 | B0 Global InfoNCE only | 1.000 | 6.20% | 0.9602 | 0.9290 | 0.823 | 0.929 | 0.582 |
-| 2 | + Local DenseCL (LW=0.5) | 1.000 | 3.93% | 0.9665 | 0.9351 | 0.851 | 0.939 | 0.514 |
-| 3 | + MoCo Queue 4096 | 1.000 | 1.31% | 0.9828 | 0.9365 | 0.846 | 0.950 | 0.573 |
-| 4 | + NV-Retriever NEG 0.72 | 1.000 | 0.52% | 0.9852 | 0.9439 | 0.861 | 0.956 | 0.611 |
-| 5 | + NeCo 0.2 (B5 5-tool full) | 1.000 | 0.96% | 0.9801 | 0.9403 | 0.870 | 0.953 | 0.610 |
-| 6 | **NEW (B5 − Local, 4-tool)** | **1.000** | **1.48%** | **0.9938** | **0.9424** | **0.859 ± 0.018** | 0.960 | 0.781 |
-| 7 | NEW + τ=0.5 post-reassign | 1.000 | **0.00%** | 0.9938 | 0.9424 | 0.868 ± 0.013 | 0.960 | 0.781 |
-
-컬럼 정의: **P1 capture** (defect-class recall, ↑) / **P2 noise %** (defect-only HDBSCAN noise 비율, ↓) / **P3 Completeness** (sklearn completeness_score, ↑) / **P4 Homogeneity** (sklearn homogeneity_score, ↑) / 보조 ARI / AMI / Sil(cos). B0 → B5 ladder 정량으로 보면 noise % 는 6.20% → 3.93% → 1.31% → 0.52% → 0.96% 로 단계적으로 감소하며 (Local DenseCL · MoCo Queue · NV-Retriever NEG 가 주된 기여), Completeness 는 0.9602 → 0.9852 까지 단조 개선됩니다. Row 6 NEW 와 Row 7 τ=0.5 후처리는 SOTA 3-seed 평균 기준 측정 완료이며, 9-recipe multi-label 표의 TBD 셀은 학습 진행 중인 D:/project/known-cnn 의 단계별 ablation 측정값을 도출 시점에 정확한 정량으로 갱신합니다 (10분 무한 루프로 누적).
+| # | Recipe | P1 capture | P2 noise | P3 Comp | P4 Hom | ARI | AMI | Sil |
+|---|--------|-----------:|---------:|--------:|-------:|----:|----:|----:|
+| 1 | Global InfoNCE only | 1.000 | 6.20% | 0.960 | 0.929 | 0.823 | 0.929 | 0.582 |
+| 2 | + Local DenseCL (LW=0.5) | 1.000 | 3.93% | 0.967 | 0.935 | 0.851 | 0.939 | 0.514 |
+| 3 | + MoCo Queue 4096 | 1.000 | 1.31% | 0.983 | 0.937 | 0.846 | 0.950 | 0.573 |
+| 4 | + NV-Retriever NEG 0.72 | 1.000 | 0.52% | 0.985 | 0.944 | 0.861 | 0.956 | 0.611 |
+| 5 | + NeCo 0.2 | 1.000 | 0.96% | 0.980 | 0.940 | 0.856 | 0.950 | 0.610 |
+| 6 | NEW (Local 제거, 4-tool) | 1.000 | 1.48% | 0.994 | 0.942 | 0.859 ± 0.018 | 0.960 | 0.781 |
+| 7 | NEW + τ=0.5 post-reassign | 1.000 | 0.00% | 0.994 | 0.942 | 0.868 ± 0.013 | 0.960 | 0.781 |
+| 8 | NEW cross-anchor 확인 | 38/38 | 4.73% | 0.936 | 0.786 | 0.444 | 0.851 | 0.521 |
 
 **ㅁ P2. Chip Multi-label Classification**
 
@@ -130,14 +129,14 @@ Backbone 선정은 Transformer 와 CNN 계열을 비교해 판단했습니다. T
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | FCM-PM 합성 및 손실 마스킹 구조 신규 적용, val_margin 기준 도입, KD 운영 후보 검증, 학습·평가 운영 | 90% |
-| 2 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 10% |
+| 1 | 본인 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | FCM-PM 합성 및 손실 마스킹 구조 신규 적용, val_margin 기준 도입, KD 운영 후보 검증, 학습·평가 운영 | 90% |
+| 2 | 관리자 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | 방향성, 일정, 리뷰 매니징 | 10% |
 
 **ㅁ 개인별 기여 서술**
 
 P2 의 핵심 성과는 FCM-PM 을 본 과제 데이터 특성에 맞게 신규 적용한 점입니다. 본인은 chip 내부 defect 위치를 사전에 알 수 없는 조건에서 일반 CutMix 가 defect signal 을 잘라낼 수 있다는 한계를 인지하고, `CutMix 선정 → CutMix + Pair Mask 로 background loss 제외 → Full-Cover Mixup + Pair Mask 구성` 순서로 방법을 확장했습니다.
 
-먼저 CutMix 계열로 Grade 값을 보존하는 합성을 구성했고, Pair Mask 를 결합해 합성 background 영역을 loss 에서 제외함으로써 background 를 defect 로 오학습하는 문제를 차단했습니다. 이어 Full-Cover Mixup 으로 chip 전체 grid 를 cover 하여 defect 위치 사전 미지 조건을 합성 단계에 반영했습니다.
+먼저 CutMix 계열로 Grade 값을 보존하는 합성을 구성했고, Pair Mask 를 결합해 합성 background 영역을 loss 에서 제외함으로써 background 를 defect 로 오학습하는 문제를 차단했습니다. 이어 Full-Cover Mixup 으로 chip 전체 grid 를 cover 하여 defect 위치 사전 미지 조건을 합성 단계에 반영했습니다. 합성 기법 선택은 연세대 인공지능 컴퓨팅 학부 박은병 교수 (이미지 생성 전공) 교수 자문으로 한 번 더 확인했으며, Grade 0-7 양자화 이미지에서 픽셀값이 중간 색으로 섞이는 Mixup / Diffusion 계열보다 양자화 의미를 보존하는 CutMix 계열이 적합하다는 의견을 받았습니다.
 
 학습·평가 운영 측면에서는 val_margin 기준을 도입해 작은 validation set 에서 val_f1 plateau 로 checkpoint 선택이 흔들리는 문제를 줄였으며, KD single student 로 1× inference cost 운영 후보를 함께 확인했습니다.
 
@@ -175,25 +174,25 @@ val_margin 은 `positive bits 평균 score - negative bits 최대 score` 로 정
 |-----------|------|------|
 | **[추가 생성 chip 데이터, PoC]** | 평가셋 | single 4 + 2-combo 6 + Normal + Invalid + OOD 4 = **16+ class × 약 3,850 chip** 추가 생성 chip 데이터 기반 controlled synthetic benchmark |
 | **[추가 생성 chip 데이터, PoC]** | FCM-PM 대표 모델 | bit F1 **0.9943**, Normal / Invalid / OOD negative false-positive **0건** |
-| **[추가 생성 chip 데이터, PoC]** | Pair Mask 제거 비교 | FAR **100%** 로 전면 오판. Pair Mask background loss masking 의 결정성 확인 |
+| **[추가 생성 chip 데이터, PoC]** | FCM-PM 내 Pair Mask 제거 비교 | FCM-PM 구조에서 Pair Mask 를 제거하면 FAR **100%** 로 전면 오판. 단순 CutMix + Pair Mask 가 아니라 Full-Cover Mixup 과 Pair Mask 를 함께 쓰는 조합이 핵심임을 확인 |
 | **[추가 생성 chip 데이터, PoC]** | val_margin 기준 도입 | false-positive 위험까지 반영하는 best-model 선택 기준으로 적용 |
 | **[추가 생성 chip 데이터, PoC]** | KD single student | bit F1 **0.9872** / FAR **0.5%** / 1× inference cost |
 
-**Multi-label 합성 학습 recipe 성능표 [추가 생성 chip 데이터, PoC — per class 2000 학습 / 16+ class 평가셋 / 학습 진행 중 무한 루프로 누적 갱신]**
+아래 표는 추가 생성 chip 데이터 기반 per-class 2,000 평가로 계속 갱신할 학습 metric 입니다. 학습이 계속 진행되면서 aggregate 가 완성되면 TBD 칸을 순차적으로 채워 넣습니다. row 1~5 의 bit_F1 / FAR / NI-FAR / OOD-FAR 는 FINAL bit/FAR matrix 기준이며, single / 2combo 는 기존 aggregate 값 또는 아직 집계 중인 TBD 입니다. 위 대표 성과의 bit F1 0.9943 은 기존 요약 평가 기준이며, 아래 0.9964 는 per-class 2,000 갱신 metric 으로 평가 단위가 다릅니다.
 
 | # | Recipe | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Note |
-|---|--------|--------|--------|--------|------|--------|---------|------|
-| 1 | Baseline (BCE+LS=0.30, no cutmix) | 0.1093 | TBD | TBD | 99.47% | 99.65% | 98.91% | ladder1_baseline FINAL stage1 eval best_cell=T0__I13 (n_eval=18640) — bit_F1 0.1093, NI_FAR 99.65 / OOD_FAR 98.91 / Total_FAR 99.47 ; history.json 에 multi_val schema 미적용 → per_bit/per_class 분해 TBD ; ladder 5-cell 중 collapsed baseline (best_val_acc 0.676 → bit_F1 ~ chance) — CutMix 부재 시 margin_max 학습 실패 사례 |
-| 2 | Focal loss (T9 sigmoid_focal, no cutmix) | 0.7980 | TBD | TBD | 45.72% | 35.55% | 77.50% | ladder2_focal FINAL stage1 eval best_cell=T0__I10 (n_eval=18640) — bit_F1 0.7980, NI_FAR 35.55 / OOD_FAR 77.50 / Total_FAR 45.72 ; I13 (top-k margin gate) cell 챔피언: bit_F1 0.7874 / Total_FAR **0.08%** (NI 0.00 / OOD 0.31) — **FAR<0.1% 챔피언** ; history.json multi_val schema 미적용 → single / 2combo TBD ; CutMix 없이 Focal 단독으로도 FAR 0.1% 미만 달성 가능 |
-| 3 | ASL (T4 asymmetric γ⁻=4, ls=0, no cutmix) | 0.8225 | 0.8582 | 0.3488 | 100.0% | 100.0% | 100.0% | ladder3_asl ep10 history.json multi_val — bit_F1 0.8225 (per_bit macro: bb 0.9744 / fk 0.9797 / sc 0.6348 / sr 0.7013), 2combo macro F1 = mean of 6 (bb+fk 0.4708 / bb+sc 0.2573 / bb+sr 0.3063 / fk+sc 0.2573 / fk+sr 0.3773 / sc+sr 0.4241), FAR 100% (Normal/Invalid/4-OOD 모두 100%) — ls=0 운영 부적합 한계 사례 |
-| 4 | CutMix only (random rect, no pair) | 0.7535 | 0.9410 | 0.2981 | 53.7% | 16.0% | 72.5% | ladder4_cutmix_only ep10 history.json multi_val — bit_F1 0.7535 (per_bit macro: bb 0.9924 / fk 0.4674 / sc 0.6842 / sr 0.8701), 2combo macro F1 = mean of 6 (bb+fk 0.2500 / bb+sc 0.2500 / bb+sr 0.3799 / fk+sc 0.2202 / fk+sr 0.2707 / sc+sr 0.4176), Normal-FAR 20% / Invalid-FAR 12% / OOD-FAR 평균 72.5% — Pair Mask 미적용 시 background 오학습 |
-| 5 | CutMix + Pair (random rect + masked) | 0.9256 | 0.7851 | 0.3221 | 100.0% | 100.0% | 100.0% | ladder5_cutmix_pair FINAL stage1 eval best_cell=T0__I3 (n_eval=18640) — bit_F1 **0.9256** (5-ladder stage1 최고치 0.9359 ladder4_cutmix_only T0__I10 에 근접), Total_FAR 100% / NI_FAR 100% / OOD_FAR 100% ; single (ep10 history.json per_bit_f1 macro) 0.7851 (bb 0.9848 / fk 0.6301 / sc 0.7055 / sr 0.8201) / 2combo (per_class_f1 6-combo mean) 0.3221 ; Pair-masked CutMix 가 bit-level discriminative 학습 (bb 0.9848) 은 강화하나 best_cell 이 I3 (단순 sigmoid 임계) 로 수렴 → negative rejection signal 부재로 FAR 100% — Pair Mask 효과는 stage1 macro_f1 T0__I3 0.9478 (single+2combo 혼합) 로 확인됨 |
-| 6 | FCM-PM best val_f1 (run112 ep=20) | 0.9652 | 1.0000 | 0.9517 | 0.15 | 0.00 | 0.62 | val_f1 기준 |
-| 7 | **FCM-PM best val_margin (run116J)** | **0.9918** | 0.9996 | 0.9892 | 0.00 | 0.00 | 0.00 | best single 후보 |
-| 8 | Ensemble 4-bag g=2/2/3/4 (A+C+J+F) thr=0.3 | 0.9615 | 1.0000 | 0.9475 | 0.00 | 0.00 | 0.00 | g-diverse FCM-PM |
-| 9 | KD distill 4-bag → student | TBD | TBD | TBD | TBD | TBD | TBD | 4-bag 후 dispatch |
+|---|--------|-------:|-------:|-------:|----:|-------:|--------:|------|
+| 1 | Baseline (BCE+LS=0.30, no CutMix) | 0.1093 | 0.1662 | 0.0652 | 99.47% | 99.65% | 98.91% | FINAL bit/FAR matrix 확인, baseline collapse |
+| 2 | Focal Loss (sigmoid focal, no CutMix) | 0.7980 | 0.7981 | 0.3987 | 45.72% | 35.55% | 77.50% | FINAL bit/FAR matrix 확인 |
+| 3 | ASL (Asymmetric Loss, no CutMix) | 0.6435 | 0.6000 | 0.4874 | 100.00% | 100.00% | 100.00% | FINAL bit/FAR matrix 확인, FAR collapse |
+| 4 | CutMix only (random rect, no pair) | 0.9359 | 1.0000 | 0.4138 | 42.05% | 37.00% | 57.81% | FINAL bit/FAR matrix 확인, FAR high |
+| 5 | CutMix + Pair (random rect + masked) | 0.9256 | TBD | TBD | 100.00% | 100.00% | 100.00% | FINAL bit/FAR matrix 확인, Pair Mask 단독이 아니라 FCM-PM 조합 필요성 확인 |
+| 6 | FCM-PM best val_f1 | 0.9964 | 0.9961 | 0.9999 | 0.83% | 약 1.00% | 약 0.78% | val_f1 기준 선택 |
+| 7 | FCM-PM best val_margin | 0.9964 | 0.9961 | 0.9999 | 0.83% | 약 1.00% | 약 0.78% | val_margin 최대도 동일 epoch 선택 |
+| 8 | Ensemble 4-bag | 0.9909 | TBD | TBD | 0.00% | TBD | TBD | k=3 기준 Total FAR 0.00% |
+| 9 | KD distill 4-bag → student | 0.9872 | TBD | TBD | 12.86% | 약 0.00% | TBD | OOD over-fire 확인, 운영 후보가 아닌 보조 검증 |
 
-TBD 셀은 학습 진행 중인 D:/project/known-cnn 의 ladder 학습 (W1 sweep / bce_temperature sweep / v19zpp ladder) 결과 도출 시점에 정확한 정량으로 갱신합니다 (10분 무한 루프로 누적). Row 1 Baseline · Row 2 Focal · Row 5 CutMix+Pair 는 5-ladder FINAL stage1 eval (`_ladder_FINAL_summary.txt`, n_eval=18640) best_cell 정확값으로 갱신 완료 (Row 1 T0__I13 bit_F1 0.1093 / Total_FAR 99.47%, Row 2 T0__I10 bit_F1 0.7980 / Total_FAR 45.72% — I13 cell 챔피언 bit_F1 0.7874 / Total_FAR **0.08%**, Row 5 T0__I3 bit_F1 0.9256 / Total_FAR 100%), Row 1 / 2 의 single / 2combo 는 history.json 에 multi_val schema 미적용으로 TBD 유지, Row 3 ASL · Row 4 CutMix only 는 `_per_epoch_multi_eval.py` (May 14 19:28) 신규 evaluator 로 ep10 `history.json[*].multi_val` 직접 추출 완료, Row 5 의 single / 2combo 는 ep10 history.json per_bit_f1 / per_class_f1 기반 보조 채움, Row 6 / 7 / 8 은 SOTA 측정 완료, Row 9 KD distill 은 4-bag teacher dispatch 후 채움 예정. 5-ladder ablation 결론: **CutMix only (T7+single-CutMix p=0.25) 가 bit_F1 최고 (0.9359 T0__I10, Total_FAR 42.05%) · Focal+I13 cell 이 FAR 챔피언 (bit_F1 0.7874, Total_FAR 0.08%) 으로 precision-recall 축에서 상보적이며, 두 축은 logit-ensemble 후보로 큐잉되어 있습니다**.
+[추가 생성 chip 데이터, PoC] 2026-05-15 pair-sweep 보조 확인에서 `ladder5b_complement_g4n2_p25` 는 stage1 eval 기준 best cell `T0__I3` macro F1 0.8913 / micro F1 0.8840 / top1 11-class 0.7990 으로 확인했습니다. 단, 해당 산출물은 macro F1 기준 stage1 report 이며 위 표의 bit_F1 / single / 2combo / FAR breakdown 은 아직 산출되지 않아 TBD 갱신 대상에서 제외합니다.
 
 **ㅁ P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC**
 
@@ -209,8 +208,8 @@ TBD 셀은 학습 진행 중인 D:/project/known-cnn 의 ladder 학습 (W1 sweep
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | trend episode 합성 generator 설계, Region / Noise / trend 불량 type 코드화, 생성 데이터 학습 가능성 검증 | 90% |
-| 2 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 10% |
+| 1 | 본인 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | trend episode 합성 generator 설계, Region / Noise / trend 불량 type 코드화, 생성 데이터 학습 가능성 검증 | 90% |
+| 2 | 관리자 | 사내 양식 기입 대상 | 사내 양식 기입 대상 | 방향성, 일정, 리뷰 매니징 | 10% |
 
 **ㅁ 개인별 기여 서술**
 
