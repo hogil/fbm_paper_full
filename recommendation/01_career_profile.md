@@ -2,13 +2,14 @@
 
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|----------------|
-| Computer Vision | Image Classification, Object Detection, ROI-based Two-stage Classification, Multi-label Image Classification, Spatial Feature Map Reconstruction |
-| Self-Supervised / Unsupervised Learning | Contrastive Learning, Representation Learning, Clustering-based Novelty / Anomaly Detection, Self-supervised Pretraining, Domain Adaptation |
-| Synthetic Data Generation / Data Augmentation | CutMix 계열 Augmentation, Full-Cover Mixup, Pair Mask 기반 Loss Masking, Image and Time-series Synthetic Dataset Generation |
-| Model Optimization / Model Selection | Bayesian Hyperparameter Optimization (Optuna), Loss Function Design, Label Smoothing, Temperature Scaling, Margin-based Checkpoint Selection, Ensemble, Knowledge Distillation |
-| MLOps / Data Pipeline Engineering | Batch Ingestion, ETL Pipeline, Object Storage Integration, Periodic Data Loading, Model Evaluation Pipeline |
-| AI System Engineering / Web Application | FastAPI Backend, JavaScript Frontend, WebGL2 Visualization, Role-Based Access Control (RBAC), SAML Single Sign-On |
-| High-Performance Data Processing | Cython Acceleration, Numba, pyvips, Large-scale Image Encoding, Palette-indexed PNG Compression |
+| Computer Vision | Image Classification, Object Detection, Multi-label Classification, Feature Representation Learning, Image-based Defect Detection |
+| Deep Learning | CNN Backbone Modeling, Transfer Learning, Fine-tuning, Loss Function Design, Regularization |
+| Self-Supervised Learning | Contrastive Learning, Self-supervised Representation Learning, Embedding Learning |
+| Unsupervised Learning | Clustering, Novelty Detection, Anomaly Detection, Out-of-Distribution Detection |
+| Synthetic Data Generation / Data Augmentation | Synthetic Dataset Generation, Data Augmentation, Mixup, CutMix, Noise Injection |
+| Model Optimization / Model Selection | Hyperparameter Optimization, Model Selection, Threshold Optimization, Calibration, Ensemble, Knowledge Distillation |
+| Data Engineering / MLOps | ETL Pipeline, Batch Processing, Object Storage Integration, Model Evaluation Pipeline, Experiment Tracking |
+| AI Application Engineering | Backend API, Web Application, Data Visualization, Access Control, Single Sign-On |
 
 ---
 
