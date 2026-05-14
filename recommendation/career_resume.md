@@ -3,7 +3,7 @@
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|------------------------|
 | Computer Vision | Image Classification, Object Detection, ROI-based Two-stage Classification, Multi-label Image Classification, Spatial Feature Map Reconstruction |
-| Self-Supervised / Unsupervised Learning | Contrastive Learning, Representation Learning, Clustering-based Novelty / Anomaly Detection, Test-Time Adaptive Pretraining (TAPT) |
+| Self-Supervised / Unsupervised Learning | Contrastive Learning, Representation Learning, Clustering-based Novelty / Anomaly Detection, Self-supervised Pretraining, Domain Adaptation |
 | Synthetic Data Generation / Data Augmentation | CutMix 계열 Augmentation, Full-Cover Mixup, Pair Mask 기반 Loss Masking, Image and Time-series Synthetic Dataset Generation |
 | Model Optimization / Model Selection | Bayesian Hyperparameter Optimization (Optuna), Loss Function Design, Label Smoothing, Temperature Scaling, Margin-based Checkpoint Selection, Ensemble, Knowledge Distillation |
 | MLOps / Data Pipeline Engineering | Batch Ingestion, ETL Pipeline, Object Storage Integration, Periodic Data Loading, Model Evaluation Pipeline |
