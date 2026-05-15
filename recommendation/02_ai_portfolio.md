@@ -2,9 +2,9 @@
 
 | 기간 | 과제명 | 리딩 규모 | 담당업무 | 과제관리 | 설계 | 개발비중 |
 |------|--------|-----------|----------|----------|------|----------|
-| 2024년 ~ 현재 | P1. Failbit Map Known & Unknown 불량 분석 아키텍처 | 3인 협업, 본인 60% 담당<br>DRAM 전제품 라인<br>일 약 2만 장 wafer 운영 데이터 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known / Unknown AI 모델 설계, 개발 및 검증 | 10% | 40% | 50% |
-| 2025년 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 80% 담당<br>16+ class<br>약 3,850 chip 통제 합성 평가셋 | FCM-PM 합성 및 손실 마스킹 구조 구성, 학습 및 평가 체계 구축, 최종 모델 선택 기준과 KD 압축 가능성 검토 | 20% | 40% | 40% |
-| 2025년 ~ 현재 | P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증 | 2인 PoC, 본인 80% 담당<br>총 7,000 sample<br>normal 3,500 + 불량 5종×700 | Domain Knowledge 기반 데이터 합성 generator 설계, trend 불량 rule 코드화, AI 기준 모델 fine-tuning 및 성능 검증 | 5% | 55% | 40% |
+| 2024년 10월 ~ 현재 | P1. Failbit Map Known & Unknown 불량 분석 아키텍처 | 3인 협업, 본인 60% 담당<br>DRAM 전제품 라인<br>일 약 2만 장 wafer 운영 데이터 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known / Unknown AI 모델 설계, 개발 및 검증 | 10% | 40% | 50% |
+| 2025년 3월 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 80% 담당<br>16+ class<br>약 3,850 chip 통제 합성 평가셋 | FCM-PM 합성 및 손실 마스킹 구조 구성, 학습 및 평가 체계 구축, 최종 모델 선택 기준과 KD 압축 가능성 검토 | 20% | 40% | 40% |
+| 2026년 1월 ~ 현재 | P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증 | 2인 PoC, 본인 80% 담당<br>총 7,000 sample<br>normal 3,500 + 불량 5종×700 | Domain Knowledge 기반 데이터 합성 generator 설계, trend 불량 rule 코드화, AI 기준 모델 fine-tuning 및 성능 검증 | 5% | 55% | 40% |
 
 ## 2. 대표 과제 상세 기술서
 
@@ -19,7 +19,7 @@
 | 항목 | 내용 |
 |------|------|
 | 과제명 | Failbit Map Known & Unknown 불량 분석 아키텍처 |
-| 수행기간 | 2024년 ~ 현재 |
+| 수행기간 | 2024년 10월 ~ 현재 |
 | 참여인원 | 본인 / 현업 엔지니어 / 관리자 |
 | 과제 개요 및 규모 | Failbit Map raw log 를 이미지와 chip 좌표 데이터로 변환해 Web App 에서 조회하고, Known 분류와 Unknown 후보 검출까지 연결한 양산 운영 과제입니다. DRAM 전제품 라인에서 일 약 2만 장 wafer 를 1시간 주기로 적재합니다. |
 
@@ -204,8 +204,8 @@ ROI YOLO 2-stage 보정 흐름은 아래 예시처럼 잡았습니다. GT 가 ce
 
 | 항목 | 내용 |
 |------|------|
-| 과제명 | Chip multi-label classification - CutMix → CutMix + Pair Mask → FCM-PM |
-| 수행기간 | 2025년 ~ 현재 |
+| 과제명 | Chip Multi-label Classification |
+| 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 | 과제 개요 및 규모 | 실제 환경에서 multi-label 불량 조합 label 을 충분히 모으기 어렵다는 조건을 두고, single-label 불량 chip 을 조합해 multi-label 불량을 예측하도록 만든 PoC 입니다. single 4 class 기반으로 2-combo, Normal, Invalid, OOD 를 포함한 16+ class × 약 3,850 chip 통제 합성 평가셋을 구성했습니다. |
 
@@ -348,7 +348,7 @@ val_margin = 0.90 - 0.31 = 0.59
 | 항목 | 내용 |
 |------|------|
 | 과제명 | Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증 |
-| 수행기간 | 2025년 ~ 현재 |
+| 수행기간 | 2026년 1월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 | 과제 개요 및 규모 | 실전 abnormal label 이 부족한 상태에서 detector 를 먼저 고도화하기보다, 학습 가능한 trend abnormal 데이터를 만드는 데이터 생성 PoC 입니다. normal 3,500 + 불량 5종 각 700 = 불량 3,500, 총 7,000 sample 합성 trend chart 평가셋을 만들었습니다. |
 
@@ -444,5 +444,5 @@ val_margin = 0.90 - 0.31 = 0.59
 
 [정량적/정성적 성과]
 
-- 기술 지표: [합성 trend chart, PoC] normal **3,500건**과 불량 5종 각 **700건**으로 불량 **3,500건**, 총 **7,000 sample** 의 합성 trend chart 평가셋을 만들고 224×224 chart PNG 로 rendering 했습니다. 1단계 정상/이상 분류에서는 Binary F1 **0.9967**, Abnormal Recall **0.9987** 을 확인했습니다. 2단계 5개 불량 type 분류는 mean_shift 와 drift 혼동이 남아 있어 generator rule 과 label definition 을 같이 보정하는 단계입니다.
+- 기술 지표: [합성 trend chart, PoC] normal **3,500건**과 불량 5종 각 **700건**으로 불량 **3,500건**, 총 **7,000 sample** 의 합성 trend chart 평가셋을 만들고 224×224 chart PNG 로 rendering 했습니다. 1단계 정상/이상 분류에서는 Binary F1 **0.9967**, Abnormal Recall **0.9987**, 5개 seed 반복 평가 **0.9944~0.9988** 을 확인했습니다. 2단계 5개 불량 type 분류는 mean_shift 와 drift 혼동이 남아 있어 generator rule 과 label definition 을 같이 보정하는 단계입니다.
 - 현업 임팩트: BBD / Overlay / CD 현업 trend 판단 기준을 synthetic data generator 로 옮겨, 실전 abnormal label 이 부족한 상태에서도 anomaly detector 검증을 시작할 수 있는 데이터 기반을 만들었습니다. 이 수치는 실전 운영 성능이 아니라 생성 rule 이 정상/이상 구분 신호를 담고 있는지 확인한 PoC 결과이며, 실제 chart 적용 전 단계로 구분했습니다.
