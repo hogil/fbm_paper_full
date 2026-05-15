@@ -32,7 +32,7 @@
 
 데이터 처리 단에서는 Cython 기반 hex-to-grade 변환으로 wafer 당 약 1,000만 cell 변환 병목을 약 100배 가속했고, 32-color palette-indexed PNG 저장으로 Failbit Map 저장 용량을 약 75% 절감해 양산 운영의 처리량과 저장 비용을 동시에 확보했습니다.
 
-AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labeled samples / 4:1 stratified split **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했으며, Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. 후속 개선 및 지표 측정용으로 **[추가 생성 데이터, 개발 중]** WM-811K 분포 기반 추가 생성 anchor 셋 (9,250 wafer / 43 defect class + Normal) 에서 보조 metric 을 확인하고 있고, 최종 recipe 에서 capture 43/43, ARI 0.859 ± 0.018 까지 도달한 수준입니다. ROI YOLO 의 한계를 보완하기 위한 chip-CNN 결과를 wafer 좌표 보정 지도 (object-id map) 로 재구성하는 2차 보정 구조 역시 **[추가 생성 chip 데이터, 개발 중]** 기준 V3 obj-only chipgrid val_f1 0.9946 / test_f1 0.9872, 5-seed 평균 val_f1 0.9838 ± 0.0092 로 추가 개발하고 있습니다.
+AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labeled samples / 4:1 stratified split **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했습니다. Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. 후속 개선 및 지표 측정용으로 **[추가 생성 데이터, 개발 중]** WM-811K 분포 기반 추가 생성 anchor 셋 (9,250 wafer / 43 defect class + Normal) 에서 보조 metric 을 확인하고 있고, 최종 recipe 에서 capture 43/43, ARI 0.859 ± 0.018 까지 도달한 수준입니다. ROI YOLO 의 한계를 보완하기 위한 chip-CNN 결과를 wafer 좌표 보정 지도 (object-id map) 로 재구성하는 2차 보정 구조 역시 **[추가 생성 chip 데이터, 개발 중]** 기준 V3 obj-only chipgrid val_f1 0.9946 / test_f1 0.9872, 5-seed 평균 val_f1 0.9838 ± 0.0092 로 추가 개발하고 있습니다.
 
 **ㅁ 문제정의**
 
@@ -153,7 +153,7 @@ chip-CNN object-id map 재구성 결과는 raw wafer map 으로는 center 영역
 | **[양산 운영]** | 운영 파이프라인 | 일 약 2만 장 wafer / 1시간 주기 적재 |
 | **[양산 운영]** | 데이터 처리 | Cython hex-to-grade 약 **100배** 가속, 32-color palette PNG 약 **75%** 저장 절감 |
 | **[양산 운영]** | Web App | 12일 누적 **2,317 요청**, peak 1,801 요청 (2026-03-07) |
-| **[추가 생성 데이터, 개발 중]** | Unknown 후속 개선 및 지표 측정용 보조 metric | baseline 대비 최종 recipe 에서 ARI 0.859 ± 0.018, Completeness 0.9938, Homogeneity 0.9424, defect class capture 43/43, noise 1.48%. 후처리 (noise 임계 τ=0.5) 로 noise 0.00%, ARI 0.868 ± 0.013. cross-anchor 평가에서는 capture 38/38, ARI 0.4437 로 도메인 shift 영향 확인. |
+| **[추가 생성 데이터, 개발 중]** | Unknown 후속 개선 및 지표 측정용 보조 metric | **최종 recipe**: ARI 0.859 ± 0.018, Completeness 0.9938, Homogeneity 0.9424, defect class capture 43/43, noise 1.48%.<br>**후처리** (noise 임계 τ=0.5): noise 0.00%, ARI 0.868 ± 0.013.<br>**cross-anchor 평가**: capture 38/38, ARI 0.4437 로 도메인 shift 영향 함께 점검 중. |
 | **[추가 생성 chip 데이터, 개발 중]** | chip-CNN object-id map 보정 구조 | V3 obj-only chipgrid 32×32×5 one-hot 기준 val_f1 **0.9946**, test_f1 **0.9872**, 5-seed 평균 val_f1 **0.9838 ± 0.0092**. ROI YOLO 의 한계를 보완하기 위한 wafer 좌표 보정 지도 (object-id map) 재구성 구조로 개발 중. |
 
 **Unknown contrastive 구성요소 성능표 [추가 생성 데이터, 개발 중]**
@@ -312,12 +312,12 @@ positive bits     negative bits
 | 3 | ASL (asymmetric, label smoothing 0, no cutmix) | 0.6435 | TBD | TBD | 100.0% | 100.0% | 100.0% | 최신 ladder final 기준 negative rejection 실패. single / 2combo 분해는 후속 검증 중 |
 | 4 | CutMix only (random rect, no pair) | 0.9359 | TBD | TBD | 42.05% | 37.00% | 57.81% | CutMix 도입으로 bit_F1 은 회복되나, Pair Mask 미적용 시 background 영역까지 defect 로 오학습되어 FAR 이 운영 부적합 수준으로 남음 |
 | 5 | CutMix + Pair (random rect + masked) | 0.9256 | 0.7851 | 0.3221 | 100.0% | 100.0% | 100.0% | bit-level 학습 (bb 0.9848) 은 강화되나 단일 sigmoid 임계 셀로 수렴해 negative rejection signal 부재. Full-Cover Mixup 까지 결합한 FCM-PM 의 필요성 확인 사례 |
-| 6 | FCM-PM val_f1 criterion (run116J ep1) | 0.9422 | TBD | TBD | 0.00% | TBD | TBD | 같은 recipe 에서 val_f1 기준 checkpoint 선택 사례 |
+| 6 | FCM-PM val_f1 criterion (run116J ep1) | 0.9422 | TBD | TBD | 0.00% | TBD | TBD | 같은 recipe 에서 val_f1 기준 checkpoint 선택 사례. val_margin 기준으로 재선택한 row 7 이 대표 모델로 채택됨 |
 | 7 | FCM-PM val_margin criterion (run116J ep6) | 0.9943 | TBD | TBD | 0.00% | 0.00% | 0.00% | val_margin 기준 대표 모델 |
 | 8 | 4-bag majority 2/4 ensemble | 0.9167 | TBD | TBD | 4.05% | 4.10% | 3.91% | ensemble 보조 실험. FCM-PM 단일 대표 모델보다 낮아 주 성과로 쓰지 않음 |
 | 9 | KD distill 4-bag → student | TBD | TBD | TBD | TBD | TBD | TBD | 1× inference cost 압축 후보. OOD 포함 Total FAR 리스크로 후속 검증 중 |
 
-표는 학습 단계별 비교 측정을 정리한 것입니다. Baseline / Focal 의 single / 2combo 는 추가 측정으로 보강했고, KD distill student 는 제출 성과에서 제외하고 후속 검증 중인 압축 후보로만 관리합니다. 단계별 비교 요약: CutMix 단독은 bit_F1 은 회복되나 FAR 기준으로는 운영 부적합했고, FCM-PM + val_margin 에서 bit_F1 0.9943 / Total FAR 0.00% 로 균형이 개선되었습니다.
+표는 학습 단계별 비교 측정을 정리한 것입니다. Row 1-2 의 single / 2combo 수치는 별도 ladder 측정 시점 결과로 row 3-5 의 TBD 와는 동일 측정 batch 가 아니며, 동일 batch 재측정은 후속 검증에서 보강합니다. KD distill student 는 제출 성과에서 제외하고 후속 검증 중인 압축 후보로만 관리합니다. 단계별 비교 요약: CutMix 단독은 bit_F1 은 회복되나 FAR 기준으로는 운영 부적합했고, FCM-PM + val_margin 에서 bit_F1 0.9943 / Total FAR 0.00% 로 균형이 개선되었습니다.
 
 추가 보조 확인 [추가 생성 chip 데이터, PoC]: Pair Mask 변형 2종 (Complement + Pair Mask, Single Pair Mask) 도 bit_F1 0.8743 / Total FAR 100% 로 negative false-positive 를 억제하지 못해, Full-Cover Mixup 과 Pair Mask 의 결합 (FCM-PM) 이 필요한 이유를 보조 확인했습니다.
 
@@ -402,7 +402,7 @@ P3는 현업 trend 통계와 불량 발생 양상을 synthetic generator 로 코
 
 **ㅁ 구현 성과**
 
-_데이터 생성 그룹 (주 성과)_
+**데이터 생성 그룹 (주 성과)**
 
 | 라벨 그룹 | 구분 | 성과 |
 |-----------|------|------|
@@ -413,7 +413,7 @@ _데이터 생성 그룹 (주 성과)_
 | **[합성 trend chart, PoC]** | trend 불량 코드화 | mean_shift / std / spike / drift 4종 + context 1종 |
 | **[합성 trend chart, PoC]** | chart rendering | 224×224 chart PNG, 12-25 episode mix |
 
-_검증용 baseline 학습 그룹 (생성 데이터 학습 가능성 확인)_
+**검증용 baseline 학습 그룹 (생성 데이터 학습 가능성 확인)**
 
 아래 baseline 수치는 위 데이터 생성 그룹이 학습 가능한 자산인지 확인한 부속 검증입니다.
 
