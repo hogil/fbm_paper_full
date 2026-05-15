@@ -4,7 +4,7 @@
 |------|--------|-----------|----------|----------|------|----------|
 | 2024년 ~ 현재 | P1. Failbit Map Known & Unknown 불량 분석 아키텍처 | 3인 협업, 본인 60% 담당<br>DRAM 전제품 라인<br>일 약 2만 장 wafer 운영 데이터 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known / Unknown AI 모델 설계, 개발 및 검증 | 10% | 40% | 50% |
 | 2025년 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 80% 담당<br>16+ class<br>약 3,850 chip 통제 합성 평가셋 | FCM-PM 합성 및 손실 마스킹 구조 구성, 학습 및 평가 체계 구축, 최종 모델 선택 기준과 KD 압축 가능성 검토 | 20% | 40% | 40% |
-| 2025년 ~ 현재 | P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 검증 PoC | 2인 PoC, 본인 80% 담당<br>총 1,500 sample<br>합성 trend chart 평가셋 | 합성 generator 설계, 도메인 자산 코드화, 생성 데이터의 정상/이상 구분 신호 확인 | 5% | 55% | 40% |
+| 2025년 ~ 현재 | P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증 | 2인 PoC, 본인 80% 담당<br>총 1,500 sample<br>합성 trend chart 평가셋 | 합성 generator 설계, 도메인 자산 코드화, 생성 데이터의 정상/이상 구분 신호 확인 | 5% | 55% | 40% |
 
 ## 2. 대표 과제 상세 기술서
 
@@ -351,7 +351,7 @@ val_margin = 0.90 - 0.31 = 0.59
 
 [추가 생성 chip 데이터, PoC] 세부 구성요소 제거 비교 실험 수치는 실험 로그로 분리하고, 본문에서는 FCM-PM 조합 필요성을 보여주는 보조 근거로만 정리했습니다.
 
-**ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 검증 PoC**
+**ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증**
 
 핵심은 BBD / Overlay / CD 현업 trend 판단 기준을 모델보다 먼저 생성 데이터 구조로 옮긴 점입니다.
 
@@ -361,7 +361,7 @@ val_margin = 0.90 - 0.31 = 0.59
 
 | 항목 | 내용 |
 |------|------|
-| 과제명 | Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 검증 PoC |
+| 과제명 | Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증 |
 | 수행기간 | 2025년 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 | 과제 개요 및 규모 | 실전 abnormal label 이 부족한 상태에서 detector 를 먼저 고도화하기보다, 학습 가능한 trend abnormal 데이터를 만드는 데이터 생성 PoC 입니다. normal 750 + abnormal 5종 각 150, 총 1,500 sample 합성 trend chart 평가셋을 만들었습니다. |

@@ -53,7 +53,7 @@
 - AI 기술: Multi-label chip classification, CutMix, CutMix + Pair Mask, FCM-PM, Pair Mask 기반 배경 영역 loss 제외, val_margin / best-margin 모델 선택, asymmetric pos/neg target, Label Smoothing, Temperature scaling, 4-bag ensemble, Knowledge Distillation
 - 방법론: Grade 값을 보존하기 위해 CutMix 계열을 선택했고, defect 위치를 미리 알 수 없는 조건은 Full-Cover Mixup 으로 반영했습니다. 합성 배경 영역이 defect 로 학습되는 문제는 Pair Mask 로 loss 에서 제외했습니다.
 
-**ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 검증 PoC**
+**ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증**
 
 핵심은 BBD / Overlay / CD 현업 trend 판단 기준을 모델보다 먼저 생성 데이터 구조로 옮긴 점입니다.
 
@@ -91,7 +91,7 @@
 - 담당 업무: 합성 및 손실 마스킹 구조 구성, 학습 및 평가 체계 구축, 모델 선택 기준 및 운영 가능성 검토
 - 비중: 관리 20% / 설계 40% / 개발 40%
 
-**P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 검증 PoC**
+**P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증**
 
 - 기간: 2025년 ~ 현재
 - 내용: trend episode 합성, Region/Noise/불량 type 코드화, 정상 산포 기준 anomaly 강도 하한 보정, 생성 데이터 확인용 기준 모델 학습 안정화
