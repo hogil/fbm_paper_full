@@ -15,7 +15,7 @@
 
 ## 2. 업무경력
 
-> 본인은 반도체 현장에서 익힌 문제 이해를 AI 모델과 학습 데이터 설계에 옮겨, 현업 검토 흐름과 연결하는 과제를 진행해 왔습니다.
+> 세 과제 모두 현업 데이터가 바로 모델 학습에 쓰이기 어려운 상황에서 시작했습니다. 본인은 데이터를 모델이 학습할 수 있는 형태로 바꾸고, 모델 결과가 현업 검토로 이어지도록 운영 흐름까지 함께 만들었습니다.
 
 **ㅁ P1. Failbit Map Known & Unknown 불량 분석 아키텍처**
 
@@ -37,11 +37,11 @@
 
 **ㅁ P2. Chip Multi-label Classification**
 
-확보 가능한 single-label 불량 chip 으로 multi-label 조합 학습을 구성한 PoC입니다.
+현업에서 바로 모으기 어려운 multi-label 조합을 single-label 불량 chip 기반으로 풀어본 과제입니다.
 
 (1) 과제 개요 및 규모 / 담당 역할 / 수행 업무 / 성과
 
-- 과제 개요 및 규모: 2025년 3월부터 현재까지 실제 환경에서 multi-label 불량 조합 label 을 충분히 모으기 어렵다는 조건을 두고, single-label 불량 chip 을 조합해 multi-label 불량을 예측하도록 만든 PoC입니다. single 4 class 기반으로 2-combo, Normal, Invalid, OOD 를 포함한 16+ class × 약 3,850 chip 통제 합성 평가셋을 구성했습니다.
+- 과제 개요 및 규모: 2025년 3월부터 현재까지 실제 환경에서 multi-label 불량 조합 label 을 충분히 모으기 어렵다는 조건을 두고, single-label 불량 chip 을 조합해 multi-label 불량 학습 및 검증을 진행한 과제입니다. single 4 class 기반으로 2-combo, Normal, Invalid, OOD 를 포함한 16+ class × 약 3,850 chip 통제 합성 평가셋을 구성했습니다.
 - 담당 역할: 본인 80% / 관리자 20%
 - 수행 업무: CutMix 계열 선정, FCM-PM(Full-Cover Mixup + Pair Mask) 합성 구조 적용, single 4 → 16+ multi-label / OOD 평가 구성, val_margin 기반 모델 선택 기준 도입, Label Smoothing, Temperature scaling, 4-bag ensemble, KD 단일 모델 압축 검토
 - 성과: [추가 생성 chip 데이터, PoC] 최신 per-class 2,000 갱신 평가 기준 bit F1 0.9964, Total FAR 0.83% 입니다. 기존 요약 평가셋 기준으로는 bit F1 0.9943, Normal/Invalid/OOD 오탐 0건이었습니다. 운영 적용 전 PoC 수치입니다.
@@ -55,18 +55,18 @@
 
 **ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증**
 
-BBD / Overlay / CD 현업 trend 판단 기준을 생성 데이터 구조로 옮긴 PoC입니다.
+BBD(현업 trend 항목) / Overlay(정렬 계측) / CD(선폭 계측) 업무에서 보던 trend 판단 기준을 생성 데이터 구조로 옮긴 과제입니다.
 
 (1) 과제 개요 및 규모 / 담당 역할 / 수행 업무 / 성과
 
-- 과제 개요 및 규모: 2026년 1월부터 현재까지 실전 abnormal label 이 부족한 상태에서 detector 를 먼저 고도화하기보다, 학습 가능한 trend abnormal 데이터를 만드는 데이터 생성 PoC입니다. normal 3,500 + 불량 5종 각 700 = 불량 3,500, 총 7,000 sample 합성 trend chart 평가셋을 만들었습니다.
+- 과제 개요 및 규모: 2026년 1월부터 현재까지 실전 abnormal label 이 부족한 상태에서 detector 를 먼저 고도화하기보다, 학습 가능한 trend abnormal 데이터를 먼저 만드는 과제입니다. normal 3,500 + 불량 5종 각 700 = 불량 3,500, 총 7,000 sample 합성 trend chart 평가셋을 만들었습니다.
 - 담당 역할: 본인 80% / 관리자 20%
-- 수행 업무: Region 5종(정상 / 희소 / 공핍 / 얇은 계측 / 결핍), Noise 3종(Gaussian noise=설비 산포 / Laplacian noise=hunting / correlation noise=drift), 불량 5종 trend 합성 generator, 정상 산포 기준 anomaly 강도 하한 보정, 1단계 정상/이상 분류 기준 모델 검증, 2단계 5개 불량 유형 분류 규칙 보정
-- 성과: [합성 trend chart, PoC] 1단계 정상/이상 분류에서 Binary F1 0.9967, Abnormal Recall 0.9987, 5개 seed 반복 평가 0.9944~0.9988 이 나왔습니다. 실전 성능이 아니라 생성 데이터에 정상/이상 구분 신호가 있는지 본 참고 수치입니다.
+- 수행 업무: Region 5종(정상 / 희소 / 공핍 / 얇은 계측 / 결핍), Noise 3종(Gaussian noise=설비 산포 / Laplacian noise=hunting, 목표값 주변 흔들림 / correlation noise=drift, 시간 방향 변화), 불량 5종 trend 합성 generator, 정상 산포 기준 anomaly 강도 하한 보정, 1단계 정상/이상 분류 기준 모델 검증, 2단계 5개 불량 유형 분류 규칙 보정
+- 성과: [합성 trend chart, PoC] 1단계 정상/이상 분류에서 Binary F1 0.9967, Abnormal Recall 0.9987, 5개 seed 반복 평가 0.9944~0.9988 이 나왔습니다. 이 값은 실전 운영 성능 주장이 아니라, 생성 데이터에 정상/이상 구분 신호가 들어갔는지 확인한 기준 모델 결과입니다.
 - 상태: 아직 실전 현업 데이터 검증 단계는 아니며, 생성 데이터와 기준 모델 결과를 분리해 관리하고 있습니다.
 
 (2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론
 
-- 도메인: BBD / Overlay / CD trend chart, 계측 밀도 차이, 설비 산포, hunting, drift, context pattern
+- 도메인: BBD(현업 trend 항목) / Overlay(정렬 계측) / CD(선폭 계측) trend chart, 계측 밀도 차이, 설비 산포, hunting(목표값 주변 흔들림), drift(시간 방향 변화), context pattern
 - AI 기술: synthetic trend episode generation, 계측 밀도 코드화, statistical noise injection, trend anomaly shape catalog, 정상 산포 기준 anomaly strength calibration, 생성 데이터 확인용 기준 모델 학습 안정화
 - 방법론: 실제 운영 chart 처럼 결핍 영역, 희소 영역, 공핍 영역을 만들고, Gaussian noise / Laplacian noise / correlation noise 로 설비 산포, hunting, drift 를 분리했습니다. 정상 산포에 묻히는 약한 이상은 최소 anomaly 강도를 보정했습니다.

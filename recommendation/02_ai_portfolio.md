@@ -23,23 +23,23 @@
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 제출 전 기입 | 제출 전 기입 | 데이터 변환/저장/조회 파이프라인, Web App, Known/Unknown 모델 기술 구현 | 60% |
-| 2 | 현업 엔지니어 | 제출 전 기입 | 제출 전 기입 | 현업 문제정의 및 불량 분석 교육 | 20% |
-| 3 | 관리자 | 제출 전 기입 | 제출 전 기입 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 본인 | 공식 과제기록 기준 | 공식 과제기록 기준 | 데이터 변환/저장/조회 파이프라인, Web App, Known/Unknown 모델 기술 구현 | 60% |
+| 2 | 현업 엔지니어 | 공식 과제기록 기준 | 공식 과제기록 기준 | 현업 문제정의 및 불량 분석 교육 | 20% |
+| 3 | 관리자 | 공식 과제기록 기준 | 공식 과제기록 기준 | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
 
 [본인이 독자적으로 수행한 핵심 모듈]
 
-- Failbit Map raw log 변환, palette PNG 저장, chip 좌표 JSON 생성, Web App 조회 흐름, Known 2-stage 분류, Unknown 자기지도 후보 검출 구조를 직접 설계 및 구현했습니다.
-- 타 구성원과 구분되는 본인 담당영역은 반도체 Failbit Map 을 모델 입력 데이터와 운영 서비스 구조로 바꾸는 기술 구현 전반입니다. 현업 엔지니어는 문제정의와 불량 분석 교육을 맡았고, 관리자는 방향성, 일정 및 리뷰를 맡았습니다.
-- 본인의 기술적 해결책은 대량 map 을 실제로 적재, 조회, 분류할 수 있는 운영 기반을 만든 데 영향을 주었습니다. 성능 수치와 운영 수치는 `구현 성과`에서 데이터 출처별로 분리했습니다.
+- 현업 엔지니어가 불량 기준과 판독 기준을 정리하면, 본인은 설비 raw log 를 Web App 과 모델이 바로 쓸 수 있는 Failbit Map 이미지, chip 좌표 JSON, palette PNG 로 바꾸는 부분을 맡았습니다.
+- Known 분류는 wafer 전체를 먼저 보는 ConvNeXtV2 와 저신뢰 샘플을 다시 보는 ROI YOLO 로 나눴고, Unknown 은 위치 의미가 사라지지 않도록 6×6 local sampling 과 Local InfoNCE 를 넣었습니다.
+- 관리자는 일정과 리뷰를 맡았고, 본인이 직접 붙인 부분은 데이터 변환부터 모델 결과를 현업 화면에 올리는 기술 흐름입니다. 성능과 운영 수치는 아래 구현 성과에 데이터 출처별로 분리했습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | Failbit Map 은 EDS Test 결과를 wafer 당 약 1,000만 개 block 의 Grade 0~7로 표현한 초고해상도 데이터입니다. 수율, BIN, FTN/QTN 같은 Measure 요약값만으로는 불량의 위치, 형상, 밀집도, 방향성을 확인하기 어렵기 때문에 map 기반 전수 분석이 필요했습니다. |
+| 현장 난제 | Failbit Map 은 EDS Test 결과를 wafer 당 약 1,000만 개 block 의 Grade 0~7로 표현한 초고해상도 데이터입니다. 수율, BIN(불량 bin 분류), FTN/QTN(검사 요약 지표) 같은 Measure 요약값만으로는 불량의 위치, 형상, 밀집도, 방향성을 확인하기 어렵기 때문에 map 기반 전수 분석이 필요했습니다. |
 | 기존 방식의 한계 | 기존 환경은 설비 raw log 를 요청 시점에 받아 변환하는 온디맨드 방식에 가까웠고, wafer 당 10~50MB 수준의 log 를 대량 변환, 저장 및 조회하기 어려웠습니다. 전 제품 기준 일 약 2만 장 wafer 가 발생하지만 엔지니어가 한 번에 확인할 수 있는 map 은 약 48매 수준이었고, 불량 유형 판정도 수작업에 의존했습니다. |
 | 기술적 / 환경적 제약 | 1시간 주기 자동 적재, wafer 당 약 1,000만 grade 변환, 대량 이미지 저장 용량, Web App 응답성, 16 class / 1,500 labeled sample 의 label 부족, low-confidence Known class 보정, 사전 class 가 없는 Unknown 후보 검출을 동시에 해결해야 했습니다. 특히 wafer map 은 같은 모양이라도 center / edge / top / bottom 등 발생 위치에 따라 다른 불량으로 해석될 수 있어, 위치 정보를 모델 구조에 반영해야 했습니다. |
 
@@ -122,7 +122,7 @@ Backbone 은 Transformer 계열과 CNN 계열을 함께 비교했습니다. Tran
 
 Unknown 검출은 정답 class 를 미리 정의하기 어려운 운영 이미지를 후보 grouping 문제로 봤습니다. 단순히 wafer 전체 모양만 임베딩하면 center, edge, top, bottom 처럼 위치가 다른 불량을 같은 그룹으로 묶을 수 있습니다. 그래서 6×6 grid structured local sampling 으로 위치별 특징을 뽑고, Local InfoNCE loss 를 함께 적용해 발생 영역 정보가 임베딩에 남도록 했습니다. 이후 HDBSCAN 으로 유사 패턴을 묶어 현업 검토 후보로 올렸습니다.
 
-학습/평가에 사용된 실제 wafer 이미지 예시입니다.
+[실전 현업 라벨 데이터] Known/Unknown 흐름을 설명하기 위해 넣은 대표 wafer map 예시입니다.
 
 | Edge-Top Scratch | Edge-Ring Scratch_rot | Center Bank-Boundary |
 |:----------------:|:---------------------:|:--------------------:|
@@ -199,22 +199,22 @@ ROI YOLO 2-stage 보정 흐름은 아래 예시처럼 잡았습니다. GT 가 ce
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 제출 전 기입 | 제출 전 기입 | FCM-PM 합성 및 손실 마스킹 구조 적용, val_margin 기준 도입, KD 압축 모델 가능성 검토, 학습 및 평가 운영 | 80% |
-| 2 | 관리자 | 제출 전 기입 | 제출 전 기입 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 본인 | 공식 과제기록 기준 | 공식 과제기록 기준 | FCM-PM 합성 및 손실 마스킹 구조 적용, val_margin 기준 도입, KD 압축 모델 가능성 검토, 학습 및 평가 운영 | 80% |
+| 2 | 관리자 | 공식 과제기록 기준 | 공식 과제기록 기준 | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
 
 [본인이 독자적으로 수행한 핵심 모듈]
 
-- single-label defect chip 을 조합해 multi-label 학습 데이터를 만드는 FCM-PM(Full-Cover Mixup + Pair Mask) 합성 구조, loss 마스킹, val_margin 기준, KD student 압축 실험을 직접 설계 및 검증했습니다.
-- 타 구성원과 구분되는 본인 담당영역은 실제로 확보 가능한 single-label chip 만으로 multi-label 조합 문제를 만들고, 각 single class 를 빠짐없이 맞히는 학습 및 평가 구조를 만든 부분입니다. 관리자는 방향성, 일정 및 리뷰를 담당했습니다.
-- 본인의 기술적 해결책은 label 부족 문제를 데이터 합성 문제로 바꿔 학습 가능하게 만든 데 있습니다. 일반 CutMix 에서 불량 신호가 잘리는 문제는 Full-Cover Mixup 으로 줄였고, 합성 background 를 defect 로 학습하는 문제는 Pair Mask 로 막았습니다.
+- 이 과제는 처음부터 운영 label 이 충분한 문제가 아니었습니다. 본인은 단일 불량 chip 을 조합해 multi-label 학습 샘플을 만들고, 조합 안의 각 단일 불량을 빠짐없이 맞히는 평가 흐름을 잡았습니다.
+- 일반 CutMix 만 쓰면 불량 영역이 잘려 나가거나 배경이 defect 로 학습되는 문제가 있어, chip 전체를 덮는 Full-Cover Mixup 과 배경 loss 를 제외하는 Pair Mask 를 같이 적용했습니다.
+- 관리자는 방향성과 리뷰를 맡았고, 합성 방식, loss 마스킹, val_margin 기준, KD student 검토는 본인이 실험과 평가까지 직접 진행했습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | multi-label 불량 조합 label 을 충분히 확보하기 어렵고, 실제로는 single-label 불량 chip 중심으로 데이터가 쌓입니다. |
+| 현장 난제 | 현장에는 single-label 불량 chip 은 비교적 쌓이지만, 두 개 이상 불량이 한 chip 안에 같이 들어간 multi-label label 은 의도적으로 모으기 어렵습니다. 운영 데이터만 기다리면 조합 class 를 학습할 만큼 균형 잡힌 샘플을 만들기 어렵습니다. |
 | 기존 방식의 한계 | single-label 불량을 단순 조합하면 multi-label chip 안의 각 single class 를 안정적으로 맞춰야 하는데, 일반 CutMix 는 일부 영역만 잘라 붙이므로 불량 신호가 잘릴 수 있습니다. 배경 영역까지 defect 로 학습하면 Normal / Invalid / OOD 평가에서 오탐이 증가합니다. |
 | 기술적 / 환경적 제약 | single-label 기반 multi-label 조합 생성, chip 내부 defect 위치 사전 미지, 작은 검증셋, OOD 및 Normal/Invalid 오탐 억제, 추론 비용 제약이 동시에 존재했습니다. |
 
@@ -320,8 +320,10 @@ val_margin = 0.90 - 0.31 = 0.59
 
 [정량적/정성적 성과]
 
-- 기술 지표: [추가 생성 chip 데이터, PoC] single 4 + 2-combo 6 + Normal + Invalid + OOD 4 로 **16+ class × 약 3,850 chip** 통제 합성 평가셋을 만들었습니다. FCM-PM 대표 모델은 기존 요약 평가셋 기준 bit F1 **0.9943**, Normal / Invalid / OOD 오탐 **0건**이었습니다. per-class 2,000 갱신 평가에서는 bit F1 **0.9964**, Total FAR **0.83%** 로 나왔고, 4-bag ensemble 은 bit F1 **0.9909**, Total FAR **0.00%** 로 오탐 안정성을 봤습니다.
-- 현업 임팩트(운영 적용 전 PoC): 실제 현업에서는 multi-label 불량 조합 label 을 충분히 모으기 어렵습니다. 이 과제에서는 single-label defect chip 만으로 multi-label 조합 학습과 검증을 시작할 수 있는 방법을 만들었습니다. Full-Cover Mixup 과 Pair Mask 구성요소 제거 비교에서는 일부 변형이 Total FAR **100.00%** 로 실패했고, 이 결과를 보고 FCM-PM 조합을 유지했습니다. 아직 실전 운영 적용에 따른 수율, 불량률, 검토 시간 개선 수치는 없습니다. KD student 는 bit F1 **0.9872** 였지만 가혹 조건 FAR **12.86%** 로 확인되어, 운영 적용 전 보정 대상으로 분리했습니다.
+- 기술 지표(데이터): [추가 생성 chip 데이터, PoC] single 4 + 2-combo 6 + Normal + Invalid + OOD 4 로 **16+ class × 약 3,850 chip** 통제 합성 평가셋을 만들었습니다.
+- 기술 지표(모델): FCM-PM 대표 모델은 기존 요약 평가셋 기준 bit F1 **0.9943**, Normal / Invalid / OOD 오탐 **0건**이었습니다. per-class 2,000 갱신 평가에서는 bit F1 **0.9964**, Total FAR **0.83%** 로 나왔고, 4-bag ensemble 은 bit F1 **0.9909**, Total FAR **0.00%** 로 오탐 안정성을 봤습니다.
+- 현업 임팩트(운영 적용 전 PoC): single-label defect chip 만으로 multi-label 조합 학습과 검증을 시작할 수 있는 방법을 만들었습니다. Full-Cover Mixup 과 Pair Mask 구성요소 제거 비교에서는 일부 변형이 Total FAR **100.00%** 로 실패했고, 이 결과를 보고 FCM-PM 조합을 유지했습니다.
+- 남은 부분: 아직 실전 운영 적용에 따른 수율, 불량률, 검토 시간 개선 수치는 없습니다. KD student 는 bit F1 **0.9872** 였지만 가혹 조건 FAR **12.86%** 로 확인되어, 운영 적용 전 보정 대상으로 분리했습니다.
 
 **ㅁ P3. Domain Knowledge 기반 Trend Anomaly 데이터 생성 및 불량 검증**
 
@@ -338,22 +340,22 @@ val_margin = 0.90 - 0.31 = 0.59
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 제출 전 기입 | 제출 전 기입 | Domain Knowledge 기반 trend episode 합성 generator 설계, Region / Noise / trend 불량 type 코드화, AI 기준 모델 fine-tuning 및 성능 검증 | 80% |
-| 2 | 관리자 | 제출 전 기입 | 제출 전 기입 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 본인 | 공식 과제기록 기준 | 공식 과제기록 기준 | Domain Knowledge 기반 trend episode 합성 generator 설계, Region / Noise / trend 불량 type 코드화, AI 기준 모델 fine-tuning 및 성능 검증 | 80% |
+| 2 | 관리자 | 공식 과제기록 기준 | 공식 과제기록 기준 | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
 
 [본인이 독자적으로 수행한 핵심 모듈]
 
-- BBD / Overlay / CD 현업 trend 경험을 바탕으로 Region 5종, Noise 3종, trend 불량 5종을 조합하는 Domain Knowledge 기반 trend episode 합성 generator 를 직접 설계했습니다.
-- 타 구성원과 구분되는 본인 담당영역은 현업 chart 에서 보던 결핍 영역, 희소 영역, 공핍 영역, 얇은 계측 영역과 Gaussian noise(설비 산포), Laplacian noise(hunting), correlation noise(drift)를 생성 규칙으로 옮긴 부분입니다. 관리자는 방향성, 일정 및 리뷰를 담당했습니다.
-- 본인의 기술적 해결책은 실전 abnormal label 이 부족한 상황에서 먼저 학습 가능한 데이터셋을 만든 데 있습니다. 2단계 불량 유형 분류는 라벨 정의와 생성 규칙을 함께 보정하는 단계로 분리했습니다.
+- P3는 모델부터 키운 과제가 아니라, 현업 trend chart 가 실제로 어떻게 흔들리고 비는지를 데이터 생성 규칙으로 옮기는 작업이었습니다.
+- 본인은 BBD(현업 trend 항목) / Overlay(정렬 계측) / CD(선폭 계측) 업무에서 보던 결핍, 희소, 공핍, 얇은 계측 영역을 Region rule 로 만들고, 설비 산포 / hunting(목표값 주변 흔들림) / drift(시간 방향 변화) 를 noise 조건으로 분리했습니다.
+- 관리자는 방향성과 리뷰를 맡았고, 본인은 생성기 설계, 7,000 sample 구성, 정상/이상 기준 모델 점검, 유형 분류 rule 보정까지 담당했습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | trend 이상은 단순 threshold 만으로 판정하기 어렵고, 설비 산포 / hunting / drift / baseline 평탄도 / spec-in 변동 가능성을 함께 봐야 합니다. |
+| 현장 난제 | trend 이상은 단순 threshold 만으로 판정하기 어렵고, 설비 산포 / hunting(목표값 주변 흔들림) / drift(시간 방향 변화) / baseline 평탄도 / spec-in 변동 가능성을 함께 봐야 합니다. |
 | 기존 방식의 한계 | 실전 trend abnormal data 는 충분한 양과 균형 label 을 확보하기 어렵고, 수작업 chart 판독은 누락 가능성과 시간 소모가 큽니다. |
 | 기술적 / 환경적 제약 | 실전 label 이 부족하므로, 먼저 현업 trend 판단 기준을 AI 검증용 synthetic data 로 옮기는 것이 핵심입니다. |
 
@@ -361,14 +363,14 @@ val_margin = 0.90 - 0.31 = 0.59
 
 [본인이 직접 수행한 핵심 로직]
 
-- 데이터 : BBD / Overlay / CD 현업 trend 경험에서 봤던 정상 chart, 희소 영역, 공핍 영역, 얇은 계측 영역, 결핍 영역을 Region 5종으로 코드화했습니다. 설비 산포는 Gaussian noise, hunting 유사 흔들림은 Laplacian noise, drift 유사 흐름은 correlation noise 로 분리해 synthetic trend episode 의 입력 조건으로 만들었습니다.
+- 데이터 : BBD(현업 trend 항목) / Overlay(정렬 계측) / CD(선폭 계측) 현업 trend 경험에서 봤던 정상 chart, 희소 영역, 공핍 영역, 얇은 계측 영역, 결핍 영역을 Region 5종으로 코드화했습니다. 설비 산포는 Gaussian noise, hunting 은 Laplacian noise, drift 는 correlation noise 로 분리해 synthetic trend episode 의 입력 조건으로 만들었습니다.
 - 알고리즘: 모델을 먼저 고도화하기보다 `domain knowledge → synthetic generator → 기준 모델 검증` 흐름을 선택했습니다. 실전 abnormal label 이 부족한 상태에서 복잡한 detector 를 바로 학습하면 모델 성능보다 데이터 편향을 먼저 학습할 수 있기 때문입니다. 생성된 chart 는 1단계 정상/이상 이진 분류로 정상/이상 구분 신호를 먼저 확인했고, 2단계 5개 불량 유형 분류는 라벨 정의와 생성 규칙 보정 대상으로 분리했습니다.
 - 최적화: 생성 데이터가 너무 쉬운 문제가 되지 않도록 정상 산포 기준 최소 이상 강도를 보정했고, normal chart 가 과도하게 흔들리지 않도록 target_std 를 정상 wafer 내부 산포 범위 안에서 제한했습니다. mean_shift / std / spike / drift / context 유형 혼동이 보이면 모델보다 생성 규칙과 라벨 정의를 먼저 보정하는 기준을 두었습니다.
 
 **ㅁ 실제 코드를 제외한 아키텍쳐 설계도 / 플로우차트**
 
 ```
-[BBD / Overlay / CD 현업 trend 경험]
+[BBD(현업 trend 항목) / Overlay(정렬 계측) / CD(선폭 계측) 현업 trend 경험]
         ↓
 [Region 5종: 정상 / 희소 / 공핍 / 얇은 계측 / 결핍 영역]
         ↓
@@ -426,5 +428,7 @@ val_margin = 0.90 - 0.31 = 0.59
 
 [정량적/정성적 성과]
 
-- 기술 지표: [합성 trend chart, PoC] normal **3,500건**과 불량 5종 각 **700건**으로 불량 **3,500건**, 총 **7,000 sample** 의 합성 trend chart 평가셋을 만들고 224×224 chart PNG 로 rendering 했습니다. 1단계 정상/이상 분류에서는 Binary F1 **0.9967**, Abnormal Recall **0.9987**, 5개 seed 반복 평가 **0.9944~0.9988** 이 나왔습니다. 2단계 5개 불량 유형 분류는 mean_shift 와 drift 혼동이 남아 있어 생성 규칙과 라벨 정의를 같이 보정하는 단계입니다.
-- 현업 임팩트(운영 적용 전 PoC): BBD / Overlay / CD 현업 trend 판단 기준을 synthetic data generator 로 옮겨, 실전 abnormal label 이 부족한 상태에서도 anomaly detector 검증을 시작할 수 있는 데이터 기반을 만들었습니다. 이 수치는 실전 운영 성능이 아니라 생성 규칙이 정상/이상 구분 신호를 담고 있는지 본 PoC 결과입니다. 실제 chart 적용 전 단계이며, 아직 실전 운영 적용에 따른 수율, 불량률, 검토 시간 개선 수치는 없습니다.
+- 기술 지표(데이터): [합성 trend chart, PoC] normal **3,500건**과 불량 5종 각 **700건**으로 불량 **3,500건**, 총 **7,000 sample** 의 합성 trend chart 평가셋을 만들고 224×224 chart PNG 로 rendering 했습니다.
+- 기술 지표(기준 모델): 1단계 정상/이상 분류에서는 Binary F1 **0.9967**, Abnormal Recall **0.9987**, 5개 seed 반복 평가 **0.9944~0.9988** 이 나왔습니다. 이 값은 실전 운영 성능이 아니라 생성 rule 이 정상/이상 구분 신호를 담고 있는지 확인한 기준 모델 결과입니다.
+- 현업 임팩트(운영 적용 전 PoC): BBD / Overlay / CD 현업 trend 판단 기준을 synthetic data generator 로 옮겨, 실전 abnormal label 이 부족한 상태에서도 anomaly detector 검증을 시작할 수 있는 데이터 기반을 만들었습니다.
+- 남은 부분: 2단계 5개 불량 유형 분류는 mean_shift 와 drift 혼동이 남아 있어 생성 규칙과 라벨 정의를 같이 보정하는 단계입니다. 실제 chart 적용 전 단계이며, 아직 실전 운영 적용에 따른 수율, 불량률, 검토 시간 개선 수치는 없습니다.
