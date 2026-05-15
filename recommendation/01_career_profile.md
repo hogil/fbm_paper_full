@@ -96,5 +96,5 @@
 - 기간: 2025년 ~ 현재
 - 내용: trend episode 합성, Region/Noise/불량 type 코드화, 정상 산포 기준 anomaly 강도 하한 보정, 생성 데이터 확인용 기준 모델 학습 안정화
 - 리딩 규모: 2인 PoC, 본인 80% 담당. normal 3,500 + 불량 5종 각 700 = 불량 3,500, 총 7,000 sample 합성 trend chart 평가셋 규모
-- 담당 업무: 합성 generator 설계, 도메인 자산 코드화, 생성 데이터의 정상/이상 구분 신호 확인
+- 담당 업무: Domain Knowledge 기반 데이터 합성 generator 설계, trend 불량 rule 코드화, AI 기준 모델 fine-tuning 및 성능 검증
 - 비중: 관리 5% / 설계 55% / 개발 40%
