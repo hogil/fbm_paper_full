@@ -13,17 +13,11 @@
 
 ## 2. 업무경력
 
-본인은 반도체 분석 현장에서 쌓은 도메인 이해를 AI 모델 설계, 학습 데이터 생성, 손실 함수 정의, 운영 단계 false-positive 제어까지 한 줄로 이어 현업 문제를 줄이는 방향으로 일해 왔습니다. 아래 세 과제는 모두 이 흐름 위에 있습니다.
-
-**※ 제출 대표 성과 기준**
-
-본 문서에서 제출 대표 성과로 읽어야 할 수치는 P1 양산 운영 파이프라인 (일 약 2만 장 / 1시간 주기, Known weighted F1 0.95, Unknown 13 후보 중 7 실제 불량 확인) 과 P2 FCM-PM val_margin 단일 모델 (bit_F1 0.9943 / Total FAR 0.00%) 입니다. Unknown 후속 metric, chip-CNN object-id map, Knowledge Distillation (KD) 은 개발 중 또는 심화 질의 대비 항목으로 분리해 관리합니다.
-
 **핵심 요약**
 
-1. P1은 raw log 를 wafer image, chip coordinate, 운영 뷰어, Known 2-stage, Unknown 후보 group 검토까지 연결한 양산 운영형 AI 시스템입니다.
-2. P2는 현업 single failure chip 원천 기반 FCM-PM + Pair Mask loss 로 2-combo label 부족과 false alarm 문제를 같이 줄인 multi-label 방법론입니다.
-3. P3는 본인 trend 판정 경험을 synthetic episode generator 로 코드화해, label 부족 환경에서 anomaly 검증을 시작할 수 있게 만든 PoC 입니다.
+1. P1 은 Failbit Map raw log → wafer image 변환, **사내 운영 뷰어 web app 직접 구현**, Known 2-stage 분류, Unknown 후보 group 검토까지 양산 운영 흐름 전체를 한 줄로 연결한 AI 시스템입니다.
+2. P2 는 현업 single failure chip 원천 기반 FCM-PM + Pair Mask loss 로 2-combo label 부족을 풀고, **bit_F1 과 false alarm 을 동시에 잡은** multi-label 방법론입니다.
+3. P3 는 본인 BBD / Overlay / CD 담당 trend 판정 경험을 generator parameter 로 코드화해, **AI 학습이 가능한 trend 데이터 자산 자체를 만든** 것이 주 성과인 PoC 입니다 (1차 Binary gate 검증까지 확보).
 
 ㅁ **P1. Failbit Map AI 분류 시스템 (Known 2-stage + Unknown contrastive)**
 
