@@ -37,15 +37,11 @@
 
 **ㅁ 개인별 기여 서술**
 
-본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어 교육을 거쳐 Failbit Map 의미와 분석 흐름을 확보한 뒤 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 운영 뷰어를 직접 설계 / 구현하고, 그 위에 Known 2-stage 분류와 Unknown self-supervised 검출을 결합한 운영 시스템을 구축했습니다.
+**[본인이 독자적으로 수행한 핵심 모듈]**
 
-wafer 한 장에 약 1,000만 cell 규모의 hex 값을 Grade 0~7 로 풀어내는 변환 루프를 Cython 으로 다시 짜서 약 100배 가속을 잡았고, 32색 palette indexed PNG 양자화로 저장 용량을 약 75% 줄여 일 약 2만 장 / 1시간 주기 적재 흐름이 양산 운영으로 가능해졌습니다.
+- **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: 본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어 교육을 거쳐 Failbit Map 의미와 분석 흐름을 확보한 뒤 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 양산 운영 시스템을 구성했습니다. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
 
-AI 모델 단에서는 ConvNeXtV2 wafer-level classifier 와 ROI YOLO 보정 stage 를 cascade 로 묶었습니다. **[실전 현업 데이터]** 16 class / 1,500 labeled samples / 4:1 stratified split 에서 weighted F1 **0.95** 에 도달했고, Unknown 검출은 13 후보 group 가운데 7개가 실제 불량으로 현업 확인되었습니다 (학습 / eval 세부는 §현업 임팩트 박스에 정리).
-
-Unknown 측은 운영 단계에 정답 label 이 없어 별도 보조 metric 으로 분리해 추적하고 있습니다. **[추가 생성 데이터, 개발 중]** 본인이 직접 구성한 추가 생성 데이터셋 기반 cross-anchor 평가는 심화 질의 대비용으로 별도 관리하며, 실전 Unknown 운영 성과와 섞지 않습니다.
-
-**[추가 생성 chip 데이터, 개발 중]** ROI-YOLO 는 6400×6400 wafer 에서 작은 chip 을 detection 하느라 small object detection 한계 + anchor / NMS 비용이 누적됩니다. chip-CNN object-id map 은 fail-map 이 chip 좌표를 확정해 둔 상태에서 chip crop 전체를 CNN 으로 분류하므로 detection 단계가 빠지면서 chip 단위 정확도도 더 높습니다. Stage 2 대체 후보이며 양산 deploy 는 validation 검증 후 결정합니다.
+- **본인의 기술적 해결책이 과제 성패에 미친 영향**: wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0~7 로 풀어내는 변환 루프를 Cython 으로 재구성해 약 **100배** 가속을 확보했고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 같이 묶어 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터]** Known 2-stage 는 16 class / 1,500 labeled / 4:1 stratified split 에서 weighted F1 **0.95** 까지 끌어올렸고, Unknown 검출은 13개 후보 group 중 **7개 불량 확인**으로 운영 검출력이 검증되었습니다. **[추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 은 fail-map 이 확정한 chip 좌표 자리에 들어가 detection 단계 없이 chip crop 분류만 수행해 val_f1 **0.9946** 까지 측정되었고, 양산 deploy 여부는 validation 후 운영 절차에 따라 결정합니다.
 
 **ㅁ 문제정의**
 
@@ -285,27 +281,13 @@ raw wafer map (좌측 2칸) 과 동일 wafer 의 chip-CNN object-id map (우측 
 
 **ㅁ 개인별 기여 서술**
 
-P2 는 chip 하나에 multi-label failure 가 같이 발생하는 사례까지 검출하기 위한 과제입니다. 현업에서 single failure 원천은 충분히 쌓여 있지만 2-combo 이상 동시 발생 데이터는 부족해, single failure 원천을 확장해 multi-label 학습 / 평가 환경을 구성했습니다.
+**[본인이 독자적으로 수행한 핵심 모듈]**
 
-- single failure 원천 데이터는 Grade 의미와 결함 분포를 유지했습니다.
-- 2-combo label 부족은 FCM-PM 으로 도메인 분포에 맞춰 보완했습니다.
-- Normal / Invalid / OOD negative 평가셋은 현업 분포에 가깝게 직접 설계했습니다.
-- 목표는 bit_F1 만 올리는 것이 아니라, false-positive 리스크를 사전에 확인하는 구조를 만드는 것이었습니다.
+- **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: chip 하나의 multi-label failure 검출 과제에서, 실전 현업 single failure 4 class chip 원천 정의, 부족한 2-combo 6 종을 도메인 분포에 맞춰 합성한 FCM-PM (Full-Cover Mixup + Pair Mask) 설계, Pair Mask 로 합성 background 를 loss 에서 분리하는 손실 통제, val_margin 기반 best-model selection, Temperature Scaling, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후보 검토까지 본인 80% 리딩으로 직접 수행했습니다. Normal / Invalid / OOD negative 평가셋도 현업 분포에 가깝게 본인이 직접 설계했습니다.
 
-본 과제의 핵심은 chip 하나의 multi-label failure 를 안정적으로 분석하고 검출하기 위해, 본 과제 데이터 구조에 맞춰 합성 / 손실 / 모델 선택 / 추론 기법을 직접 설계해 결합한 것입니다.
+- **본인의 기술적 해결책이 과제 성패에 미친 영향**: BCE / Focal / ASL 단순 loss 변형만으로는 2-combo recall 과 false alarm 억제를 동시에 만족시키기 어려웠던 한계를, FCM-PM + val_margin selection 결합 설계로 풀었습니다. Pair Mask 제거 ablation 에서 Total FAR 이 **100%** 까지 치솟아 background loss masking 이 false-positive 억제의 결정적 요인임을 정량으로 확인했고, 최종적으로 FCM-PM val_margin 단일 모델 **bit_F1 0.9943 / Total FAR 0.00%** 를 controlled benchmark 위에서 달성했습니다. bit-level majority voting ensemble (champion `vote_majority_bits`) **bit_F1 0.9941 / Total FAR 0.00%** 와 Knowledge Distillation single student (KD_v12 α=0.3 T=3, bit_F1 **0.9470**) 도 후속 안정성 / 압축 보조로 확보했습니다.
 
 **[평가 지표]** single F1 은 single failure class 별 F1 의 평균입니다. bit_F1 은 한 chip 의 label 을 `[0, 1, 1, 0]` 같은 4-bit vector 로 보고 각 bit 별로 정답 여부를 따집니다. 예를 들어 정답이 `[0, 1, 1, 0]` 일 때 예측이 `[1, 1, 1, 0]` 이면 첫 bit 가 틀린 것이고, `[0, 1, 1, 0]` 처럼 모든 bit 가 정확히 맞아야 정답입니다. multi-label 에서는 한 chip 안에 여러 failure 가 동시에 켜질 수 있어, 모든 bit (chip × class) 를 micro-averaged 로 합쳐 본 bit_F1 이 전체 검출 품질을 가장 잘 보여줍니다. 제출 대표 수치 0.9943 도 bit_F1 기준입니다.
-
-- **데이터 합성**: FCM-PM 으로 2-combo 결함 학습 신호를 구성했습니다.
-- **손실 통제**: Pair Mask 로 합성 background 의 오학습 경로를 분리했습니다.
-- **모델 선택**: `val_margin` 기준으로 false-alarm 위험까지 checkpoint 선택에 반영했습니다.
-- **추론 최적화**: max-prob threshold gate, bit-level majority voting ensemble (champion `vote_majority_bits`, bit_F1 0.9941 / Total False Alarm Rate (FAR) 0.00%), Knowledge Distillation single student (1× cost) 압축 후보 검토를 대표 성과와 분리해 관리했습니다.
-
-기존 BCE, Focal, ASL 같은 loss 변경만으로는 2-combo recall 과 false alarm 억제를 동시에 만족시키기 어려웠습니다. 본인은 아래 세 조건이 같이 필요하다고 봤고, 이를 FCM-PM 과 val_margin checkpoint selection 으로 묶었습니다.
-
-- Grade 0-7 결함 픽셀 의미 보존
-- chip 내부 failure signal coverage 보장
-- 합성 background 의 오학습 억제
 
 **P2 대표 성과 / 후속 개발 / 한계 및 관리**
 
@@ -544,9 +526,11 @@ positive bits     negative bits
 
 **ㅁ 개인별 기여 서술**
 
-P3 의 본인 기여는 데이터를 만들어 내는 쪽입니다. 본인이 BBD담당 / Overlay담당 / CD담당으로 trend chart 를 직접 판정해 온 업무 경험에서 **mean shift** (평균 변동), **standard deviation** (산포 변동), **spike** (순간 튐), **drift** (미세 이동), **context** (다른 legend 대비 튀는 경우) 같은 불량 형태가 어느 강도에서 실제 spec out 으로 이어지는지 알고 있었고, 그 판단 기준을 synthetic trend episode generator 의 parameter 로 직접 옮겨 코드화했습니다. 1차 Binary gate 는 만들어 낸 데이터가 정상 / 이상 패턴을 학습 가능한 형태로 담고 있는지 확인하기 위한 검증용 baseline 으로 두었습니다 (실전 현업 검증과 분리). 동료 엔지니어는 AI 모델 실행, 데이터 정리, 실험 결과 취합을 공동 수행했습니다.
+**[본인이 독자적으로 수행한 핵심 모듈]**
 
-먼저 **Noise 분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 영역 분리** (밀집 dense / 희박 sparse / very_sparse / thin / 공핍 missing) 로 합성 normal baseline 을 실전 환경에 최대한 가깝게 구현했고, 그 위에 본인 담당 경험에서 알고 있던 **불량 형태별 강도 구간** (mean shift / standard deviation / spike / drift / context) 을 더해 학습 가능한 데이터 자산을 만들었습니다. 합성 normal 이 실전 baseline 통계 안에 들어가면서도 abnormal 강도가 정상 산포에 묻히지 않도록 두 조건을 같이 잡았고, 구체 parameter / 식 / 단계 흐름은 [기술적 해결 방안] 과 다이어그램에 모았습니다.
+- **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: 본인이 BBD담당 / Overlay담당 / CD담당으로 **9년간** trend chart 를 직접 판정해 온 업무 경험에서 **mean shift** (평균 변동), **standard deviation** (산포 변동), **spike** (순간 튐), **drift** (미세 이동), **context** (다른 legend 대비 튀는 경우) 5종 불량이 어느 강도에서 실제 spec out 으로 이어지는지 알고 있었고, 그 판단 기준을 synthetic trend episode generator 의 parameter 로 직접 코드화했습니다. **Noise 3분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 Region 5단계** (dense / sparse / very_sparse / thin / missing) 도 본인이 정의해 합성 normal baseline 을 실전 환경에 가깝게 구현했고, 합성 normal 산포에 상한 / 하한을 같이 두는 두 가지 수식까지 본인이 설계했습니다. 동료 엔지니어는 AI 모델 실행, 데이터 정리, 실험 결과 취합을 공동 수행했습니다.
+
+- **본인의 기술적 해결책이 과제 성패에 미친 영향**: 실전 abnormal label 부족으로 사실상 막혀 있던 anomaly 검증을, 본인 담당 경험을 generator parameter 로 코드화한 합성 데이터 자산으로 풀었습니다. **normal 3,500 + abnormal 3,500 = 총 7,000개** trend sample 자산을 확보해 AI 학습이 가능하게 만들었고, 1차 Binary gate baseline 에서 **Binary F1 0.9967 / Abnormal Recall 0.9987** (test 1,500 / threshold=0.9) 로 생성 데이터가 학습 가능한 정상 / 이상 패턴을 담고 있음을 확인했습니다. L1 trend 모니터링의 수작업 부담과 초보자 누락, spec out 위험을 줄이는 1차 스크리닝 기반으로 **현업 데이터 적용 직전** 단계까지 진행했습니다.
 
 **ㅁ 문제정의**
 
