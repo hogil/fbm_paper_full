@@ -2,10 +2,10 @@
 
 | 기술 분야 | 세부 역량 |
 |---|---|
-| Computer Vision | Failbit Map wafer image classification, ROI object detection, chip-level defect classification |
+| Computer Vision | Failbit Map wafer image classification, ROI object detection, chip-level failure classification |
 | Self-Supervised Representation Learning | Contrastive learning, embedding learning, HDBSCAN 기반 Unknown 후보 group 압축 |
 | Multi-label Image Classification | FCM-PM (Full-Cover Mixup + Pair Mask loss), val_margin checkpoint selection, sigmoid multi-label head (BCE) |
-| Synthetic Data Engineering | 추가 생성 chip 데이터 기반 2-combo 조합 생성, trend episode generator, Normal / Invalid / OOD 평가셋 설계 |
+| Synthetic Data Engineering | 실제 현업 single failure chip 원천 + 도메인 확률분포 기반 2-combo 조합 생성, trend episode generator, Normal / Invalid / OOD 평가셋 설계 |
 | Model Optimization / Evaluation | hyperparameter tuning, threshold / max-prob gate, FAR 평가, Spearman 기반 checkpoint 기준 검증 |
 | AI Data Pipeline | EDS raw log 변환, Cython 기반 hex-to-grade 가속, palette PNG, chip positions JSON, 운영 뷰어 연동 |
 
@@ -26,7 +26,7 @@
 
 (2) **과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-- 도메인은 DRAM EDS Test Grade 0-7, Failbit Map zone pattern, wafer-level defect distribution, 대량 wafer 이미지 운영 파이프라인입니다.
+- 도메인은 DRAM EDS Test Grade 0-7, Failbit Map zone pattern, wafer-level failure distribution, 대량 wafer 이미지 운영 파이프라인입니다.
 - ConvNeXtV2는 운영 inference 비용과 국소 결함 민감도를 함께 보고 선정했습니다. MaxViT와 동일한 1-stage weighted F1 0.87을 보이면서 parameter 약 26%, FLOPs 약 39%가 낮아 일 단위 대량 inference 비용에서 유리했습니다. 결함이 특정 zone이나 국소 chip 영역에 몰리는 경우가 많아, sliding-window 기반 CNN 계열의 지역 특징 추출이 본 과제에 더 맞다고 판단했습니다.
 - AI 설계는 wafer-level CNN, ROI-YOLO cascade, contrastive embedding, HDBSCAN clustering을 하나의 운영 흐름으로 묶은 구조입니다. 핵심은 모델 하나의 정확도보다 raw log 변환, 이미지 / 좌표 정합성, Known 불량 분류, Unknown 불량 후보 압축, 현업 검증까지 이어지는 현업 개선 흐름을 만든 점입니다.
 
@@ -36,19 +36,19 @@
 
 - 수행기간: 2025년 3월 ~ 현재
 - 담당 역할: 본인 80% / 관리자 20%
-- 본 과제는 **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로, 현업에서 충분히 모으기 어려운 2-combo 결함 조합을 학습 가능한 문제로 바꾸는 과제입니다. controlled benchmark는 16+ class × 약 3,850 chip 규모로 구성했습니다.
-- 본인은 bank_boundary, fork, scratch, scratch_rot 4개 single defect를 원천으로 정의하고, train / test 원천 chip을 먼저 split했습니다. 2-combo와 Pair Mask 조합은 train 원천에서만 생성하고, test 원천 chip은 조합 생성 과정에서 배제해 원천 chip 단위 누수를 막았습니다.
-- 일반 Mixup은 Grade 0-7 pixel 값의 의미를 흐릴 수 있어 배제했습니다. CutMix 계열로 원값을 보존하되, random CutMix에서 defect가 잘리는 문제와 background를 defect로 외우는 문제를 풀기 위해 Full-Cover Mixup과 Pair Mask를 결합한 FCM-PM 구조를 적용했습니다.
+- 본 과제는 **[현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로, 현업에서 충분히 모으기 어려운 2-combo 결함 조합을 학습 가능한 문제로 바꾸는 과제입니다. controlled benchmark는 16+ class × 약 3,850 chip 규모로 구성했습니다.
+- 본인은 bank_boundary, fork, scratch, scratch_rot 4개 single failure를 원천으로 정의하고, train / test 원천 chip을 먼저 split했습니다. 2-combo와 Pair Mask 조합은 train 원천에서만 생성하고, test 원천 chip은 조합 생성 과정에서 배제해 원천 chip 단위 누수를 막았습니다.
+- 일반 Mixup은 Grade 0-7 pixel 값의 의미를 흐릴 수 있어 배제했습니다. CutMix 계열로 원값을 보존하되, random CutMix에서 failure가 잘리는 문제와 background를 failure로 외우는 문제를 풀기 위해 Full-Cover Mixup과 Pair Mask를 결합한 FCM-PM 구조를 적용했습니다.
 - Pair Mask loss는 유효 결함 영역만 학습에 반영하도록 `L = sum(M_ij * BCE(y_ij, yhat_ij))` 형태로 두었습니다. 차별점은 BCE 자체가 아니라, FCM-PM으로 2-combo 학습 신호를 만들고 Pair Mask로 background 오학습을 줄인 뒤, val_margin과 max-prob gate로 false alarm 가능성을 같이 낮춘 구조입니다.
-- **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 기준 대표 모델은 bit_F1 0.9943 / Total FAR 0.00%입니다. Pair Mask 제거 시 Normal / Invalid / OOD negative 평가축의 Total FAR이 100%까지 올라가는 사례를 확인해, background loss 분리가 필요한 이유를 ablation으로 확인했습니다.
+- **[현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]** 기준 대표 모델은 bit_F1 0.9943 / Total FAR 0.00%입니다. Pair Mask 제거 시 Normal / Invalid / OOD negative 평가축의 Total FAR이 100%까지 올라가는 사례를 확인해, background loss 분리가 필요한 이유를 ablation으로 확인했습니다.
 - 4-bag ensemble은 seed / checkpoint 안정성 확인용 보조 실험으로 두었습니다. KD student는 1x 추론 가능성과 OOD 포함 FAR를 보는 후속 압축 후보로 분리했습니다.
 
 (2) **과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-- 도메인은 반도체 chip Grade 0-7 양자화 이미지, multi-label defect co-occurrence, 2-combo label 부족, Normal / Invalid / OOD false alarm 억제입니다.
+- 도메인은 반도체 chip Grade 0-7 양자화 이미지, multi-label failure co-occurrence, 2-combo label 부족, Normal / Invalid / OOD false alarm 억제입니다.
 - 모델은 ConvNeXtV2 backbone + sigmoid multi-label head를 사용했습니다. 학습은 BCE를 기본 loss로 두되, FCM-PM sample builder, Pair Mask loss, val_margin checkpoint selection, max-prob gate, bit_F1 / FAR 동시 평가를 함께 구성했습니다.
 - 작은 validation set에서는 val_f1이 여러 epoch에서 비슷하게 붙어 best epoch가 흔들렸습니다. 그래서 `val_margin = mean(P positive bits) - max(P negative bits)`를 사용했습니다. epoch-vs-test_f1 Spearman rho는 val_margin +0.56, val_f1 -0.10으로 갈려, val_margin이 실제 test 흐름과 더 같은 방향으로 움직였습니다.
-- 성능 개선의 핵심은 추가 생성 chip 데이터에서 2-combo 부족 문제를 보완하고, Grade 의미 보존, defect coverage 보장, background loss 분리, false alarm 기준의 checkpoint 선택을 하나로 묶은 데 있습니다.
+- 성능 개선의 핵심은 실제 현업 single failure chip을 원천으로 두고, train 원천 chip에서만 2-combo 조합을 생성해 label 부족을 보완한 뒤, Grade 의미 보존, failure coverage 보장, background loss 분리, false alarm 기준의 checkpoint 선택을 하나로 묶은 데 있습니다.
 
 ㅁ **P3. Trend Chart 기반 Anomaly Detection 합성 데이터 및 검증 PoC**
 

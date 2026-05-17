@@ -3,7 +3,7 @@
 | 기간 | 내용(과제명, 리딩 규모, 담당업무, 본인 업무 내 과제관리/설계/개발비중) |
 |---|---|
 | 2024년 10월 ~ 현재 | **Failbit Map 이미지 데이터 생성 및 Known 불량 및 Unknown 불량 분류 시스템**. 3인 협업 과제로 본인 60% / 현업 엔지니어 20% / 관리자 20% 기여입니다. 담당 범위는 fail-map 데이터 파이프라인, 운영 뷰어 연동/기여, Known CNN -> ROI-YOLO 2-stage, Unknown contrastive learning, 후속 chip-CNN obj-id map 개발 구조였습니다. raw log 변환, 이미지/좌표 생성, 모델 분기, 현업 검증을 연결해 일 약 2만 장 wafer 이미지를 1시간 주기로 처리 가능한 운영형 AI 시스템으로 설계했습니다. |
-| 2025년 3월 ~ 현재 | **Chip Multi-label Classification 및 FCM-PM 기반 결함 조합 학습**. 2인 협업 과제로 본인 80% / 관리자 20% 기여입니다. **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로, 2-combo 결함 부족 문제를 보완했습니다. Full-Cover Mixup과 Pair Mask loss를 결합한 FCM-PM, BCE 기반 multi-label 학습, val-margin best-model selection, max-prob gate, bit_F1 / FAR 동시 평가와 운영성 검토를 수행했습니다. 본인 업무는 모델 구조, 학습/평가 로직, 조합 데이터 설계 중심으로 수행했습니다. |
+| 2025년 3월 ~ 현재 | **Chip Multi-label Classification 및 FCM-PM 기반 결함 조합 학습**. 2인 협업 과제로 본인 80% / 관리자 20% 기여입니다. **[현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로, 2-combo 결함 부족 문제를 보완했습니다. Full-Cover Mixup과 Pair Mask loss를 결합한 FCM-PM, BCE 기반 multi-label 학습, val-margin best-model selection, max-prob gate, bit_F1 / FAR 동시 평가와 운영성 검토를 수행했습니다. 본인 업무는 모델 구조, 학습/평가 로직, 조합 데이터 설계 중심으로 수행했습니다. |
 | 2026년 1월 ~ 현재 | **Trend Chart 기반 Anomaly Detection 합성 데이터 및 검증 PoC**. 3인 협업 과제로 본인 70% / 관리자 20% / 공동 연구자 10% 기여입니다. 합성 trend chart에서는 trend episode generator, Region 5종, Noise 3종, anomaly 5종, 정상 산포 기준 최소 이상 강도 보정, 1차 binary gate 검증 PoC를 담당했습니다. 본인 업무는 생성 규칙 설계와 검증 구조 개발 중심으로 수행했고, 과제관리는 실험 기준 정리와 결과 리뷰 중심으로 담당했습니다. |
 
 ## 2. 대표 과제 상세 기술서
@@ -78,7 +78,7 @@
         |     [ROI-YOLO]
         |          |
         |          v
-        |     [16-class Known defect 판정]
+        |     [16-class Known failure 판정]
         |
         +--> Unknown path
               [contrastive embedding]
@@ -121,17 +121,17 @@
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |---:|---|---|---|---|---:|
-| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | 현업 single defect 원천 정의, 도메인 확률분포 기반 2-combo 생성, FCM-PM, Pair Mask loss, BCE multi-label 학습 구조, val-margin selection, max-prob gate, 운영성 검토, bit_F1 / FAR 평가 | 80% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | 현업 single failure 원천 정의, 도메인 확률분포 기반 2-combo 생성, FCM-PM, Pair Mask loss, BCE multi-label 학습 구조, val-margin selection, max-prob gate, 운영성 검토, bit_F1 / FAR 평가 | 80% |
 | 2 | 관리자 | 개인정보 비공개 | 관리조직(공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 
 ㅁ **개인별 기여 서술**
 
 [본인이 독자적으로 수행한 핵심 모듈]
 
-- 실제 현장에서는 한 chip에 결함이 두 개 이상 겹칠 수 있지만, 2-combo label을 충분히 확보하고 평가하기 어렵습니다. 본 과제는 그 병목을 풀기 위한 **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로 진행했습니다.
-- 결함 조합 학습을 위해 실제 현업 single defect chip을 기준 defect set으로 정의했습니다. 이후 bank_boundary, fork, scratch, scratch_rot 4개 single defect를 원천으로 두고, 결함 위치와 강도, Grade 0-7 분포가 현업 defect 양상과 맞도록 2-combo 학습 구조를 만들었습니다. Normal / Invalid / OOD는 false alarm 확인용 negative 평가축으로 분리했습니다.
+- 실제 현장에서는 한 chip에 결함이 두 개 이상 겹칠 수 있지만, 2-combo label을 충분히 확보하고 평가하기 어렵습니다. 본 과제는 그 병목을 풀기 위한 **[현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]** 구조로 진행했습니다.
+- 결함 조합 학습을 위해 실제 현업 single failure chip을 기준 failure set으로 정의했습니다. 이후 bank_boundary, fork, scratch, scratch_rot 4개 single failure를 원천으로 두고, 결함 위치와 강도, Grade 0-7 분포가 현업 failure 양상과 맞도록 2-combo 학습 구조를 만들었습니다. Normal / Invalid / OOD는 false alarm 확인용 negative 평가축으로 분리했습니다.
 - Grade 0-7 pixel 값은 결함 강도 의미를 갖기 때문에 값을 평균 내는 Mixup류보다 원래 pixel patch를 보존하는 CutMix 계열이 맞다고 판단했습니다.
-- 단순 CutMix만으로는 defect가 잘리거나 background를 defect로 외우는 문제가 남아 Full-Cover Mixup + Pair Mask 구조를 직접 설계했습니다.
+- 단순 CutMix만으로는 failure가 잘리거나 background를 failure로 외우는 문제가 남아 Full-Cover Mixup + Pair Mask 구조를 직접 설계했습니다.
 - BCE는 multi-label 기본 loss로 사용했습니다. 차별점은 BCE 자체가 아니라, 그 앞단에서 FCM-PM으로 2-combo 학습 신호를 만들고, Pair Mask로 background 오학습을 줄인 뒤, val-margin과 max-prob gate로 false alarm 가능성을 같이 낮춘 구조입니다.
 - 4-bag ensemble은 seed/checkpoint 안정성을 확인하기 위한 보조 실험으로 두었습니다. single model 압축 가능성은 후속 검증 항목으로 분리했습니다.
 - 검증 누수를 막기 위해 원천 chip 단위 split을 먼저 수행한 뒤, train 원천에서만 FCM-PM 조합을 생성하고 test 원천 chip은 조합 생성 과정에서 배제하는 기준으로 관리했습니다.
@@ -140,26 +140,26 @@
 
 | 항목 | 내용 |
 |---|---|
-| 현장 난제 및 해결 목표 | single defect 형태는 실제 현업 chip에서 상대적으로 정의할 수 있지만, 두 결함이 함께 있는 2-combo chip label은 충분히 모으고 평가하기 어렵습니다. 현업 single defect를 원천으로 2-combo 학습 신호를 만들고, Normal / Invalid / OOD를 결함으로 오인하는 false alarm을 억제하는 구조가 필요했습니다. |
-| 기존 방식의 한계 및 AI 도입 배경 | BCE-only는 multi-label 기본 구조이지만 2-combo 검출 안정성과 false alarm을 동시에 만족시키기 어려웠습니다. Focal / ASL처럼 loss만 바꾸는 접근도 반도체 Grade image의 의미 보존 문제를 직접 풀지는 못했습니다. 일반 Mixup은 Grade 0-7의 범주형 의미를 훼손할 수 있었고, random CutMix는 결함 일부가 잘리거나 background를 defect로 외우는 문제가 있었습니다. |
-| 기술적 / 환경적 제약 조건 | 실제 2-combo 평가 데이터가 부족한 상태에서, 반도체 defect chip의 모양과 Grade 의미를 보존하면서 조합 데이터를 만들어야 했습니다. controlled benchmark는 16+ class × 약 3,850 chip 규모로 구성했고, 작은 validation set, 2-combo 검출 안정성, Normal / Invalid / OOD false alarm, ensemble 추론 비용, 후속 압축 가능성을 함께 봐야 했습니다. |
+| 현장 난제 및 해결 목표 | single failure 형태는 실제 현업 chip에서 상대적으로 정의할 수 있지만, 두 결함이 함께 있는 2-combo chip label은 충분히 모으고 평가하기 어렵습니다. 현업 single failure를 원천으로 2-combo 학습 신호를 만들고, Normal / Invalid / OOD를 결함으로 오인하는 false alarm을 억제하는 구조가 필요했습니다. |
+| 기존 방식의 한계 및 AI 도입 배경 | BCE-only는 multi-label 기본 구조이지만 2-combo 검출 안정성과 false alarm을 동시에 만족시키기 어려웠습니다. Focal / ASL처럼 loss만 바꾸는 접근도 반도체 Grade image의 의미 보존 문제를 직접 풀지는 못했습니다. 일반 Mixup은 Grade 0-7의 범주형 의미를 훼손할 수 있었고, random CutMix는 결함 일부가 잘리거나 background를 failure로 외우는 문제가 있었습니다. |
+| 기술적 / 환경적 제약 조건 | 실제 2-combo 평가 데이터가 부족한 상태에서, 반도체 failure chip의 모양과 Grade 의미를 보존하면서 조합 데이터를 만들어야 했습니다. controlled benchmark는 16+ class × 약 3,850 chip 규모로 구성했고, 작은 validation set, 2-combo 검출 안정성, Normal / Invalid / OOD false alarm, ensemble 추론 비용, 후속 압축 가능성을 함께 봐야 했습니다. |
 
 ㅁ **기술적 해결 방안**
 
 [본인이 직접 수행한 핵심 로직]
 
-- 데이터: 4개 현업 single defect chip을 원천으로 2-combo multi-hot target을 만들었습니다. 이미지 단순 혼합 대신, chip defect가 갖는 위치, 강도, Grade 0-7 분포가 유지되도록 조합 조건을 잡았습니다. 원천 chip 단위 split을 먼저 수행해 train/test 원천이 섞이지 않게 했고, train 원천에서만 FCM-PM 조합을 생성했습니다. 평가는 16+ class × 약 3,850 chip controlled benchmark에서 single, 2-combo, Normal, Invalid, OOD를 함께 두어 결함을 잘 잡는지와 정상/외부 패턴을 결함으로 오인하는지를 같이 봤습니다.
+- 데이터: 4개 현업 single failure chip을 원천으로 2-combo multi-hot target을 만들었습니다. 이미지 단순 혼합 대신, chip failure가 갖는 위치, 강도, Grade 0-7 분포가 유지되도록 조합 조건을 잡았습니다. 원천 chip 단위 split을 먼저 수행해 train/test 원천이 섞이지 않게 했고, train 원천에서만 FCM-PM 조합을 생성했습니다. 평가는 16+ class × 약 3,850 chip controlled benchmark에서 single, 2-combo, Normal, Invalid, OOD를 함께 두어 결함을 잘 잡는지와 정상/외부 패턴을 결함으로 오인하는지를 같이 봤습니다.
 - 알고리즘: ConvNeXtV2 backbone + sigmoid multi-label head를 사용하고, BCE를 multi-label 기본 loss로 두었습니다. 다만 성능 차이는 BCE 자체보다 FCM-PM sample 구성, Pair Mask loss 제어, val-margin 모델 선택에서 더 크게 갈렸습니다.
-- FCM-PM: Full-Cover Mixup은 한 defect가 합성 중 특정 crop에서 사라지지 않게 coverage를 보장합니다. Pair Mask는 유효 결함 영역과 background를 나누어, background가 defect label과 함께 잘못 학습되는 것을 막습니다. 학습 loss는 binary mask M을 두고 `L = Σ M_ij · BCE(y_ij, ŷ_ij)`로 계산해, mask가 1인 유효 영역만 loss에 반영했습니다.
+- FCM-PM: Full-Cover Mixup은 한 failure가 합성 중 특정 crop에서 사라지지 않게 coverage를 보장합니다. Pair Mask는 유효 결함 영역과 background를 나누어, background가 failure label과 함께 잘못 학습되는 것을 막습니다. 학습 loss는 binary mask M을 두고 `L = Σ M_ij · BCE(y_ij, ŷ_ij)`로 계산해, mask가 1인 유효 영역만 loss에 반영했습니다.
 - 모델 선택: 작은 validation set에서는 val_f1이 여러 epoch에서 비슷하게 붙었습니다. 그래서 `val_margin = mean(P positive bits) - max(P negative bits)` 기준을 넣어, positive는 충분히 높고 negative는 낮은 checkpoint를 골랐습니다. epoch-vs-test_f1 Spearman ρ는 val_margin +0.56, val_f1 -0.10으로 갈려, val_margin이 실제 test 흐름과 더 같은 방향으로 움직였습니다. F1만 높고 negative bit가 자주 튀는 모델은 현업 후보로 보기 어렵기 때문입니다.
 - 추론 gate: 모든 결함 bit 확률이 애매하게 낮은 입력은 Normal로 강제하는 max-prob gate를 두었습니다. 정상/측정불능/OOD chip이 특정 결함 bit로 잘못 fire 되는 상황을 줄이기 위한 장치이며, 최종 평가는 bit_F1과 FAR를 같이 보도록 잡았습니다.
 - Ensemble / KD: 4-bag ensemble은 seed/checkpoint 안정성을 확인하기 위한 보조 실험으로 두었습니다. 다만 4-bag 구조는 추론 비용이 커질 수 있습니다. KD student는 single model 수준의 latency / throughput / parameter 비용까지 보는 압축 후보로 검토 중이며, OOD 포함 Total FAR 기준 때문에 최종 운영 기준으로 확정하지 않았습니다.
-- Ablation 관리: Baseline BCE, Focal loss, ASL, CutMix only, CutMix + Pair, FCM-PM best val_f1, FCM-PM best val_margin 순서로 비교했습니다. Ensemble은 보조 안정성 실험, KD는 후속 압축 후보로 분리했습니다. 기존 loss 변경만으로는 부족했고, 반도체 Grade image에서는 defect coverage 보장과 background loss 분리가 함께 필요했습니다.
+- Ablation 관리: Baseline BCE, Focal loss, ASL, CutMix only, CutMix + Pair, FCM-PM best val_f1, FCM-PM best val_margin 순서로 비교했습니다. Ensemble은 보조 안정성 실험, KD는 후속 압축 후보로 분리했습니다. 기존 loss 변경만으로는 부족했고, 반도체 Grade image에서는 failure coverage 보장과 background loss 분리가 함께 필요했습니다.
 
 ㅁ 실제 코드를 제외한 아키텍쳐 설계도, 플로우차트 등으로 기술
 
 ```text
-[현업 single defect chip A]        [현업 single defect chip B]
+[현업 single failure chip A]        [현업 single failure chip B]
 label: [1,0,0,0]                   label: [0,1,0,0]
         |                                  |
         v                                  v
@@ -170,7 +170,7 @@ label: [1,0,0,0]                   label: [0,1,0,0]
                        v
               [FCM-PM sample builder]
               - CutMix 계열: Grade 0-7 원값 보존
-              - 도메인 분포: defect 위치/강도/조합 조건 반영
+              - 도메인 분포: failure 위치/강도/조합 조건 반영
               - Full-Cover: 결함 영역이 합성 중 사라지지 않게 보장
               - Pair Mask: 결함 영역과 background loss 분리
                        |
@@ -183,7 +183,7 @@ label: [1,0,0,0]                   label: [0,1,0,0]
                        v
               [BCE multi-label loss + Pair Mask]
               - 결함 영역: positive bit 학습
-              - background: defect negative로 과도하게 밀지 않음
+              - background: failure negative로 과도하게 밀지 않음
                        |
                        v
           [val-margin checkpoint selection]
@@ -213,10 +213,10 @@ label: [1,0,0,0]                   label: [0,1,0,0]
 
 적용 이유
   - 반도체 chip Grade 값의 의미를 유지해야 함
-  - 현업 single defect 원천에서 2-combo label 부족을 보완해야 함
+  - 현업 single failure 원천에서 2-combo label 부족을 보완해야 함
   - source chip 단위 split으로 train/test 원천 누수를 막아야 함
   - BCE 자체보다 FCM-PM / Pair Mask / val-margin 조합이 성능을 좌우함
-  - 현업 defect 양상과 맞는 확률분포로 조합 평가셋을 만들어야 함
+  - 현업 failure 양상과 맞는 확률분포로 조합 평가셋을 만들어야 함
   - 실제 적용 전부터 false alarm 가능성을 같이 봐야 함
   - bit_F1만 높고 FAR가 남는 모델은 운영 후보로 보기 어려움
   - ensemble은 보조 안정성 검토용이고, KD는 OOD FAR까지 확인해야 함
@@ -226,7 +226,7 @@ label: [1,0,0,0]                   label: [0,1,0,0]
 
 [정량적/정성적 성과]
 
-- 기술 지표: **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 기준으로 bit_F1 0.9943 / Total FAR 0.00%를 확인했습니다. 이 지표는 현업 single defect 원천과 반도체 분포 설계가 결합된 FCM-PM 구조에서 2-combo 학습 신호와 false alarm 억제가 함께 작동했음을 보여주는 검증 결과입니다. 원천 chip 단위 split 이후 train 원천에서만 조합을 생성해, 같은 원천 chip이 학습과 평가 조합에 동시에 섞이지 않도록 관리했습니다.
+- 기술 지표: **[현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]** 기준으로 bit_F1 0.9943 / Total FAR 0.00%를 확인했습니다. 이 지표는 현업 single failure 원천과 반도체 분포 설계가 결합된 FCM-PM 구조에서 2-combo 학습 신호와 false alarm 억제가 함께 작동했음을 보여주는 검증 결과입니다. 원천 chip 단위 split 이후 train 원천에서만 조합을 생성해, 같은 원천 chip이 학습과 평가 조합에 동시에 섞이지 않도록 관리했습니다.
 
 **성능 / 운영성 관리표**
 
@@ -241,9 +241,9 @@ label: [1,0,0,0]                   label: [0,1,0,0]
 - 내부 ablation에서는 Pair Mask를 제거했을 때 Normal / Invalid / OOD negative 평가축의 Total FAR이 100%까지 올라가는 운영 부적합 사례를 확인했습니다. 이 결과를 기준으로 FCM-PM의 핵심을 coverage 보장과 background loss 분리의 결합으로 정리했습니다.
 - 대표 checkpoint는 전체 bit_F1과 Normal / Invalid / OOD FAR 기준으로 선정했으며, 2-combo 분해 성능은 별도 평가표에서 관리했습니다.
 - 제출 본문에서는 val_f1 checkpoint의 2combo 0.9517 확인값과 val_margin checkpoint의 전체 bit_F1 / FAR 균형을 분리해 해석합니다.
-- 성능 개선의 핵심은 반도체 defect의 Grade 의미를 보존한 조합 생성, Pair Mask를 통한 background 오학습 차단, val-margin 기반 checkpoint 선택, max-prob gate 기반 FAR 억제였습니다.
+- 성능 개선의 핵심은 반도체 failure의 Grade 의미를 보존한 조합 생성, Pair Mask를 통한 background 오학습 차단, val-margin 기반 checkpoint 선택, max-prob gate 기반 FAR 억제였습니다.
 - Ensemble은 seed/checkpoint 안정성 확인용 보조 실험으로 두고, KD student는 1x 추론 가능성과 OOD 포함 FAR를 함께 보는 후속 검증 항목으로 분리했습니다.
-- 현업 의미: 이 과제는 실제 현업 single defect chip을 출발점으로 삼아, 현업에서 충분히 모으기 어려운 2-combo 결함을 도메인 확률분포 기반 조합으로 학습 가능한 문제로 바꾼 multi-label learning 방법론입니다. wafer 단위 분류를 chip 좌표계의 결함 조합 판단으로 좁히고, P1 후속 chip-CNN obj-id map 개발의 기반으로 연결할 수 있습니다.
+- 현업 의미: 이 과제는 실제 현업 single failure chip을 출발점으로 삼아, 현업에서 충분히 모으기 어려운 2-combo 결함을 도메인 확률분포 기반 조합으로 학습 가능한 문제로 바꾼 multi-label learning 방법론입니다. wafer 단위 분류를 chip 좌표계의 결함 조합 판단으로 좁히고, P1 후속 chip-CNN obj-id map 개발의 기반으로 연결할 수 있습니다.
 
 **P3. Trend Chart 기반 Anomaly Detection 합성 데이터 및 검증 PoC**
 
