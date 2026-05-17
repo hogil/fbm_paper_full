@@ -491,7 +491,7 @@ positive bits     negative bits
 
 **(4) Inference / 후속 — Threshold gate / Ensemble / Knowledge Distillation**
 
-운영 환경 약 80% Normal 분포에 대응해, max-prob<0.55 입력을 Normal 로 강제하는 threshold gate 를 두어 운영 false-positive 를 한 단계 더 억제했습니다. 학습 단계에서는 positive target 0.85 / negative target 0.15 로 negative 측 보수성을 같이 잡았고, bit-level majority voting ensemble (champion `vote_majority_bits`) 은 SOTA 단일 모델이 현업 데이터에서 흔들릴 경우를 대비해 서로 다른 3 모델의 bit 단위 majority voting 으로 운영 안전판을 둔 구조입니다. 단일 모델이 흔들리는 cell 도 다른 두 모델 합의로 보정되며, bit_F1 **0.9941** / Total FAR **0.00%** 로 단일 대표 (0.9943) 와 동급 수준에 zero FAR 까지 확인됐습니다. Knowledge Distillation (single student) 는 CutMix 활성 batch 의 distillation loss 를 제외하는 설정으로 학생 모델 collapse 를 회피, bit_F1 **0.9265** / Total FAR **0.00%** 까지 동작했지만 대표 모델보다 낮아 후속 압축 후보로만 두었습니다.
+운영 환경 약 80% Normal 분포에 대응해, max-prob<0.55 입력을 Normal 로 강제하는 threshold gate 를 두어 운영 false-positive 를 한 단계 더 억제했습니다. 학습 단계에서는 positive target 0.85 / negative target 0.15 로 negative 측 보수성을 같이 잡았고, bit-level majority voting ensemble (champion `vote_majority_bits`) 은 SOTA 단일 모델이 현업 데이터에서 흔들릴 경우를 대비해 서로 다른 3 모델의 bit 단위 majority voting 으로 운영 안전판을 둔 구조입니다. 단일 모델이 흔들리는 cell 도 다른 두 모델 합의로 보정되며, bit_F1 **0.9941** / Total FAR **0.00%** 로 단일 대표 (0.9943) 와 동급 수준에 zero FAR 까지 확인됐습니다. Knowledge Distillation (single student) 는 CutMix 활성 batch 의 distillation loss 를 제외하는 설정으로 학생 모델 collapse 를 회피했습니다. α / T sweep 으로 KD_v7 (α=0.3, T=2) 에서 bit_F1 **0.9265** 첫 안정, KD_v12 (α=0.3, T=3) 에서 bit_F1 **0.9470** / Total FAR **0.00%** 까지 끌어올려 KD sweep 현 최고점을 확보했습니다. 같은 sweep 에서 α=0.25 (KD_v11, bit_F1 0.9192) 와 T=4 (KD_v13, 0.9347) 는 KD_v12 대비 열등해 α=0.30 / T=3 이 본 데이터 sweet spot 임을 정량으로 확인했습니다. 대표 모델보다 bit_F1 이 낮아 후속 압축 후보로만 두었습니다.
 
 **[최적화]** 합성 단계에서는 CutMix → CutMix + Pair → FCM-PM 순서로 단계별 효과를 직접 측정했고, false-positive 와 bit_F1 의 trade-off 가 어디서 깨지는지를 아래 ablation 표로 추적했습니다.
 
@@ -521,7 +521,8 @@ positive bits     negative bits
   | 6 | FCM-PM + val_f1 selection | **0.9652** | 1.0000 | 0.9517 | 0.15% | 0.00% | 0.62% | 1x | 1x | 1x | val_f1 기준 checkpoint |
   | 7 | **FCM-PM + val_margin selection** | **0.9943** | **0.9918** | **0.9894** | **0.00%** | 0.00% | 0.00% | 1x | 1x | 1x | **제출 대표 모델** |
   | 8 | vote_majority_bits Ensemble※ | **0.9941** | **1.0000** | **0.9893** | **0.00%** | 0.00% | 0.00% | 3x | 1/3x | 3x | champion ensemble |
-  | 9 | Knowledge Distillation (single student) | 0.9265 | 0.9785 | TBD | 0.00% | 0.00% | 0.00% | 1x | 1x | 1x | 압축 후보 |
+  | 9 | Knowledge Distillation (KD_v7 α=0.3 T=2) | 0.9265 | 0.9785 | TBD | 0.00% | 0.00% | 0.00% | 1x | 1x | 1x | 압축 후보 — collapse 회피 첫 안정 |
+  | 10 | Knowledge Distillation (KD_v12 α=0.3 T=3) | **0.9470** | TBD | TBD | **0.00%** | 0.00% | 0.00% | 1x | 1x | 1x | 압축 후보 — KD sweep 현 최고점 |
 
   본 표는 per class 2000 chip 합성 평가셋 기준의 잠정값이며, 추가 evaluation 이 완료되면 정식 값으로 갱신할 예정입니다. row 8 의 ensemble 은 보조 안정성 실험으로 01_career_profile.md / 02_ai_portfolio.md 의 ensemble 수치와는 동일 실험이 아닙니다. 표 row 1~7 흐름을 보면 CutMix 단독으로는 FAR 이 운영에 쓰기 어려운 구간에 남고, FCM-PM + val_margin 으로 와서야 bit_F1 0.9943 / Total FAR 0.00% 의 균형이 맞춰집니다. 제출 대표 성과는 row 7 (bit_F1 0.9943 / Total FAR 0.00%) 로 고정합니다.
 
