@@ -2,9 +2,13 @@
 
 | 기간 | 과제명 | 리딩 규모 | 담당업무 | 과제관리 | 설계 | 개발비중 |
 |------|--------|-----------|----------|----------|------|----------|
-| 2022년 ~ 현재 | P1. Failbit Map AI 분류 시스템 | 3인 협업, 본인 60% 리딩<br>DRAM 전제품 라인 양산 운영<br>일 약 2만 장 wafer 처리 | S3 수집, Cython/Python 파싱, palette PNG / chip 좌표 JSON 생성, Web App 운영, Known / Unknown AI 모델 설계·개발·검증 | 20% | 35% | 45% |
-| 2025년 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 80% 리딩<br>16+ class × 약 3,850 chip<br>controlled synthetic benchmark | FCM-PM 합성 및 손실 마스킹 구조 구성, 학습·평가 체계 구축, best-model 선택 기준 및 대표 모델 검증 | 20% | 40% | 40% |
-| 2025년 ~ 현재 | P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC | 2인 PoC, 본인 80% 리딩<br>10,000 scenarios 구성<br>test 1,500 sample 평가 | 합성 generator 설계, 도메인 자산 코드화, 생성 데이터 학습 가능성 검증 | 20% | 45% | 35% |
+| 2024년 10월 ~ 현재 | P1. Failbit Map AI 분류 시스템 | 3인 협업, 본인 60% 리딩. DRAM 전제품 라인 양산 운영, 일 약 2만 장 wafer 처리 | 본인이 FBM raw log 적재 / Cython 파싱 / palette PNG 와 chip 좌표 JSON 생성을 짜고, 운영 뷰어 쪽과 연결한 뒤 Known 불량 및 Unknown 불량 AI 모델을 설계 / 학습 / 검증까지 끌고 갔습니다. | 20% | 35% | 45% |
+| 2025년 3월 ~ 현재 | P2. Chip Multi-label Classification | 2인 PoC, 본인 80% 리딩. 16+ class × 약 3,850 chip controlled synthetic benchmark | chip single / 2-combo 합성, Pair Mask loss masking, FCM-PM 설계, val_margin 기반 best-model 선택, 대표 모델 검증까지 본인이 직접 진행. | 20% | 40% | 40% |
+| 2026년 1월 ~ 현재 | P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC | 3인 PoC, 본인 70% 리딩. 10,000 scenarios 구성, test 1,500 sample 평가 | 본인이 직접 trend 를 판정해 온 시기에 본 패턴들을 episode generator parameter 로 코드화, 정상성 보정 식 설계, 검증용 baseline 분류기 구성. | 20% | 45% | 35% |
+
+**※ 제출 대표 성과 기준**
+
+본 문서에서 제출 대표 성과로 읽어야 할 수치는 P1 양산 운영 파이프라인 (일 약 2만 장 / 1시간 주기, Known weighted F1 0.95, Unknown 13 후보 중 7 실제 불량 확인) 과 P2 FCM-PM val_margin 단일 모델 (bit_F1 0.9943 / Total FAR 0.00%) 입니다. Unknown 후속 metric, chip-CNN object-id map, KD는 개발 중 또는 심화 질의 대비 항목으로 분리해 관리합니다.
 
 ## 2. 대표 과제 상세 기술서
 
@@ -15,45 +19,56 @@
 | 항목 | 내용 |
 |------|------|
 | 과제명 | Failbit Map 대량 데이터 파이프라인 + single-label Known 2-stage 분류 + Unknown self-supervised 검출 |
-| 수행기간 | 2022년 ~ 현재 |
+| 수행기간 | 2024년 10월 ~ 현재 |
 | 참여인원 | 본인 / 현업 엔지니어 / 관리자 |
+
+**양산 파이프라인 혁신 요약**
+
+- Cython hex-to-grade 변환 재구성으로 데이터 처리 속도를 약 **100배** 끌어올렸습니다.
+- 32색 palette indexed PNG 저장으로 이미지 저장 용량을 약 **75%** 줄였습니다.
+- 기존 1회 약 48매 조회 중심의 흐름을 일 약 **2만 장 wafer / 1시간 주기** 누적 비교 흐름으로 확장했습니다.
+- Known 2-stage 는 weighted F1 **0.95**, Unknown 운영 검증은 13개 후보 group 중 7개 실제 불량 확인으로 분리해 보고합니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | Frontend, Backend, AI 모델, 데이터 처리, 생성 파이프라인 주요 설계와 구현 주도 | 60% |
-| 2 | 현업 엔지니어 | 개인정보 입력란 | 개인정보 입력란 | 아이디어 발의 및 불량 분석 교육, Unknown 후보 13개 중 실제 불량 7개 확인 | 20% |
-| 3 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | FBM 데이터 파이프라인, 운영 뷰어 연동, Known CNN → ROI-YOLO 2-stage, Unknown contrastive 학습, 후속 chip-CNN obj-id map 보정 구조의 설계 / 구현 주도 | 60% |
+| 2 | 현업 엔지니어 | 개인정보 비공개 | 관련 현업부서 (공식 기록 대조) | 아이디어 발의, Failbit Map 의미 및 불량 분석 교육, Unknown 후보 13개 중 실제 불량 7개 현업 검증 협업 | 20% |
+| 3 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
 
-본인은 Failbit Map 의 의미와 현업 사용자 분석 방식을 먼저 학습한 뒤, 대량 변환·저장·조회 파이프라인, Web App, Known 2-stage 분류, Unknown self-supervised 검출을 하나의 운영 흐름으로 연결했습니다. 반도체 분석 현장에서 쌓은 이해를 AI 모델 구조와 데이터 처리 설계에 직접 반영하여, 현업 분석 부담을 줄이는 운영 시스템으로 구현한 점이 본인의 핵심 기여입니다.
+본인은 이전 담당 경력에서 wafer 단위 Grade 판독을 직접 해온 시간이 있어, Failbit Map 의 의미와 분석 흐름을 짧게 익힌 뒤 바로 AI 설계 단으로 들어갈 수 있었습니다. 분석 엔지니어가 평소 wafer 를 어떤 순서로 읽고 어떤 Grade 가 어디서 몰리는지가 이미 머리 안에 잡혀 있었던 점이 모델 구조 결정과 데이터 흐름 설계의 출발점입니다. 그 이해 위에서 raw log 를 wafer 이미지로 풀어내는 변환 / 저장 / 조회 흐름 (fail-map) 과 대량 이미지 검색을 위한 운영 뷰어를 한 줄로 이었고, 그 위에 Known 2-stage 분류와 Unknown self-supervised 검출을 얹어 분석 부담을 줄이는 운영 시스템 모양이 잡혔습니다. fail-map 은 데이터를 만들어내는 쪽, 운영 뷰어는 만들어진 데이터를 사람이 보는 쪽으로 역할이 나뉘고, 본인은 양쪽 모두에 직접 손을 댔습니다.
 
-데이터 처리 단에서는 Cython 기반 hex-to-grade 변환으로 wafer 당 약 1,000만 cell 변환 병목을 약 100배 가속했고, 32-color palette-indexed PNG 저장으로 Failbit Map 저장 용량을 약 75% 절감해 양산 운영의 처리량과 저장 비용을 동시에 확보했습니다.
+데이터 처리 단에서 가장 먼저 짚어낸 부분은 hex 그 자체가 아니라 hex → Grade 0-7 해석이 분석 / AI 의 실제 입구라는 점이었습니다. wafer 한 장에 약 1,000만 cell 이 있고, 그 cell 각각의 hex 값을 Grade 0-7 로 풀어내야 분석 엔지니어가 zone 별 결함을 읽을 수 있고, AI 모델 입력으로도 의미가 살아납니다. 즉 이 변환이 막히면 뒤 흐름은 전부 멈춥니다. 본인은 변환 루프를 Cython 으로 다시 짜서 약 100배 가속을 잡았고, 저장 측은 32색 palette indexed PNG 양자화로 용량을 약 75% 줄여 일 약 2만 장 / 1시간 주기 적재 흐름이 양산 운영으로 가능해졌습니다.
 
-AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labeled samples / 4:1 stratified split **[실전 현업 데이터]** 에서 weighted F1 0.95 를 달성했습니다. Unknown 검출은 **[실전 현업 데이터]** 5일 운영 데이터 10,000장 학습 + 별도 1일 2,000장 적용 결과 13 후보 중 7개가 실제 불량으로 현업 확인되었습니다. 후속 개선 및 지표 측정용으로 **[추가 생성 데이터, 개발 중]** WM-811K 분포 기반 추가 생성 anchor 셋 (9,250 wafer / 43 defect class + Normal) 에서 보조 metric 을 확인하고 있고, 최종 recipe 에서 capture 43/43, ARI 0.859 ± 0.018 까지 도달한 수준입니다. ROI YOLO 의 한계를 보완하기 위한 chip-CNN 결과를 wafer 좌표 보정 지도 (object-id map) 로 재구성하는 2차 보정 구조 역시 **[추가 생성 chip 데이터, 개발 중]** 기준 V3 obj-only chipgrid val_f1 0.9946 / test_f1 0.9872, 5-seed 평균 val_f1 0.9838 ± 0.0092 로 추가 개발하고 있습니다.
+AI 모델 단에서는 ConvNeXtV2 wafer-level classifier 와 ROI YOLO 보정 stage 를 cascade 로 묶었습니다. **[실전 현업 데이터]** 16 class / 1,500 labeled samples / 4:1 stratified split 에서 weighted F1 **0.95** 에 도달했고, Unknown 검출은 같은 운영 환경에서 5일 10,000장 학습 후, 학습에 쓰지 않은 별도 1일치 2,000장에 적용해 13 후보 group 가운데 7개가 실제 불량으로 현업 확인되었습니다.
+
+Unknown 측은 운영 단계에 정답 label 이 없어 별도 보조 metric 으로 분리해 추적하고 있습니다. **[추가 생성 데이터, 개발 중]** WM-811K 공개 셋 분포 기반 추가 anchor 는 심화 질의 대비용으로 별도 관리하며, 실전 Unknown 운영 성과와 섞지 않습니다.
+
+ROI YOLO 측의 class 확장성 / throughput 한계는 별도 후속 구조로 풀고 있습니다. **[추가 생성 chip 데이터, 개발 중]** chip-CNN 결과를 wafer 좌표계에 다시 그리는 object-id map 보정을 본인이 추가 설계 중이고, 결합은 confidence-gated max-likelihood matching 으로 잡되 λ=0 일 때 CNN-only 로 회귀하도록 안전판을 두어 후속 구조가 기존 운영 성능 아래로 떨어지지 않도록 차단했습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | Failbit Map 은 EDS Test 에서 wafer 당 약 1,000만 cell 의 Grade 로 표현되는 초고해상도 데이터이며, 분석 엔지니어 수작업 판독만으로는 전수 분석이 어렵습니다. |
-| 기존 방식의 한계 | 기존 조회는 1회 48매 수준에 머물렀고, 제품 / 시간 / lot 단위 누적 대량 분석이 어려웠습니다. 등록 외 신규 결함 패턴은 known classifier 만으로 검출하기 어렵습니다. |
-| 기술적 / 환경적 제약 | label 데이터 부족 (16 class / 1,500 sample), 일 약 2만 장 wafer 처리, 1시간 주기 적재, 대량 이미지 저장 용량, Web App 응답성, 신규 unknown pattern 검출이 동시에 요구되었습니다. |
+| 현장 난제 | Failbit Map 은 EDS Test 단계에서 wafer 당 약 1,000만 cell 의 Grade 로 표현되는 초고해상도 데이터라, 분석 엔지니어 수작업 판독만으로는 전수 분석이 불가능합니다. |
+| 기존 방식의 한계 | 기존 조회는 1회 약 48매 수준에 머물러 제품 / 시간 / lot 단위 누적 비교가 어려웠고, 등록되지 않은 신규 결함 패턴은 known classifier 만으로는 잡히지 않습니다. |
+| 기술적 / 환경적 제약 | label 1,500장 / 16 class 의 작은 학습 set, 일 약 2만 장 wafer 처리, 1시간 주기 적재, 운영 뷰어 응답성, 신규 unknown pattern 검출이 한꺼번에 걸려 있었습니다. |
 
 **ㅁ 기술적 해결 방안**
 
-데이터 파이프라인은 설비 raw log 를 Failbit Map 이미지로 변환하고, AI 모델이 신규 불량 후보를 현업 검토 대상으로 올리며, 엔지니어가 대량 Failbit Map 을 빠르게 조회·비교·확인할 수 있도록 Web App 에 표시하는 end-to-end 운영 흐름으로 설계했습니다.
+**[데이터]** 본인이 직접 잡은 end-to-end 흐름은 raw log → wafer 이미지 변환 → 좌표 JSON → 운영 뷰어 노출 → Known 분류 / Unknown 검출 → 현업 검증 까지입니다. 단계별 모듈은 아래와 같습니다.
 
 ```
 [EDS Test raw log]
         ↓
-[S3 적재 / 압축 해제]
+[원본 적재 / 압축 해제]
         ↓
 [fail-map 변환: Cython hex-to-grade + palette PNG + chip 좌표 JSON]
         ↓
-[mapviewer: FastAPI 제공 / 조회 / 비교 / WebGL2 렌더링]
+[운영 뷰어 (사내 인증 시스템 연동, 대량 wafer 이미지 조회 / 비교, 운영 기여)]
         ↓
 [Known 2-stage 분류]
         ├─ Stage 1: ConvNeXtV2 wafer-level classification
@@ -61,22 +76,35 @@ AI 모델 단에서는 ConvNeXtV2 + ROI YOLO 2-stage 로 16 class / 1,500 labele
         ↓
 [Unknown self-supervised 후보 grouping]
         ↓
-[Web App 결과 표시 및 현업 검증]
+[운영 뷰어 결과 표시 및 현업 검증]
 ```
 
-알고리즘은 다음 3단계 logic flow 로 구성했고, 각 단계마다 도메인 특성에 맞춰 모델 아키텍처를 선정했습니다.
+**[알고리즘]** 모델 선택과 결합 구조는 본 과제 데이터 특성에 맞춰 다음과 같이 결정했습니다.
 
-**(1) Stage 1 Backbone 선정 — ConvNeXtV2**
+**(1) Stage 1 Backbone — ConvNeXtV2 선택과 fine-tune 설계**
 
-Transformer 와 CNN 계열을 비교 평가했습니다. ViT, Swin 같은 Transformer 계열은 wafer 전체 구조를 보는 전역 attention 에 강점이 있으나, 본 과제의 결함은 특정 zone 이나 국소 영역에 나타나는 경우가 많아 CNN 계열의 sliding-window 기반 지역 특징 추출이 더 적합하다고 판단했습니다. 동일한 weighted F1 0.87 을 보이는 MaxViT 와 비교하더라도 ConvNeXtV2 가 파라미터 26% 감소 (119.5M → 88.6M), FLOPs 39% 감소 (74.2G → 45.1G) 로 양산 운영 inference 비용 측면에서 효율적이어서 최종 backbone 으로 채택했습니다. 백본 선택 비교표 (ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87) 도 동일 결론으로 수렴했습니다.
+먼저 Transformer 와 CNN 을 같이 돌려 비교했습니다. ViT, Swin 처럼 전역 attention 기반 backbone 은 wafer 전체 구조를 보는 데 강하지만, 본 과제의 결함은 특정 zone 이나 국소 chip 영역에 몰리는 경우가 많아 CNN 계열의 local receptive field 와 계층적 feature extraction 이 더 어울린다고 판단했습니다. 비교 결과 (ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87, 동일 4:1 stratified split 에서 Optuna sweep 으로 hyperparameter 정렬 후 측정) 도 같은 방향이었고, MaxViT 와 동일한 F1 0.87 을 유지하면서 파라미터 26% (119.5M → 88.6M) / FLOPs 39% (74.2G → 45.1G) 감소가 따라와 양산 inference 비용 측면에서 ConvNeXtV2 를 최종 backbone 으로 채택했습니다 (자문: 연세대학교 인공지능학과 전해곤 교수). 비용 외에 또 한 가지 본인이 비중을 둔 기준은 과적합 여유였습니다. 본 과제는 label 이 1,500장 / 16 class 로 작은 편이라, FLOPs 가 적어 한 epoch 당 갱신되는 파라미터 규모가 작은 backbone 일수록 좁은 class 분포에 빨리 끌려가는 위험이 줄어든다고 본 점을 두 번째 결정 축으로 잡았습니다. label 1,500장 제약 위에서 backbone 전체를 풀 미세조정하면 분포 좁은 class 가 빠르게 과적합되기에, ConvNeXt block 본체의 학습률은 낮게 잡고 분류 head 와 마지막 stage 만 학습률을 분리해 올리는 식으로 fine-tune 을 구성했습니다. 실 적용 비율은 block 본체 대비 분류 head 약 10×, 마지막 stage 약 3× 수준으로 잡았고, 이 비율 분리가 작은 label set 에서 backbone 사전학습 특성을 보존하면서 분류층만 본 과제 분포에 맞춰 빠르게 적응시키는 결정 포인트였습니다.
 
-**(2) Stage 2 ROI 보정 — YOLO**
+**(2) Stage 2 ROI 보정 — cascade gate 와 보정 결정 로직**
 
-Stage 1 만으로는 center 영역 chip 분포가 유사한 class (center scratch ↔ center scratch_rot 등) 가 혼동되는 한계가 있었습니다. 이를 보완하기 위해 wafer 안의 ROI 영역에서 chip 단위 bounding box 와 class 라벨을 다수 출력해 종합 판단하는 ROI YOLO 보정 stage 를 결합했습니다. 단일 wafer-level prediction 의 confidence 가 gate 보다 낮을 때만 ROI 단계로 넘어가는 cascade 구조로, throughput 손실은 최소화하면서 헷갈리는 class 의 분리력만 선택적으로 보강했습니다. 이 2-stage 조합으로 weighted F1 0.92 → 0.95 로 향상했습니다.
+Stage 1 만으로는 center 영역 chip 분포가 비슷한 class (center scratch ↔ center scratch_rot 등) 가 헷갈리는 한계가 남았습니다. 본인이 잡은 보완 구조는 wafer-level confidence 뿐 아니라 class별 precision / recall 로 식별한 difficult class 기준을 함께 보며, 필요한 경우에만 ROI YOLO 가 chip 단위 bounding box 와 class 라벨을 다수 출력하고 그 분포로 wafer class 를 다시 추정하는 cascade gate 입니다. confidence ≥ gate 인 wafer 는 Stage 2 를 건너뛰므로 throughput 손실이 거의 발생하지 않고, 헷갈리는 class 의 분리력만 선택적으로 보강할 수 있습니다. cascade gate 가 한 번 흘려보낸 wafer 가 영구적으로 빠지지 않도록, skip 된 wafer 중 일정 비율을 일일 sampling 으로 Stage 2 에 다시 흘려 false-negative rate 를 후행 측정하고, Stage 1 의 Normal / 고신뢰도 class prediction 누적 분포 drift 를 별도 monitoring 으로 추적해 gate 자체를 주기적으로 재조정합니다. 단계별 ladder 는 [구현 성과] 기술 지표에 모았습니다.
 
 **(3) 후속 보정 — chip-CNN object-id map 재구성 (개발 중)**
 
-ROI YOLO 는 box prediction throughput 과 class 확장성에 한계가 있어, 후속으로 chip-CNN 결과를 wafer 좌표계로 재구성하는 object-id map 보정 구조를 개발하고 있습니다. chip 단위 defect class 를 grid 32×32 의 one-hot 채널에 매핑하면, raw map 에서는 비슷해 보이는 wafer 도 object-id map 으로는 center 영역 결함이 즉시 식별됩니다.
+ROI YOLO 경로는 class 추가 시마다 annotation 과 재학습 비용이 같이 누적되어 운영 확장이 점점 무거워지는 구조였습니다. 반대로 chip-CNN 경로는 chip-level confusion matrix 로 어느 class 가 어느 위치에서 헷갈리는지를 분리해 볼 수 있어 운영 개선 cycle 이 짧아진다는 점이 본인이 본 가장 큰 차이였습니다. 그래서 다음 후속 구조로 chip 단위 classification 결과를 wafer 좌표계에 다시 그리는 object-id map 보정을 개발 중입니다. 본인이 잡은 결합 식은 confidence-gated max-likelihood matching 이고, posterior 형태로 적으면 `log p_post = log p_cnn + λ · log L(y | obj_id_map)` 입니다. gate threshold τ_gate 와 결합 가중 λ 는 validation grid 에서 함께 뽑고, λ=0 이면 CNN-only 로 회귀하므로 추가 구조가 양산 성능 아래로 떨어지지 않게 자동으로 차단되는 안전판이기도 합니다. raw map 만 봐서는 비슷해 보이는 wafer 도 chip 단위 defect grid (32×32 one-hot) 로 옮겨 놓으면 center 영역 결함이 즉시 식별되어, 헷갈리는 class 분리력을 한 번 더 끌어올리는 방향으로 잡혀 있습니다.
+
+chip-CNN object-id map 의 내부 흐름은 아래 식으로 정리했습니다.
+
+```
+c_{u,v} = crop(x, pos_{u,v})
+q_{u,v} = softmax(h_phi(c_{u,v}))
+M_obj(u,v) = argmax_k q_{u,v,k}
+log p_post = log p_cnn + λ · log L(y | M_obj)
+```
+
+`c_{u,v}` 는 wafer 내 (u,v) 위치의 chip crop, `h_phi` 는 chip-CNN, `M_obj` 는 chip 위치별 defect family map 입니다. 이 map 을 ROI-YOLO 결과와 consistency check 하는 보조 evidence 로 쓰고, λ=0 fallback 으로 기존 CNN-only 판단으로 되돌아갈 수 있게 잡았습니다.
+
+**[최적화]** Known 2-stage ladder 와 Unknown 보조 metric ladder 는 [구현 성과] 에 정리했고, label 부족 조건에서 결정적이었던 두 step 은 backbone 교체 (0.78 → 0.87) 와 cascade 결합 (0.92 → 0.95) 입니다. Unknown contrastive 측은 global InfoNCE 만으로는 patch-level 분리력이 부족해 DenseCL 의 patch-level positive matching 을 추가했고, large batch 에서 false negative 가 metric 을 흔드는 부분은 MoCo Queue (4096) 와 NV-Retriever 의 hard-negative 임계 0.72 를 누적으로 잡았습니다. 임계 자체는 0.6 / 0.72 / 0.8 sweep 에서 noise 비율 감소와 cluster 분리력이 둘 다 살아나는 지점이 0.72 라 그 값에서 멈춘 결과입니다. noise % 가 6.20% → 0.52% 까지 떨어진 흐름은 이 누적 결과이며, 이후 Local DenseCL 을 빼고 4-tool 로 재구성한 recipe (noise 1.48%, τ=0.5 후처리 시 0.00%) 가 안정성 / 분리력 균형이 더 좋아 최종 안으로 잡았습니다. Local DenseCL 제거 판단의 근거는, 본 과제처럼 large batch + MoCo Queue 가 같이 들어가는 구성에서는 patch-level positive matching 이 false negative 와 동시에 누적되어 분리력 이득보다 patch matching 잡음 비용이 커지는 구간으로 넘어간다고 본 부분이었습니다.
 
 ```
 [Input wafer image]
@@ -88,7 +116,7 @@ ROI YOLO 는 box prediction throughput 과 class 확장성에 한계가 있어, 
 [Known class prediction]
 ```
 
-학습/평가에 사용된 실제 wafer 이미지 예시 (2행 3열, 좌측부터):
+학습 / 평가에 사용된 실제 wafer 이미지 예시 (2행 3열):
 
 | Edge-Top Scratch | Edge-Ring Scratch_rot | Center Bank-Boundary (신규) |
 |:----------------:|:---------------------:|:---------------------------:|
@@ -96,15 +124,15 @@ ROI YOLO 는 box prediction throughput 과 class 확장성에 한계가 있어, 
 | **BrokenRing** | **RingDots** | **CrescentArc (신규)** |
 | <img src="./figures/wafer_brokenring.png" width="180" /> | <img src="./figures/wafer_ringdots.png" width="180" /> | <img src="./figures/wafer_crescentarc.png" width="180" /> |
 
-ROI YOLO 2-stage 보정 흐름은 다음 도식과 같습니다. GT 가 center scratch 인 wafer 가 Stage 1 wafer-level CNN 만으로는 center scratch_rot 으로 오인 분류되지만, Stage 2 ROI YOLO 가 chip 단위 bounding box 와 class 라벨을 다수 출력해 최종 정확한 class 로 보정합니다.
+Stage 1 만으로 헷갈리는 사례를 Stage 2 ROI YOLO 가 보정하는 흐름:
 
 | Stage 1 (raw wafer) | Stage 2 ROI 영역 | Stage 2 chip 단위 box + class |
 |:-------------------:|:----------------:|:-----------------------------:|
 | <img src="./figures/wafer_center_scratch.png" height="280" /> | <img src="./figures/p1_roi_crop_real.png" height="280" /> | <img src="./figures/p1_chip_yolo_box_real.png" height="280" /> |
 
-표 좌측은 GT = center scratch 인 raw wafer 입력으로, Stage 1 wafer-level CNN 만 보면 center scratch_rot 으로 오인 분류됩니다. 표 우측은 Stage 2 ROI YOLO 의 chip 단위 bounding box + class 라벨 출력으로, 다수 chip 의 예측을 종합해 최종 center scratch 로 정확히 보정합니다.
+좌측 raw wafer 는 GT 가 center scratch 인데 Stage 1 wafer-level CNN 만 보면 center scratch_rot 으로 오인됩니다. Stage 2 ROI YOLO 가 chip 단위 box 와 class 라벨을 다수 출력하고, 그 분포 majority 로 다시 center scratch 로 잡아주는 구조입니다.
 
-2차 개발은 ROI YOLO 의 class 확장성과 throughput 한계를 보완하기 위한 구조입니다.
+후속 chip-CNN object-id map 재구성 흐름은 다음과 같이 두었습니다.
 
 ```
 [Wafer image]
@@ -115,22 +143,34 @@ ROI YOLO 2-stage 보정 흐름은 다음 도식과 같습니다. GT 가 center s
         ↓
 [wafer 좌표계 object-id map 재구성]
         ↓
+[confidence-gated max-likelihood matching: λ=0 fallback]
+        ↓
 [최종 보정 classifier 입력]
 ```
 
-chip-CNN object-id map 재구성 결과는 raw wafer map 으로는 center 영역 분포가 비슷해 즉시 구분하기 어려운 두 class 가, object-id map 에서는 chip 단위 defect 분포 패턴이 즉시 식별되는 효과를 보여줍니다. 좌측 두 칸이 raw wafer map (center bank-boundary / center scratch_rot), 우측 두 칸이 **동일 wafer** 의 chip-CNN object-id map 입니다.
+**[chip-CNN obj-id map 정식 수식]**
+
+위 흐름을 식으로 풀면 다음과 같습니다.
+
+- chip crop: c_{u,v} = crop(x, pos_{u,v})
+- chip-CNN posterior: q_{u,v} = softmax(h_φ(c_{u,v}))
+- object-id map: M_obj(u,v) = arg max_k q_{u,v,k}
+
+여기서 (u,v) 는 wafer 내 chip 좌표, h_φ 는 chip-CNN, M_obj 는 wafer 위에 다시 올라가는 chip-level object-id map 입니다. 이 M_obj 가 raw wafer image 와 함께 후속 보정 classifier 입력으로 들어가, posterior 결합 식 `log p_post = log p_cnn + λ · log L(y | obj_id_map)` 의 두 번째 항을 형성합니다. λ=0 fallback 으로 양산 회귀 위험이 자동 차단되는 안전판은 본 식 위에서 그대로 작동합니다.
+
+raw wafer map (좌측 2칸) 과 동일 wafer 의 chip-CNN object-id map (우측 2칸) 비교:
 
 <table>
   <thead>
     <tr>
-      <th colspan="2" align="center" style="text-align:center">raw wafer map</th>
-      <th colspan="2" align="center" style="text-align:center">chip-CNN obj-id map</th>
+      <th colspan="2" align="center">raw wafer map</th>
+      <th colspan="2" align="center">chip-CNN obj-id map</th>
     </tr>
     <tr>
-      <th align="center" style="text-align:center">center bank-boundary</th>
-      <th align="center" style="text-align:center">center scratch_rot</th>
-      <th align="center" style="text-align:center">center bank-boundary</th>
-      <th align="center" style="text-align:center">center scratch_rot</th>
+      <th align="center">center bank-boundary</th>
+      <th align="center">center scratch_rot</th>
+      <th align="center">center bank-boundary</th>
+      <th align="center">center scratch_rot</th>
     </tr>
   </thead>
   <tbody>
@@ -145,30 +185,41 @@ chip-CNN object-id map 재구성 결과는 raw wafer map 으로는 center 영역
 
 **ㅁ 구현 성과**
 
-| 라벨 그룹 | 구분 | 성과 |
-|-----------|------|------|
-| **[실전 현업 데이터]** | Known 2-stage | weighted F1 **0.95** (16 class / 1,500 labeled samples / 4:1 stratified split) |
-| **[실전 현업 데이터]** | Known 단계별 개선 | 0.78 (baseline) → 0.87 (ConvNeXtV2 backbone) → 0.92 (+Optuna) → **0.95** (+ROI YOLO 2-stage) |
-| **[실전 현업 데이터]** | Unknown 실전 운영 확인 | 5일 10,000장 학습 + 별도 1일 2,000장 적용 → 13 후보 중 7개 실제 불량 확인 |
-| **[양산 운영]** | 운영 파이프라인 | 일 약 2만 장 wafer / 1시간 주기 적재 |
-| **[양산 운영]** | 데이터 처리 | Cython hex-to-grade 약 **100배** 가속, 32-color palette PNG 약 **75%** 저장 절감 |
-| **[양산 운영]** | Web App | 12일 누적 **2,317 요청**, peak 1,801 요청 (2026-03-07) |
-| **[추가 생성 데이터, 개발 중]** | Unknown 후속 개선 및 지표 측정용 보조 metric | **최종 recipe**: ARI 0.859 ± 0.018, Completeness 0.9938, Homogeneity 0.9424, defect class capture 43/43, noise 1.48%.<br>**후처리** (noise 임계 τ=0.5): noise 0.00%, ARI 0.868 ± 0.013.<br>**cross-anchor 평가**: capture 38/38, ARI 0.4437 로 도메인 shift 영향 함께 점검 중. |
-| **[추가 생성 chip 데이터, 개발 중]** | chip-CNN object-id map 보정 구조 | V3 obj-only chipgrid 32×32×5 one-hot 기준 val_f1 **0.9946**, test_f1 **0.9872**, 5-seed 평균 val_f1 **0.9838 ± 0.0092**. ROI YOLO 의 한계를 보완하기 위한 wafer 좌표 보정 지도 (object-id map) 재구성 구조로 개발 중. |
+**[정량적/정성적 성과]**
 
-**Unknown contrastive 구성요소 성능표 [추가 생성 데이터, 개발 중]**
+- **기술 지표**
+  - **[실전 현업 데이터]** Known 2-stage weighted F1 **0.95** (16 class / 1,500 labeled samples / 4:1 stratified split). 단계별 ladder 는 0.78 (baseline) → 0.87 (ConvNeXtV2 backbone 교체) → 0.92 (+Optuna hyperparameter optimization) → **0.95** (+ROI YOLO 2-stage 보정) 로 누적되었습니다. label 부족 조건에서 backbone 교체와 cascade 결합이 결정적이었습니다.
+  - **[실전 현업 데이터]** Unknown 운영 검증은 5일 10,000장 학습 후, 학습에 쓰지 않은 별도 1일치 2,000장에 적용해 13 후보 group 중 7개가 실제 불량으로 확인되었습니다. 운영 단계는 정답 label 이 없으므로 정량 metric 대신 현업 확인 결과로 보고합니다.
+  - **[추가 생성 데이터, 개발 중 / WM-811K 공개 셋 분포 기반]** Unknown 후속 보조 metric 은 추가 anchor 셋으로 별도 관리합니다. cross-anchor 평가에서는 학습 분포 바깥에서 분리력이 낮아지는 도메인 shift 영향이 보여, 신규 anchor 학습과 분포 보완을 추가 점검 중입니다. 이 항목은 실전 Unknown 운영 성과와 분리한 심화 질의 대비용 근거입니다.
+  - **[추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 보정 구조는 confidence-gated max-likelihood matching 과 λ=0 fallback 안전판을 같이 둔 후속 개발 항목입니다. 추가 구조가 양산 분류 성능 아래로 회귀하는 위험을 자동으로 차단하는 방향으로 설계했습니다. 아래 수치는 P1 대표 성과가 아니라 ROI-YOLO 이후 class 확장 비용을 줄이기 위한 후속 개발 보조 지표입니다.
 
-| # | Recipe | P1 (capture) | P2 (noise %) | P3 (Completeness) | P4 (Homogeneity) | ARI | AMI | Sil |
+| chip-CNN object-id map 후속 개발 보조 지표 | 값 |
+|----------------------------------|----|
+| V3 obj-only chipgrid | 32×32×5 one-hot |
+| val_f1 | **0.9946** |
+| test_f1 | **0.9872** |
+| 5-seed 평균 val_f1 | **0.9838** |
+| 5-seed val_f1 표준편차 | **± 0.0092** |
+
+- **현업 임팩트**
+  - **[양산 운영]** 일 약 2만 장 wafer / 1시간 주기 적재 파이프라인이 가동 중입니다. Cython hex-to-grade 변환 약 **100배** 가속과 32색 palette indexed PNG 약 **75%** 저장 절감으로 처리량과 저장 비용을 같이 풀었고, 사람이 1회 약 48매 보던 환경에서 일 2만 장 단위 누적 비교가 가능한 환경으로 운영 폭이 넓어졌습니다.
+  - Known 자동 분류 weighted F1 0.95 와 Unknown 13 후보 → 7 실제 불량 현업 확인이 한 흐름 안에서 돌아가므로, 알려진 결함 자동화와 등록되지 않은 신규 패턴 조기 검토가 같이 잡혀 있습니다. ROI YOLO 의 class 확장성 한계는 chip-CNN object-id map 보정으로 이어 풀고 있으며, λ=0 fallback 이 양산 회귀 위험을 차단한 상태에서 진행 중입니다.
+
+**Unknown contrastive 구성요소 성능표 [심화 질의 대비용 / 추가 생성 데이터, 개발 중]**
+
+| # | Recipe | M1 (capture) | M2 (noise %) | M3 (Completeness) | M4 (Homogeneity) | ARI | AMI | Sil |
 |---|--------|--------------|--------------|-------------------|------------------|-----|-----|-----|
 | 1 | B0 Global InfoNCE only | 1.000 | 6.20% | 0.9602 | 0.9290 | 0.823 | 0.929 | 0.582 |
 | 2 | + Local DenseCL (LW=0.5) | 1.000 | 3.93% | 0.9665 | 0.9351 | 0.851 | 0.939 | 0.514 |
 | 3 | + MoCo Queue 4096 | 1.000 | 1.31% | 0.9828 | 0.9365 | 0.846 | 0.950 | 0.573 |
 | 4 | + NV-Retriever NEG 0.72 | 1.000 | 0.52% | 0.9852 | 0.9439 | 0.861 | 0.956 | 0.611 |
-| 5 | + NeCo 0.2 (full 구성) | 1.000 | 0.96% | 0.9801 | 0.9403 | 0.8564 | 0.9503 | 0.6104 |
+| 5 | + NeCo 0.2 (B5 5-tool full) | 1.000 | 0.96% | 0.9801 | 0.9403 | 0.8564 | 0.9503 | 0.6104 |
 | 6 | 최종 recipe (Local DenseCL 제외 4-tool) | 1.000 | 1.48% | 0.9938 | 0.9424 | 0.859 ± 0.018 | 0.960 | 0.781 |
 | 7 | 최종 recipe + 후처리 (noise 임계 τ=0.5) | 1.000 | 0.00% | 0.9938 | 0.9424 | 0.868 ± 0.013 | 0.960 | 0.781 |
 
-컬럼 정의: P1 capture (defect-class recall, ↑) / P2 noise % (defect-only HDBSCAN noise 비율, ↓) / P3 Completeness (sklearn completeness_score, ↑) / P4 Homogeneity (sklearn homogeneity_score, ↑) / 보조 ARI / AMI / Silhouette 점수. 단계별 구성요소 누적으로 보면 noise % 는 6.20% → 3.93% → 1.31% → 0.52% → 0.96% 로 감소하며 (Local DenseCL, MoCo Queue, NV-Retriever NEG 가 주된 기여), Completeness 는 0.9602 → 0.9852 까지 단조 개선됩니다. 최종 recipe 와 후처리 측정값은 3-seed 평균 기준이며, 후속 검증 중입니다.
+이 표는 P1 Unknown 의 실전 운영 성과 (13 후보 중 7 실제 불량 현업 확인) 와는 분리된, 후속 개발 / metric 관리용 synthetic benchmark 결과입니다. 실전 운영 Unknown 에는 정답 label 이 없어 F1 / ARI / recall 같은 정량 metric 이 성립하지 않고, 13/7 운영 검증은 후보 압축 결과이지 분류 metric 이 아닙니다.
+
+컬럼은 M1 capture (defect-class recall), M2 noise % (defect-only HDBSCAN noise 비율), M3 Completeness, M4 Homogeneity, 그리고 ARI / AMI / Silhouette 입니다 (본 추천서 본문 P1/P2/P3 프로젝트 번호와는 별개의 metric 식별자). noise % 가 6.20% → 0.52% 로 떨어진 흐름은 DenseCL, MoCo Queue, NV-Retriever 가 patch-level / hard-negative 측면을 누적으로 잡아준 결과입니다. 최종 recipe 는 Local DenseCL 을 빼고 안정성 / 분리력 균형 쪽으로 옮긴 안이고, 후처리 τ=0.5 단계에서 cluster 신뢰도가 낮은 sample 을 재할당해 noise 0.00% 까지 떨어뜨렸습니다. 3-seed 평균 기준이며, 후속 검증을 이어가고 있습니다. 5-tool full 까지 누적한 후 본인은 Local DenseCL 을 다시 빼는 쪽으로 방향을 틀었는데, MoCo Queue 의 large negative pool 과 Local DenseCL 의 patch-level positive matching 이 같은 batch 안에서 충돌해 patch matching 잡음이 분리력 이득을 갉아먹는 구간이 보였기 때문입니다.
 
 **ㅁ P2. Chip Multi-label Classification**
 
@@ -176,46 +227,102 @@ chip-CNN object-id map 재구성 결과는 raw wafer map 으로는 center 영역
 
 | 항목 | 내용 |
 |------|------|
-| 과제명 | Chip multi-label classification - CutMix → CutMix + Pair Mask → FCM-PM |
-| 수행기간 | 2025년 ~ 현재 |
+| 과제명 | Chip multi-label classification — CutMix → CutMix + Pair Mask → FCM-PM |
+| 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
 **ㅁ 과제 참여 인력 및 역할**
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | FCM-PM 합성 및 손실 마스킹 구조 신규 적용, val_margin 기준 도입, KD 압축 후보 검증, 학습·평가 운영 | 80% |
-| 2 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | chip single / 2-combo 합성, CutMix 계열 선정, Pair Mask loss masking 설계, FCM-PM 본 과제 신규 적용, val_margin 기반 best-model selection, Temperature Scaling, pos/neg target asymmetry sweep, I13 inference variant, 4-bag ensemble, KD 압축 후보 검토 | 80% |
+| 2 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
 
-P2 의 주요 기여는 FCM-PM 을 본 과제 데이터 특성에 맞게 신규 적용한 점입니다. 본인은 chip 내부 defect 위치를 사전에 알 수 없는 조건에서 일반 CutMix 가 defect signal 을 잘라낼 수 있다는 한계를 인지하고, `CutMix 선정 → CutMix + Pair Mask 로 background loss 제외 → Full-Cover Mixup + Pair Mask 구성` 순서로 방법을 확장했습니다.
+P2 는 현업의 근본 제약인 2-combo 결함 데이터 부족을 풀기 위해, 실제 single defect chip 원천을 multi-label 학습 신호로 확장한 과제입니다.
 
-알고리즘은 다음 3단계 logic flow 로 데이터 합성 구조를 단계적으로 확장했고, 각 단계마다 본 과제 데이터 특성에 맞춘 선택 사유를 두었습니다.
+- single defect 원천 데이터는 Grade 의미와 결함 분포를 유지했습니다.
+- 2-combo label 부족은 FCM-PM 으로 도메인 분포에 맞춰 보완했습니다.
+- Normal / Invalid / OOD negative 평가셋은 현업 분포에 가깝게 직접 설계했습니다.
+- 목표는 bit_F1 만 올리는 것이 아니라, false-positive 리스크를 사전에 확인하는 구조를 만드는 것이었습니다.
 
-**(1) CutMix 계열 선정 — Mixup 계열 대신 양자화 의미 보존**
+본 과제의 핵심 기술적 성과는 단순한 BCE 손실 함수 적용을 넘어, 본 과제 데이터 구조에 맞는 학습 / 평가 파이프라인을 직접 설계한 것입니다.
 
-Grade 0-7 양자화 chip 이미지를 다루는 본 과제에서는 픽셀값이 중간 색으로 섞이는 Mixup / Diffusion 계열은 사용할 수 없습니다. 합성 결과의 픽셀값이 실재하지 않는 grade 가 되어 분류기 학습에 노이즈로 작용하기 때문입니다. 영역 단위로 잘라 붙이는 CutMix 계열만이 양자화 의미를 보존하면서 multi-label 학습 신호를 만들 수 있다고 판단해 CutMix 를 baseline 으로 채택했습니다.
+- **데이터 합성**: FCM-PM 을 통한 2-combo 결함 데이터 생성
+- **손실 통제**: Pair Mask 를 활용한 background 오학습 loss 분리
+- **모델 선택**: false-alarm 위험까지 고려한 val_margin 기반 checkpoint 선택
+- **추론 최적화**: 운영 환경 FAR 을 억제하는 I13 max-prob gate 적용 및 KD student (1× cost) 압축 후보 검토
 
-**(2) Pair Mask 결합 — background loss 제외로 negative 오학습 차단**
+기존 BCE, Focal, ASL 같은 loss 변경만으로는 2-combo recall 과 false alarm 억제를 동시에 만족시키기 어려웠습니다. 본인은 아래 세 조건이 같이 필요하다고 봤고, 이를 FCM-PM 과 val_margin checkpoint selection 으로 묶었습니다.
 
-CutMix 단독은 합성된 chip 의 background 영역까지 defect class 로 학습 신호가 흘러 Normal / Invalid / OOD negative 에서 false-positive 가 100% 까지 치솟는 한계가 있었습니다. 이를 해결하기 위해 합성 단계에서 어느 영역이 background 인지 추적하는 Pair Mask 를 결합해, loss 계산 시 background 영역을 제외하는 구조를 적용했습니다. 이로써 background 를 defect 로 오학습하는 문제가 차단됩니다.
+- Grade 0-7 결함 픽셀 의미 보존
+- chip 내부 defect coverage 보장
+- 합성 background 의 오학습 억제
 
-**(3) Full-Cover Mixup 확장 — chip 내부 defect 위치 미지 조건 반영**
+여기에 추가로 4-bag ensemble 과 KD 를 후속 운영성 검토 항목으로 분리했습니다.
 
-일반 CutMix 는 chip 의 일부 영역만 잘라 붙이는 방식이라 defect signal 이 잘릴 위험이 있습니다. chip 내부 어느 위치에 defect 가 올지 사전에 알 수 없는 본 과제의 특성을 합성 단계에 반영하기 위해 chip 전체 grid 를 cover 하는 Full-Cover Mixup 으로 확장하고, 위 (2) 의 Pair Mask 와 결합해 FCM-PM (Full-Cover Mixup + Pair Mask) 합성 구조를 본 과제에 신규 적용했습니다.
+- **4-bag (g=2/2/3/4) ensemble**: seed / cover grid 강도 차이에 따른 checkpoint 흔들림을 확인하는 보조 안정성 실험. 단일 FCM-PM val_margin 대표 모델보다 bit_F1 이 낮은 구간이 있어 대표 성능 향상 근거로는 쓰지 않습니다.
+- **KD single student**: single model 수준의 추론 비용으로 압축 가능성을 보는 후보. OOD 포함 Total FAR 리스크가 남아 제출 성과에서는 분리.
+- **제출 대표 성과 고정**: FCM-PM val_margin 단일 모델 bit_F1 **0.9943** / Total FAR **0.00%**.
 
-학습·평가 운영 측면에서는 val_margin 기준을 도입해 작은 validation set 에서 val_f1 plateau 로 checkpoint 선택이 흔들리는 문제를 줄였으며, KD single student 로 1× inference cost 압축 후보를 함께 확인했습니다.
+출발점은 CutMix 였습니다. 다만 일반 CutMix 는 본 과제에서 두 가지 문제가 같이 생겼습니다.
+
+- 일부 직사각형만 잘라 붙이면 defect signal 이 잘려 학습 신호가 사라질 수 있습니다.
+- 잘라 붙인 영역 바깥 background 까지 defect 로 오학습되어 Normal / Invalid / OOD negative 에서 false-positive 가 폭증할 수 있습니다.
+
+본인은 이를 Full-Cover Mixup 과 Pair Mask 로 나누어 풀었습니다.
+
+- **Full-Cover Mixup**: chip 전체 grid 를 cover 해 defect 위치와 무관하게 학습 signal 이 남도록 합니다.
+- **Pair Mask**: 합성 영역과 background 를 구분하는 binary mask M (M_ij ∈ {0, 1}) 으로 loss 를 `L = Σ_ij M_ij · BCE(y_ij, ŷ_ij)` 에 제한해 background 픽셀 / bit 를 학습에서 제외합니다.
+- **Pair Mask 제거 ablation**: Total FAR 이 **100%** 까지 치솟아, background loss 가 false-positive 의 핵심 원인임이 정량으로 확인됐습니다.
+
+마지막 쟁점은 best epoch 선택이었습니다. 작은 validation set 에서는 val_f1 이 여러 epoch 에서 같은 값으로 붙어 선택이 흔들렸습니다. 그래서 본인은 `val_margin = mean(score over positive bits) - max(score over negative bits)` 를 기준으로 잡았습니다.
+
+- positive bit 평균은 결함 신호가 충분히 살아 있는지 봅니다.
+- negative bit 최대값은 가장 위험한 false-positive 후보를 직접 봅니다.
+- epoch-vs-test_f1 Spearman ρ 는 val_margin +0.56, val_f1 -0.10 으로 갈렸습니다.
+
+이후 운영 환경 약 80% Normal 분포에 대응하는 추론 단계를 같이 검토했습니다.
+
+- **I13 inference variant**: max-prob<0.55 → Normal 강제 (80% Normal 분포 사전 정보가 임계 근거).
+- **pos=0.95 / neg=0.30 비대칭 target sweep**: 39-cell grid 위에서 negative 측 보수성을 강화한 유일 조합.
+- **4-bag (g=2/2/3/4) ensemble**: 보조 안정성 실험 (대표 성과 후보 아님).
+- **KD single student**: 1× inference cost 압축 후보, OOD Total FAR 리스크로 제출 성과에서는 분리.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | chip 내부 defect 위치를 사전에 알 수 없고, single defect chip 을 조합해 multi-label 평가로 확장해야 합니다. |
-| 기존 방식의 한계 | 일반 CutMix 는 일부 영역만 잘라 붙이므로 defect signal 이 잘릴 수 있습니다. background 영역까지 defect 로 학습하면 Normal / Invalid / OOD negative 에서 false-positive 가 증가합니다. |
-| 기술적 / 환경적 제약 | multi-label 조합 label 부족, 작은 validation set, OOD / negative false-positive 억제, 압축 후보의 inference cost 제약이 동시에 존재했습니다. |
+| 현장 난제 | chip 내부 defect 위치를 사전에 알 수 없고, single defect chip 만 가지고 multi-label 평가로 확장해야 합니다. |
+| 기존 방식의 한계 | 일반 CutMix 는 일부 영역만 잘라 붙여 defect signal 누락과 background 의 defect 오학습이 같이 발생하고, 그 결과 Normal / Invalid / OOD negative 에서 false-positive 가 운영 부적합 수준으로 치솟습니다. |
+| 기술적 / 환경적 제약 | 2-combo label 부족, 작은 validation set 의 best epoch plateau, OOD / negative false-positive 억제, 압축 후보의 1× inference cost 제약이 한꺼번에 묶여 있습니다. |
 
 **ㅁ 기술적 해결 방안**
+
+**[데이터]** 학습 원천은 **[실전 현업 chip defect 원본]** single 4 class (bank_boundary / fork / scratch / scratch_rot) 입니다. 그 위에 **[FCM-PM 합성, 실전 chip 원천 결합]** 2-combo 6 종을 반도체 도메인 분포에 맞춰 만들어 multi-label 학습 신호를 확보했고, 평가 측은 여기에 **[현업 분포 기반 합성 평가셋]** Normal + Invalid + OOD 4 종을 더해 single 4 + 2-combo 6 + negative 6 = 16+ class × 약 3,850 chip 규모의 controlled benchmark 를 구성했습니다. 실전 평가 환경을 얻기 어려운 조건에서 현업 분포에 맞춰 평가셋까지 직접 설계한 부분이 본 과제 데이터 전략의 핵심입니다.
+
+data leakage 방지를 위해 single defect chip 원천을 chip 단위로 먼저 train / test 로 split 한 뒤, 2-combo 와 Pair Mask 합성은 train 원천 chip 만 사용했습니다. test 원천 chip 은 합성 과정에서 완전히 배제되어 train / test 사이 chip 단위 누수가 없도록 잡았습니다.
+
+**[P2 수식 요약]**
+
+```
+p_k = sigmoid(z_k),  k = 1..K
+
+L_BCE = -Σ_k [y_k log p_k + (1-y_k) log(1-p_k)]
+
+x_tilde = Σ_r M_r ⊙ T_r(x_r)
+y_tilde = OR_r y_r
+
+L_PM = Σ_{i,k} M_{i,k} · BCE(y_{i,k}, p_{i,k})
+       / (Σ_{i,k} M_{i,k} + ε)
+
+val_margin = mean_{k in P+}(p_k) - max_{j in P-}(p_j)
+
+FAR = FP_negative / N_negative
+```
+
+softmax 대신 sigmoid multi-label head 를 쓴 이유는 single defect 와 2-combo defect 가 mutually exclusive 가 아니기 때문입니다. FCM-PM 합성은 포함된 defect label 의 union 을 target 으로 두고, Pair Mask loss 는 합성 background 가 defect negative 로 과도하게 학습되는 경로를 끊습니다. FAR 는 Normal / Invalid / OOD negative set 에서 별도로 계산해 운영 false-positive 위험을 직접 보게 했습니다.
 
 ```
 [single 4 class chip]
@@ -230,10 +337,10 @@ CutMix 단독은 합성된 chip 의 background 영역까지 defect class 로 학
         ↓
 [val_margin best checkpoint selection]
         ↓
-[대표 모델 / KD single 비교]
+[I13 inference variant + 4-bag 보조 안정성 / KD 후보 risk check]
 ```
 
-학습 single 4 class 예시 chip (좌측부터 bank_boundary / fork / scratch / scratch_rot):
+학습 single 4 class 예시 chip (bank_boundary / fork / scratch / scratch_rot):
 
 <p align="left">
   <img src="./figures/chip_eval_bank_boundary_selected.png" width="160" />
@@ -242,7 +349,7 @@ CutMix 단독은 합성된 chip 의 background 영역까지 defect class 로 학
   <img src="./figures/chip_eval_scratch_rot_selected.png" width="160" />
 </p>
 
-2-combo 합성 예시 chip 6종 (single 4 class 의 모든 2-조합, 좌측부터 bb+fork / bb+scratch / bb+scratch_rot / fork+scratch / fork+scratch_rot / scratch+scratch_rot):
+single 4 class 의 모든 2-조합으로 만든 2-combo 평가 chip 6종:
 
 <p align="left">
   <img src="./figures/chip_combo_bb_fork_selected.png" width="130" />
@@ -253,7 +360,7 @@ CutMix 단독은 합성된 chip 의 background 영역까지 defect class 로 학
   <img src="./figures/chip_combo_scratch_scratch_rot_selected.png" width="130" />
 </p>
 
-Normal / Invalid / OOD negative 평가셋 예시 (좌측부터 Normal / Invalid / OOD-Starburst / OOD-CenterDonut / OOD-CrossScratch / OOD-DiagonalSmear):
+Normal / Invalid / OOD negative 평가셋 예시:
 
 <p align="left">
   <img src="./figures/chip_eval_normal_selected.png" width="130" />
@@ -264,7 +371,27 @@ Normal / Invalid / OOD negative 평가셋 예시 (좌측부터 Normal / Invalid 
   <img src="./figures/chip_ood_diagonalsmear_selected.png" width="130" />
 </p>
 
-val_margin 은 chip 한 장에서 모델이 출력하는 bit 별 score 를 두 그룹으로 나눠 차이를 본 신호입니다. positive bit (실제 결함이 있는 bit) 의 평균 score 와 negative bit (정상 bit) 의 최대 score 의 차이로 정의했습니다.
+**[알고리즘]** 합성 / 손실 / 선택 / 추론 네 단계로 본 과제 데이터 특성에 맞춰 본인이 직접 설계했습니다.
+
+**(1) 합성 — CutMix 계열 채택과 Full-Cover Mixup 확장**
+
+Grade 0-7 양자화 chip 이미지를 다루는 본 과제는 픽셀값이 중간 색으로 섞이는 Mixup / Diffusion 계열을 그대로 쓰면 실재하지 않는 grade 가 만들어져 분류기가 그걸 noise 로 학습하게 됩니다. 영역 단위로 잘라 붙이는 CutMix 계열이라야 양자화 의미가 보존됩니다 (자문: 연세대학교 인공지능학과 박은병 교수). 다만 일반 CutMix 는 일부 직사각형 영역만 잘라 붙이기에 chip 내부 어디에 defect 가 올지 모르는 본 과제에서는 defect signal 이 잘릴 위험이 남아, 본인이 chip 전체 grid 를 cover 하는 Full-Cover Mixup 으로 확장했습니다.
+
+**(2) 손실 — Pair Mask 와 background loss 제외**
+
+합성 단계에서 잘라 붙인 영역 / background 영역을 구분하는 binary mask M (M_ij ∈ {0, 1}) 를 같이 만들고, 학습 loss 를 다음과 같이 정의했습니다.
+
+```
+L = Σ_ij M_ij · BCE(y_ij, ŷ_ij)
+```
+
+M_ij = 1 인 영역만 loss 에 들어가므로 background 픽셀 / bit 는 학습에서 제외되고, Normal / Invalid / OOD negative 에서 background 가 defect 로 오학습되는 경로가 끊깁니다. Pair Mask 를 빼면 Total FAR 이 100% 까지 치솟는 PoC 결과가 본 설계의 직접 근거입니다.
+
+**(3) checkpoint 선택 — val_margin 정의**
+
+val_margin = mean(score over positive bits) − max(score over negative bits)
+
+평균과 최대의 차이로 정의했기에 val_f1 plateau 구간에서도 미세 변동이 남아 best epoch 이 흔들리지 않습니다. negative 측 최대를 쓴 정의 근거는 §개인별 기여 서술 에서 풀어 적었습니다. epoch-vs-test_f1 Spearman ρ 는 val_margin +0.56 / val_f1 −0.10 으로, val_margin 이 ground-truth test_f1 과 양의 일관성을 보였습니다.
 
 ```
        [chip image]
@@ -280,46 +407,66 @@ positive bits     negative bits
    │                 │
    └────────┬────────┘
             ▼
-   val_margin = 평균(positive) - 최대(negative)
+   val_margin = mean(positive) − max(negative)
             ↓
    클수록 결함과 정상 분리가 안정적
 ```
 
-이렇게 정의한 이유는 다음 두 가지입니다.
+**(4) inference / 후속 — I13 variant, ensemble, KD**
 
-첫째, validation set 이 작으면 val_f1 이 여러 epoch 에서 같은 값으로 plateau 가 되어 best epoch 이 흔들립니다. val_margin 은 score 평균과 최대의 차이라 plateau 구간에서도 미세한 변동이 살아 있어 best epoch 식별이 안정됩니다.
+운영 환경은 약 80% Normal 분포라서, max-prob<0.55 인 입력을 Normal 로 강제하는 I13 inference variant 를 두어 운영 false-positive 를 추가로 억제했습니다. Normal 분포 80% 라는 운영 사전 정보가 max-prob 임계 0.55 의 직접 근거입니다. pos=0.95 / neg=0.30 비대칭 target sweep 으로 negative 측 보수성을 강화했고, 4-bag (g=2/2/3/4) ensemble 은 부속 실험으로 검증했습니다. g 를 2/2/3/4 로 펼친 이유는 bag 별로 cover grid 강도가 달라 실수 패턴이 겹치지 않게 하기 위함입니다. 그 결과 4-bag majority vote 의 분산이 줄어드는 효과까지 따라옵니다. KD student 는 본 단계에서 압축 후보로만 두고 대표 성과에서는 빼 두었습니다.
 
-둘째, negative 측은 최대값을 사용했기 때문에 정상 bit 중 가장 결함처럼 보이는 케이스 (false-positive 위험점) 가 그대로 신호에 들어옵니다. val_f1 만 봤을 때 놓치는 운영 false-positive 위험을 best-model 선택 단계에서 자동으로 반영하게 됩니다.
+**[최적화]** 합성 단계에서는 CutMix → CutMix + Pair → FCM-PM 순서로 단계별 효과를 직접 측정했고, false-positive 와 bit_F1 의 trade-off 가 어디서 깨지는지를 아래 ablation 표로 추적했습니다.
 
-운영 적용 시에는 val_f1 best 와 val_margin best 를 함께 보았고, 본 과제 데이터에서는 두 기준이 동일한 epoch 으로 수렴해 정합성을 확인했습니다.
+- **cover grid sweep**: FCM-PM 의 분할 파라미터는 `g ∈ {2..6}`, `n ∈ {1..8}` 범위에서 sweep 했습니다. eval I3 기준 g=3 / n=1 조합이 bit_F1 0.9960 으로 가장 높았고, g=3 부근에서는 n 변화에 둔감했습니다.
+- **g 선택 근거**: g 를 키우면 chip 한 장이 더 잘게 쪼개져 공간 다양성은 올라갑니다. 다만 본 데이터에는 fork 처럼 좁고 긴 결함이 있어 g≥4 부터 fork bit 분리력이 떨어졌고, g=3 부근에서 멈추는 것이 본 과제 데이터에 맞다고 판단했습니다.
+- **pos / neg target sweep**: pos=0.95 / neg=0.30 비대칭 target 은 39-cell asymmetric target grid sweep 에서 bit_F1 0.9795 / Total FAR 0.00% 가 동시 달성되는 유일 조합이었습니다. neg target 을 0~0.10 으로 낮추면 OOD FAR 가 다시 올라갔고, pos=1.0 을 유지한 채 neg 만 0.30 이상으로 올리면 bit_F1 자체가 빠졌습니다.
+- **checkpoint 선택**: val_f1 best 와 val_margin best 를 같이 보았고, 본 데이터에서는 두 기준의 best epoch 이 인접 구간에 모여 있어 큰 충돌 없이 같이 관리하고 있습니다.
 
 **ㅁ 구현 성과**
 
-| 라벨 그룹 | 구분 | 성과 |
-|-----------|------|------|
-| **[추가 생성 chip 데이터, PoC]** | 평가셋 | single 4 + 2-combo 6 + Normal + Invalid + OOD 4 = **16+ class × 약 3,850 chip** 추가 생성 chip 데이터 기반 controlled synthetic benchmark |
-| **[추가 생성 chip 데이터, PoC]** | FCM-PM 대표 모델 | bit F1 **0.9943**, Normal / Invalid / OOD negative 평가셋에서 false-positive 미검출 |
-| **[추가 생성 chip 데이터, PoC]** | Pair Mask 제거 비교 | Pair Mask 미적용 시 Total FAR **100%** 의 운영 부적합 사례 확인. Pair Mask background loss masking 의 false-positive 억제 효과 확인 |
-| **[추가 생성 chip 데이터, PoC]** | val_margin 기준 도입 | false-positive 위험까지 반영하는 best-model 선택 기준으로 적용 |
-| **[추가 생성 chip 데이터, PoC]** | KD single student | 1× inference cost 압축 후보로 검토 중이나, OOD 포함 Total FAR 리스크가 있어 제출 성과에서는 제외하고 후속 개선 대상으로 분리 관리합니다. |
+**[정량적/정성적 성과]** (P2 성과는 **[현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증]** 위에서 측정한 값입니다. 아래 성과 항목별 데이터 출처는 inline 라벨로 분리 표기합니다.)
 
-**Multi-label 합성 학습 recipe 성능표 [추가 생성 chip 데이터, PoC — n=2000/class 평가 / 16+ class 평가셋]**
+- **기술 지표**
+  - **[실전 현업 chip defect 원본]** single 4 class (bank_boundary / fork / scratch / scratch_rot) 를 학습 원천으로 두고, **[FCM-PM 합성, 실전 chip 원천 결합]** 2-combo 6 종 + **[현업 분포 기반 합성 평가셋]** Normal / Invalid / OOD 4 종을 합쳐 **16+ class × 약 3,850 chip** 규모의 controlled benchmark 를 구성했습니다.
+  - FCM-PM 대표 모델은 bit F1 **0.9943**, Normal / Invalid / OOD negative 평가셋에서 false-positive 미검출 (Total FAR 0.00%) 입니다.
+  - Pair Mask 를 제거하면 Total FAR 이 **100%** (Normal / Invalid / OOD negative 평가셋 합산 기준) 로 치솟는 운영 부적합 사례가 PoC 에서 확인되었습니다. background loss 를 masking 한 것이 false-positive 억제의 핵심 요인이라는 직접 근거입니다.
+  - val_margin 기반 best-model selection 은 epoch-vs-test_f1 Spearman ρ val_margin +0.56, val_f1 −0.10 으로, false-positive 위험까지 반영하는 best epoch 선택 기준으로 정착되었습니다.
+  - I13 inference variant 와 4-bag ensemble 보조 실험을 검증했고, KD single student 1× inference cost 압축 후보는 OOD 포함 Total FAR 리스크로 제출 성과에서 분리해 후속 개선 대상으로 관리합니다.
 
-| # | Recipe | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Note |
-|---|--------|--------|--------|--------|------|--------|---------|------|
-| 1 | Baseline (BCE+LS, no cutmix) | 0.1093 | 0.1662 | 0.0652 | 99.47% | 99.65% | 98.91% | Baseline 단독 학습은 검증 단계에서 수렴 실패 (best val 0.676, bit_F1 chance 수준). CutMix 미적용 시 margin_max 학습 실패 사례 |
-| 2 | Focal loss (sigmoid focal, no cutmix) | 0.7980 | 0.7981 | 0.3987 | 45.72% | 35.55% | 77.50% | Focal loss 단독으로도 추가 하이퍼파라미터 조정에 따라 Total FAR 0.08% 까지 도달 가능 (FAR 최저 사례). CutMix 미적용 |
-| 3 | ASL (asymmetric, label smoothing 0, no cutmix) | 0.6435 | TBD | TBD | 100.0% | 100.0% | 100.0% | 최신 ladder final 기준 negative rejection 실패. single / 2combo 분해는 후속 검증 중 |
-| 4 | CutMix only (random rect, no pair) | 0.9359 | TBD | TBD | 42.05% | 37.00% | 57.81% | CutMix 도입으로 bit_F1 은 회복되나, Pair Mask 미적용 시 background 영역까지 defect 로 오학습되어 FAR 이 운영 부적합 수준으로 남음 |
-| 5 | CutMix + Pair (random rect + masked) | 0.9256 | 0.7851 | 0.3221 | 100.0% | 100.0% | 100.0% | bit-level 학습 (bb 0.9848) 은 강화되나 단일 sigmoid 임계 셀로 수렴해 negative rejection signal 부재. Full-Cover Mixup 까지 결합한 FCM-PM 의 필요성 확인 사례 |
-| 6 | FCM-PM val_f1 criterion (run116J ep1) | 0.9422 | TBD | TBD | 0.00% | TBD | TBD | 같은 recipe 에서 val_f1 기준 checkpoint 선택 사례. val_margin 기준으로 재선택한 row 7 이 대표 모델로 채택됨 |
-| 7 | FCM-PM val_margin criterion (run116J ep6) | 0.9943 | TBD | TBD | 0.00% | 0.00% | 0.00% | val_margin 기준 대표 모델 |
-| 8 | 4-bag majority 2/4 ensemble | 0.9167 | TBD | TBD | 4.05% | 4.10% | 3.91% | ensemble 보조 실험. FCM-PM 단일 대표 모델보다 낮아 주 성과로 쓰지 않음 |
-| 9 | KD distill 4-bag → student | TBD | TBD | TBD | TBD | TBD | TBD | 1× inference cost 압축 후보. OOD 포함 Total FAR 리스크로 후속 검증 중 |
+- **현업 임팩트**
+  - 실전 single defect chip 원천 위에 부족한 2-combo 결함을 도메인 분포로 합성해 multi-label 학습 / 평가가 가능해졌습니다. 현업에서는 2-combo label 수와 균형을 얻기 어려워 사실상 막혀 있던 분류 문제를, 반도체 도메인 (Grade 0-7 의미와 defect 위치 / 강도 / 조합 분포) 위에서 다시 푼 방법론입니다.
+  - 현업 eval 환경을 얻기 어려운 상황에서 Normal / Invalid / OOD negative 평가셋을 현업 분포에 가깝게 직접 설계한 점도 본 과제 변별 포인트입니다. 현업 평가 환경 부재를 도메인 분포 합성과 multi-label 학습 설계로 풀어낸 사례에 해당합니다.
+  - 정량으로는 bit F1 0.9943, Normal / Invalid / OOD negative Total FAR 0.00% 로 양산 적용 전 false-positive 리스크 검증을 마쳤습니다.
+  - val_margin 기반 best-model 선택은 작은 validation set 의 plateau 흔들림을 제어하는 안전판으로 같이 들어 있습니다.
+  - 이 구조는 P1 의 wafer-level 판단을 chip 좌표계로 정밀화하는 후속 기반으로도 이어집니다.
+  - 본 방법론의 변별 포인트는 실전 single defect chip 원천 + 반도체 도메인 분포 기반 결합 합성 + multi-label 학습 / 평가 설계 결합이라는 한 줄 흐름입니다.
 
-표는 학습 단계별 비교 측정을 정리한 것입니다. Row 1-2 의 single / 2combo 수치는 별도 ladder 측정 시점 결과로 row 3-5 의 TBD 와는 동일 측정 batch 가 아니며, 동일 batch 재측정은 후속 검증에서 보강합니다. KD distill student 는 제출 성과에서 제외하고 후속 검증 중인 압축 후보로만 관리합니다. 단계별 비교 요약: CutMix 단독은 bit_F1 은 회복되나 FAR 기준으로는 운영 부적합했고, FCM-PM + val_margin 에서 bit_F1 0.9943 / Total FAR 0.00% 로 균형이 개선되었습니다.
+**Multi-label 학습 recipe 성능표 [현업 defect chip 원천 + 도메인 확률분포 기반 생성/검증 — 제출 본문용 완료 수치]**
 
-추가 보조 확인 [추가 생성 chip 데이터, PoC]: Pair Mask 변형 2종 (Complement + Pair Mask, Single Pair Mask) 도 bit_F1 0.8743 / Total FAR 100% 로 negative false-positive 를 억제하지 못해, Full-Cover Mixup 과 Pair Mask 의 결합 (FCM-PM) 이 필요한 이유를 보조 확인했습니다.
+| # | Recipe | bit_F1 | Total FAR | Latency | Throughput | Params | 핵심 해석 |
+|---|--------|--------|-----------|---------|------------|--------|-----------|
+| 1 | Baseline (BCE+LS, no cutmix) | 0.1093 | 99.47% | 1x | 1x | 1x | 2-combo 신호를 거의 학습하지 못해 기본 multi-label 구조만으로는 운영 후보가 되기 어렵습니다. |
+| 2 | Focal loss (sigmoid focal, no cutmix) | 0.7980 | 45.72% | 1x | 1x | 1x | hard sample 대응은 됐지만 Normal / Invalid / OOD false-positive 가 남았습니다. |
+| 3 | ASL (asymmetric, LS 0, no cutmix) | 0.6435 | 100.0% | 1x | 1x | 1x | class imbalance 손실만으로는 negative rejection 이 무너졌습니다. |
+| 4 | CutMix only (random rect, no pair) | 0.9359 | 42.05% | 1x | 1x | 1x | bit_F1 은 회복됐지만 background 까지 defect 로 오학습되어 FAR 이 운영 부적합 수준에 남았습니다. |
+| 5 | CutMix + Pair (random rect + masked) | 0.9256 | 100.0% | 1x | 1x | 1x | mask 만 붙이면 임계 수렴으로 흔들렸고, defect coverage 보장이 같이 필요했습니다. |
+| 6 | FCM-PM val_f1 criterion (run116J ep1) | 0.9422 | 0.00% | 1x | 1x | 1x | 같은 FCM-PM recipe 에서 val_f1 기준으로 고른 checkpoint 입니다. |
+| 7 | FCM-PM val_margin criterion (run116J ep6) | 0.9943 | 0.00% | 1x | 1x | 1x | 제출 대표 모델입니다. bit_F1 과 false-positive 억제가 동시에 맞았습니다. |
+| 8 | 4-bag majority 2/4 ensemble※ | 0.9167 | 4.05% | 4x | 1/4x | 4x | 단일 FCM-PM val_margin 대표 모델 대비 bit_F1·FAR 모두 낮은 보조 안정성 실험입니다. bag 별 cover-grid 강도 (g=2/2/3/4) 를 달리해 실수 패턴 겹침을 확인했고, 4x latency / 1/4x throughput 이라 운영 후보는 단일 FCM-PM val_margin 모델로 고정했습니다. |
+
+※ 4-bag ensemble row 는 seed / cover-grid / checkpoint 조건이 다른 보조 안정성 실험이며, 다른 요약 자료(01_career_profile.md / 02_ai_portfolio.md)에 기재된 ensemble 수치와는 동일 실험이 아닙니다. 제출 대표 성과는 단일 FCM-PM val_margin 모델 bit_F1 0.9943 / Total FAR 0.00% 로 고정합니다.
+
+위 표는 제출 본문용으로 완료 수치가 있는 항목만 남긴 것입니다. KD distill student 는 1× inference cost 압축 후보이지만 OOD 포함 Total FAR 리스크가 남아 성과표에서 제외하고 후속 검증 항목으로 관리합니다. 표 row 1~7 을 같이 보면 CutMix 단독은 bit_F1 회복은 되어도 FAR 기준에서 운영 부적합이었고, FCM-PM + val_margin 으로 와서야 bit_F1 0.9943 / Total FAR 0.00% 의 균형이 맞춰졌습니다.
+
+이 흐름이 가리키는 본인 결론은 분명합니다.
+
+- Focal 이나 ASL 처럼 loss 만 바꾸는 접근은 2-combo recall 과 false-positive 억제를 동시에 만족시키지 못했습니다.
+- 단순 CutMix 도 chip 내부 defect 위치를 사전에 모르는 Grade 0-7 양자화 이미지에서는 충분하지 않았습니다.
+- 결정적 두 축은 defect coverage 보장 (Full-Cover Mixup) 과 합성 background 의 loss 분리 (Pair Mask) 였습니다.
+- 그 두 축을 한 학습 구조에 결합한 것이 FCM-PM 이고, val_margin 으로 운영 false-positive 위험까지 selection 기준에 넣어 운영 적용 후보로 가져갔습니다.
+
+추가 보조 [추가 생성 chip 데이터, PoC]: Pair Mask 변형 2종 (Complement + Pair Mask, Single Pair Mask) 도 bit_F1 0.8743 / Total FAR 100% 로 negative false-positive 를 억제하지 못해, Full-Cover Mixup 과 Pair Mask 결합 (FCM-PM) 이 필요한 이유를 보조로 확인했습니다.
 
 **ㅁ P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC**
 
@@ -328,69 +475,64 @@ positive bits     negative bits
 | 항목 | 내용 |
 |------|------|
 | 과제명 | Trend episode 데이터 생성 기반 Anomaly-detection 검증 PoC |
-| 수행기간 | 2025년 ~ 현재 |
-| 참여인원 | 본인 / 관리자 |
+| 수행기간 | 2026년 1월 ~ 현재 |
+| 참여인원 | 본인 / 관리자 / 동료 엔지니어 (공동 연구자) |
 
 **ㅁ 과제 참여 인력 및 역할**
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 본인 | 개인정보 입력란 | 개인정보 입력란 | trend episode 합성 generator 설계, Region / Noise / 일반 trend 4종 + context 1종 코드화, 생성 데이터 학습 가능성 검증 | 80% |
-| 2 | 관리자 | 개인정보 입력란 | 개인정보 입력란 | 방향성, 일정, 리뷰 매니징 | 20% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | trend episode 합성 generator 설계, Region 5종 / Noise 3종 / trend 불량 4종 + context 1종 parameter 코드화, 정상 산포 기준 enforcement floor 식 설계, 1차 Binary gate 검증 PoC 설계 / 구현 | 70% |
+| 2 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
+| 3 | 동료 엔지니어 (공동 연구자) | 개인정보 비공개 | 관련 엔지니어 조직 (공식 기록 대조) | AI 모델 실행, 데이터 정리, 실험 결과 취합 | 10% |
 
 **ㅁ 개인별 기여 서술**
 
-P3 의 주요 기여는 데이터 생성입니다. 본인은 BBD/Overlay/CD 현업 경험에서 형성된 trend 도메인 지식을 synthetic trend episode generator 의 parameter 로 코드화했습니다. Binary gate + Type classifier 는 생성 데이터가 정상 / 이상 패턴을 학습 가능하게 담고 있는지 확인하기 위한 검증용 baseline 입니다 (실전 운영 검증과 분리).
+P3 의 본인 기여는 데이터를 만들어 내는 쪽입니다. 본인이 BBD담당 / Overlay담당 / CD담당 으로 직접 trend chart 를 판정해 온 업무 경험에서, 특정 설비의 산포가 fleet 평균 산포보다 약간만 커져도 lot 단위로 spec-in 변동이 이어지는 패턴, 일시 튐 한두 점이 후공정 정렬에 영향을 주는 패턴, 미세 drift 가 baseline 평탄도를 흔들어 후반에 spec-in 으로 넘어가는 패턴을 반복해서 봐 왔습니다. 그래서 정상 chart 의 통계 분포와 설비 산포 / 일시 튐 / drift 가 어느 강도에서 실제 spec-in 변동을 일으키는지 알고 있었고, 그 판단 기준을 synthetic trend episode generator 의 parameter 로 직접 옮겨 코드화했습니다. Binary gate + Type classifier 는 만들어 낸 데이터가 정상 / 이상 패턴을 학습 가능한 형태로 담고 있는지 확인하기 위한 검증용 baseline 으로 두었습니다 (실전 운영 검증과 분리). 동료 엔지니어는 AI 모델 실행, 데이터 정리, 실험 결과 취합을 공동 수행했습니다.
 
-먼저 Region 5종으로 계측 밀도 차이를 코드화하고, Noise 3종으로 설비 산포·일시 튐·상관 drift 성격을 통계 noise 로 설계한 뒤, 일반 trend 불량 4종 mean shift / standard deviation change / spike / drift 와 context pattern 1종을 구성했습니다.
-
-생성 데이터의 신뢰도 확보를 위해 fleet/target baseline 통계 기반 enforcement floor 로 이상 강도가 정상 산포에 묻히지 않도록 하한을 보장했고, target_std 를 fleet_within_std × 1.2 이내로 정렬해 합성 normal chart 의 통계 특성이 현업 정상 trend 판단 기준에 가까워지도록 보정했습니다.
+판단 근거 측에서는 Region 별 계측 밀도 차이, 설비 산포 / 일시 튐 / 상관 drift 의 성격 차이, 일반 trend 불량 4종과 context 1종이 실재 spec-in 변동을 일으키는 강도 구간을 본인이 미리 알고 있었고, 합성 normal 이 실전 baseline 통계 안에 있으면서도 abnormal 강도는 정상 산포에 묻히지 않아야 한다는 두 조건도 같은 경험에서 나왔습니다. 구체 parameter / 식 / 단계 흐름은 [기술적 해결 방안] 과 다이어그램에 모았습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | trend 이상은 단순 threshold 만으로 판정하기 어렵고, 설비 산포 / hunting / drift / baseline 평탄도 / spec-in 변동 가능성을 함께 봐야 합니다. |
-| 기존 방식의 한계 | 실전 trend abnormal data 는 충분한 양과 균형 label 을 확보하기 어렵고, 수작업 chart 판독은 초보자 누락과 시간 소모가 큽니다. |
-| 기술적 / 환경적 제약 | 실전 label 부족을 전제로, 먼저 현업 trend domain knowledge 를 학습 가능한 synthetic data 로 만드는 것이 핵심 과제입니다. |
+| 현장 난제 | trend 이상은 단순 threshold 만으로 판정하기 어렵고, 설비 산포 / hunting / drift / baseline 평탄도 / spec-in 변동 가능성을 같이 봐야 합니다. |
+| 기존 방식의 한계 | 실전 abnormal data 는 양과 label 균형 확보가 어려운 위에 수작업 chart 판독까지 의존하다 보니 초보자 누락과 모니터링 시간 부담이 같이 누적됩니다. |
+| 기술적 / 환경적 제약 | 실전 label 부족을 전제로 trend domain knowledge 를 합성 데이터 parameter 로 옮기는 단계가 먼저 풀려야 뒤 단계 검증이 가능합니다. |
 
 **ㅁ 기술적 해결 방안**
 
-알고리즘은 다음 3단계 logic flow 로 구성했고, 각 단계마다 본 과제 도메인 특성에 맞춘 선택 사유를 두었습니다.
+본인이 잡은 흐름은 도메인 지식의 코드화 → 정상성 보장 → 학습 가능성 검증 세 단계입니다.
 
-**(1) 합성 generator 코드화 — 실전 label 부족 전제**
+먼저 위 담당 경험에서 쌓은 trend 분석 기준 — Region 별 계측 밀도, 설비 산포 / 헌팅 / drift 등 통계 분포, 일반 trend 불량 4종 + context pattern 1종 — 을 episode generator 의 parameter 로 직접 옮겨, 실전 label 부족 상황에서도 학습이 가능한 데이터 자산을 확보하는 것을 1단계로 두었습니다. P3 의 핵심 가치는 현업 도메인 지식을 AI 데이터 generator 의 parameter 로 코드화한 데 있고, 이를 통해 실전 abnormal 데이터가 부족한 조건에서도 정상 / 이상 패턴을 학습 가능한 형태로 만들었습니다.
 
-trend abnormal 데이터는 실전 운영에서 충분한 양과 균형 라벨을 확보하기 어렵습니다. 본인은 BBD / Overlay / CD 현업에서 형성한 trend 도메인 지식 (Region 별 계측 밀도, 설비 산포 / 헌팅 / drift 등 통계 noise, 일반 trend 불량 4종 + context pattern 1종) 을 episode generator 의 parameter 로 코드화해 학습 가능한 데이터 자산으로 만드는 것을 알고리즘 1단계로 두었습니다. 이 단계가 본 과제의 핵심 알고리즘 기여입니다.
+이어 합성 데이터가 실전 baseline 과 통계 분포가 일치하면서도 이상 강도가 정상 산포에 묻히지 않도록 두 통계 조건 (`target_std ≤ fleet_within_std × 1.2`, `target_baseline_std = max(baseline_std, 0.01)`) 을 enforcement floor 로 결합했습니다. fleet 평균 산포 안에 normal chart 를 가두고, abnormal 강도는 0.01σ 하한으로 lift 되도록 동시에 잡아준 식입니다.
 
-**(2) 정상성 보장 — fleet/target baseline 기반 enforcement floor**
+마지막으로 위 합성 데이터가 학습 가능한 자산인지 확인하기 위해 1차 Binary gate (정상 / 이상) 와 2차 Type classifier (4 + context) 를 baseline 으로 같이 돌렸습니다. 두 baseline 은 모델 차별성을 주장하는 운영 후보가 아니라, generator 가 만든 데이터의 학습 가능성을 점검하기 위한 검증 도구입니다.
 
-합성 데이터가 실전에 가깝게 보이려면 정상 chart 의 통계 특성이 실재 baseline 과 일치해야 하고, 이상 강도는 정상 산포에 묻혀버리면 안 됩니다. target_std 를 fleet_within_std × 1.2 이내로 정렬해 합성 normal chart 의 통계 분포를 실전에 맞췄고, fleet_std 기반 enforcement floor 로 이상 강도에 하한을 보장해 ABNORMAL 사례가 noise 안에 숨지 않도록 설계했습니다.
-
-**(3) 학습 가능성 검증 — Binary gate + Type classifier baseline**
-
-위 합성 데이터가 정상 / 이상 패턴을 실제로 학습 가능한 형태로 담고 있는지 검증하기 위해 2단계 baseline 분류기를 구성했습니다. 1차 Binary gate 는 정상 / 이상 판정 신호의 명확성을 검증하고, 2차 Type classifier 는 5종 (4 + context) 분류로 세부 패턴까지 분리 가능한지 확인합니다. 두 baseline 은 모델 차별성을 주장하는 운영 후보가 아니라 합성 데이터 학습 가능성을 점검하기 위한 검증 도구로 분리해 보고합니다.
-
-P3는 현업 trend 통계와 불량 발생 양상을 synthetic generator 로 코드화한 과제입니다.
+전체 흐름을 도식으로 정리하면 다음과 같습니다.
 
 ```
-[BBD / Overlay / CD 현업 trend 경험]
+[본인 trend 판정 경험을 generator parameter 로 코드화]
         ↓
 [Region 5종: dense / sparse / very_sparse / thin / missing]
         ↓
-[Noise 3종: Gaussian / Laplacian / correlated drift]
+[Noise 3종: Gaussian / Laplacian / Correlated]
         ↓
 [일반 trend 불량 4종 + context 1종]
         ↓
-[fleet/target baseline 통계 기반 enforcement floor]
+[fleet/target baseline enforcement floor]
+[target_baseline_std = max(baseline_std, 0.01) 최소 0.01σ 보장]
+[target_std ≤ fleet_within_std × 1.2 정렬]
         ↓
 [224×224 trend chart PNG rendering]
         ↓
-[검증용 baseline 학습: Binary gate + Type classifier]
+[검증용 baseline: 1차 Binary gate + 2차 Type classifier]
         ↓
 [생성 데이터 학습 가능성 확인]
 ```
 
-합성 trend chart 예시 (정상 + 일반 trend 불량 4종 + context pattern 1종):
+합성 trend chart 예시 (정상 + 일반 trend 불량 4종 + context 1종):
 
 | Normal | Mean Shift | Standard Deviation Change |
 |:------:|:----------:|:-------------------------:|
@@ -398,28 +540,20 @@ P3는 현업 trend 통계와 불량 발생 양상을 synthetic generator 로 코
 | **Spike** | **Drift** | **Context** |
 | <img src="./figures/trend_spike.png" width="200" /> | <img src="./figures/trend_drift.png" width="200" /> | <img src="./figures/trend_context.png" width="200" /> |
 
-생성 데이터 검증 파이프라인의 checkpoint 안정화를 위해, 일시적 spike 에 선택이 흔들리지 않도록 val-F1 median smoothing 과 val-loss spike guard 를 구성했습니다.
+검증 baseline 학습 측의 checkpoint 안정화에는 일시 spike 에 선택이 흔들리지 않도록 val-F1 median smoothing 과 val-loss spike guard 를 같이 두었습니다.
 
 **ㅁ 구현 성과**
 
-**데이터 생성 그룹 (주 성과)**
+**[정량적/정성적 성과]** (P3 성과는 모두 **[합성 trend chart, PoC]** 기반이며, 주 성과는 데이터 생성 자체입니다.)
 
-| 라벨 그룹 | 구분 | 성과 |
-|-----------|------|------|
-| **[합성 trend chart, PoC]** | 시나리오 구성 | train 7,000 + val 1,500 + test 1,500 = 총 10,000 scenarios |
-| **[합성 trend chart, PoC]** | test 평가셋 | normal 750 + abnormal 5종 각 150 = 총 **1,500 sample** |
-| **[합성 trend chart, PoC]** | Region 코드화 | `dense` 70-100%, `sparse` 40-70%, `very_sparse` 20-35%, `thin` 10-20%, `missing` 0% |
-| **[합성 trend chart, PoC]** | Noise 코드화 | Gaussian 0.80, Laplacian 0.15, correlated drift 0.05 |
-| **[합성 trend chart, PoC]** | trend 불량 코드화 | mean_shift / std / spike / drift 4종 + context 1종 |
-| **[합성 trend chart, PoC]** | chart rendering | 224×224 chart PNG, 12-25 episode mix |
+- **기술 지표**
+  - 시나리오 구성: train 7,000 + val 1,500 + test 1,500 = 총 10,000 scenarios. test 평가셋은 normal 750 + abnormal 5종 각 150 = 총 **1,500 sample** 입니다.
+  - 도메인 코드화: Region 5단계 (`dense` 70-100%, `sparse` 40-70%, `very_sparse` 20-35%, `thin` 10-20%, `missing` 0%), Noise 3분포 (Gaussian 0.80 / Laplacian 0.15 / Correlated 0.05). 0.80 / 0.15 / 0.05 비율은 본인이 담당 업무에서 자주 본 형태부터 잡은 결과입니다. 일반 trend 불량 4종 (mean_shift / std / spike / drift) + context 1종, 224×224 chart PNG 12-25 episode mix.
+  - 정상성 보정: `target_baseline_std = max(baseline_std, 0.01)` 와 `target_std ≤ fleet_within_std × 1.2` 두 식을 enforcement floor 로 같이 적용해, 합성 normal 의 통계 분포는 실전 baseline 에 맞추고 이상 강도는 정상 산포 안에 묻히지 않도록 하한을 두었습니다.
+  - 1차 Binary gate baseline: test 1,500건, normal_threshold=0.9 기준 Binary F1 **0.9967**, Abnormal Recall **0.9987**, TN/FN/FP/TP=746/1/4/749. 생성 데이터가 정상 / 이상 패턴을 학습 가능한 형태로 담고 있는지 확인한 참고 수치입니다. 판정식은 `p_anom = sigmoid(f_theta(x))`, `y_hat = 1 if p_anom >= 0.9 else 0` 입니다.
+  - 2차 Type classifier 는 mean_shift ↔ drift 혼동 등이 남아 type-level accuracy 가 추가 개발 중이며, 1차 binary 안정성과 분리해 보고합니다.
 
-**검증용 baseline 학습 그룹 (생성 데이터 학습 가능성 확인)**
-
-아래 baseline 수치는 위 데이터 생성 그룹이 학습 가능한 자산인지 확인한 부속 검증입니다.
-
-| 라벨 그룹 | 구분 | 성과 |
-|-----------|------|------|
-| **[합성 trend chart, PoC]** | 1차 Binary gate | test split 1,500건, normal_threshold=0.9 기준 Binary F1 **0.9967**, Abnormal Recall **0.9987**, TN/FN/FP/TP=746/1/4/749. 생성 데이터 학습 가능성 확인용 참고 수치입니다. |
-| **[합성 trend chart, PoC, 개발 중]** | 2차 Type classifier | mean_shift ↔ drift 혼동 등으로 type-level accuracy 는 추가 개발 중 (1차 binary 안정성과 분리하여 보고합니다) |
-
-BBD/Overlay/CD trend 판단 기준을 synthetic data generator 로 코드화해, 실전 label 부족 상황에서도 AI 검증을 시작할 수 있는 데이터 기반을 마련했습니다.
+- **현업 임팩트**
+  - 본인 담당 경력에서 쌓은 trend 분석 경험을 synthetic generator parameter 로 직접 옮긴 덕에, 실전 abnormal label 부족 상황에서도 AI 검증을 시작할 수 있는 데이터 자산이 마련된 상태입니다. L1 trend 모니터링의 수작업 부담과 초보자 누락, spec-in 변동 위험을 완화하는 1차 스크리닝 기반이 됩니다.
+  - 본 baseline 수치는 생성 데이터의 학습 가능성을 보는 1차 PoC 지표이며, 양산 적용 후보 모델은 PoC 이후 단계에서 다시 잡습니다.
+  - 이 수치는 실제 현업 trend log 일반화 성능과 분리해 해석합니다. 본인이 만든 generator rule 이 정상 / 이상 구분 신호를 학습 가능한 형태로 담고 있는지 확인한 PoC 결과이며, 다음 단계는 generator 가 만들지 않은 실전 abnormal log 를 parameter 재보정 trigger 로 흘려 unseen 영역 일반화 검증으로 이어가는 흐름입니다.
