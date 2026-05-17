@@ -239,6 +239,19 @@ raw wafer map (좌측 2칸) 과 동일 wafer 의 chip-CNN object-id map (우측 
 
 DenseCL / MoCo Queue / NV-Retriever / τ=0.5 후처리는 운영 대표 성과가 아니라 embedding recipe 개선을 위한 후속 metric 관리 항목입니다. noise % 가 6.20% → 0.52% 로 떨어진 흐름은 patch-level matching 과 hard-negative 제어를 누적으로 조합한 결과이고, 최종 recipe 는 Local DenseCL 을 제외한 4-tool 구성이 안정성 / 분리력 균형이 더 좋아 별도 관리 중입니다.
 
+**Cross-anchor 일반화 평가 [심화 질의 대비용 / WM-811K 공개 셋 분포 기반 추가 anchor]**
+
+| 지표 | Same-anchor (학습 분포) | Cross-anchor (WM-811K 기반 E set) | 변동 |
+|---|---|---|---|
+| ARI | 0.859 ± 0.018 | **0.4437** | −0.415 |
+| AMI | 0.961 | **0.8507** | −0.110 |
+| Completeness | 0.994 | **0.9358** | −0.058 |
+| Homogeneity | 0.942 | **0.7859** | −0.156 |
+| P1 capture (38 class 발견) | 1.000 | **1.000** | 유지 |
+| Noise (defect) | 1.48% | 4.73% | +3.25pp |
+
+학습 분포 바깥 (cross-anchor) 에서는 cluster 분리력 (ARI / Homogeneity) 이 크게 떨어지지만 P1 capture 1.000 은 그대로 유지됩니다. 즉, 후보 group 압축은 계속 작동하나 cluster 내부 정밀도는 도메인 shift 영향을 받는 구조입니다. 본 항목은 실전 Unknown 운영 성과 (13 후보 → 7 실제 불량 confirm) 와 분리한 심화 질의 대비용 근거이며, 신규 anchor 학습과 분포 보완을 후속 개선 항목으로 관리 중입니다.
+
 **ㅁ P2. Chip Multi-label Classification**
 
 **ㅁ 과제 기본정보**
@@ -583,8 +596,12 @@ P3 의 본인 기여는 데이터를 만들어 내는 쪽입니다. 본인이 BB
   - 시나리오 구성: train 7,000 + val 1,500 + test 1,500 = 총 10,000 scenarios. test 평가셋은 normal 750 + abnormal 5종 각 150 = 총 **1,500 sample** 입니다.
   - 도메인 코드화: Region 5단계 (`dense` 70-100%, `sparse` 40-70%, `very_sparse` 20-35%, `thin` 10-20%, `missing` 0%), Noise 3분포 (Gaussian 0.80 / Laplacian 0.15 / Correlated 0.05). 0.80 / 0.15 / 0.05 비율은 본인이 담당 업무에서 자주 본 형태부터 잡은 결과입니다. 일반 trend 불량 4종 (mean_shift / std / spike / drift) + context 1종, 224×224 chart PNG 12-25 episode mix.
   - 정상성 보정: `target_baseline_std = max(baseline_std, 0.01)` 와 `target_std ≤ fleet_within_std × 1.2` 두 식을 enforcement floor 로 같이 적용해, 합성 normal 의 통계 분포는 실전 baseline 에 맞추고 이상 강도는 정상 산포 안에 묻히지 않도록 하한을 두었습니다.
-  - 1차 Binary gate baseline: test 1,500건, normal_threshold=0.9 기준 Binary F1 **0.9967**, Abnormal Recall **0.9987**, TN/FN/FP/TP=746/1/4/749. 생성 데이터가 정상 / 이상 패턴을 학습 가능한 형태로 담고 있는지 확인한 참고 수치입니다. 판정식은 `p_anom = sigmoid(f_theta(x))`, `y_hat = 1 if p_anom >= 0.9 else 0` 입니다.
-  - 2차 Type classifier 는 mean_shift ↔ drift 혼동 등이 남아 type-level accuracy 가 추가 개발 중이며, 1차 binary 안정성과 분리해 보고합니다.
+  - 1차 Binary gate baseline: test 1,500건, normal_threshold=0.9 기준 Binary F1 **0.9967**, Abnormal Recall **0.9987**, TN/FN/FP/TP=746/1/4/749. 생성 데이터가 정상 / 이상 패턴을 학습 가능한 형태로 담고 있는지 확인한 참고 수치입니다. 판정식은 `p_anom = sigmoid(f_theta(x))`, `y_hat = 1 if p_anom >= 0.9 else 0` 입니다. 5-seed 안정성 검증에서도 pc600_s1 / pc700_s2 기준 F1 **0.9987** (TN=748 / FN=0 / FP=2 / TP=750) 으로 일관된 분리 성능을 확인했고, normal_threshold sweep (0.5 / 0.9 / 0.99 / 0.999) 에서도 F1 0.9987 로 임계에 둔감한 결과였습니다.
+  - 2차 Type classifier 는 binary TP subset (n=749) 기준 type-level accuracy **0.7303** 수준으로, type 별 분리력이 갈립니다 [합성 trend chart, PoC, 개발 중].
+    - context: 150/150 (100%, 분리 양호)
+    - spike: 99/150 (66%, standard_deviation 로 51건 흘려)
+    - drift: 42/150 (28%, mean_shift 로 97건 혼동)
+    - 주 혼동 쌍은 drift ↔ mean_shift (97건) / spike ↔ standard_deviation (51건) 이며, 1차 binary 안정성과 분리해 보고합니다.
 
 - **현업 임팩트**
   - 본인 담당 경력에서 쌓은 trend 분석 경험을 synthetic generator parameter 로 직접 옮긴 덕에, 실전 abnormal label 부족 상황에서도 AI 검증을 시작할 수 있는 데이터 자산이 마련된 상태입니다. L1 trend 모니터링의 수작업 부담과 초보자 누락, spec-in 변동 위험을 완화하는 1차 스크리닝 기반이 됩니다.
