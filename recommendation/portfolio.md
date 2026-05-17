@@ -129,7 +129,7 @@ Unknown 측은 운영 단계에 정답 label 이 없어 별도 보조 metric 으
 
 **(2) Stage 2 ROI 보정 — cascade gate 와 보정 결정 로직**
 
-Stage 1 만으로는 center 영역의 비슷한 class 들이 헷갈리는 한계가 남아, wafer-level confidence 와 class별 precision / recall 기준으로 difficult class 만 ROI YOLO 로 넘기는 cascade gate 를 잡았습니다. confidence ≥ gate 인 wafer 는 Stage 2 를 건너뛰어 throughput 손실 없이 헷갈리는 class 분리력만 선택적으로 보강합니다. skip 된 wafer 일부는 일일 sampling 으로 Stage 2 재검증 + Stage 1 분포 drift monitoring 으로 gate 를 주기적으로 재조정합니다. 단계별 ladder 는 [구현 성과] 기술 지표에 모았습니다.
+Stage 1 만으로는 center 영역의 비슷한 class 들이 헷갈리는 한계가 남아, wafer-level confidence 가 낮은 difficult sample 만 ROI YOLO 로 넘기는 cascade gate 를 잡았습니다. confidence ≥ gate 인 wafer 는 Stage 2 를 건너뛰어 throughput 손실 없이 헷갈리는 sample 의 분리력만 선택적으로 보강합니다. skip 된 wafer 일부는 일일 sampling 으로 Stage 2 재검증 + Stage 1 분포 drift monitoring 으로 gate 를 주기적으로 재조정합니다. 단계별 ladder 는 [구현 성과] 기술 지표에 모았습니다.
 
 **(3) 후속 보정 — chip-CNN object-id map 재구성 (개발 중)**
 
@@ -154,7 +154,7 @@ M_obj(u,v) = argmax_k q_{u,v,k}
 │ ladder: 0.78 → 0.87 (backbone) → 0.92 (Optuna)                            │
 └──────────────────────────────────┬────────────────────────────────────────┘
                                    ▼
-       ┌─ cascade gate: confidence < τ_gate OR difficult class ─┐
+       ┌─ cascade gate: confidence < τ_gate (difficult sample) ─┐
        │                                                         │
    conf ≥ gate                                          conf < gate
        │                                                         │

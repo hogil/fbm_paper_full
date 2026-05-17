@@ -23,15 +23,15 @@
 
 **(1) 과제 개요 / 담당 역할 / 수행 업무 / 성과**
 
-- 과제 개요 및 규모: DRAM 전제품 라인 Failbit Map 데이터 파이프라인 (fail-map) + 사내 운영 뷰어 web app + Known 2-stage AI 분류기 + Unknown self-supervised 검출기를 결합한 양산 운영 시스템.
+- 과제 개요 및 규모: DRAM 전제품 라인 Failbit Map 데이터 파이프라인 + 사내 운영 뷰어 web app + Known 2-stage AI 분류기 + Unknown self-supervised 검출기를 결합한 양산 운영 시스템.
 - 수행기간: 2024년 10월 ~ 현재
 - 담당 역할: 본인 60% / 현업 엔지니어 20% / 관리자 20%
-- 수행 업무: wafer 당 약 1,000만 cell hex → Grade 0-7 변환을 Cython 으로 약 100배 가속, 32색 palette indexed PNG 로 저장 용량 약 75% 절감. 운영 뷰어 web app 은 대용량 병렬 처리 + 사내 인증 시스템 연동까지 직접 구현. Stage 1 ConvNeXtV2 backbone + fine-tune LR 분리, Stage 2 ROI YOLO cascade gate (wafer confidence + class별 precision / recall 식별 difficult class 기준), Stage 2 skip wafer 일일 sampling 재검증 + Normal drift 추적으로 false-negative 차단. Unknown 은 self-supervised embedding + HDBSCAN grouping. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 직접 설계 / 구현.
+- 수행 업무: wafer 당 약 1,000만 cell hex → Grade 0-7 변환을 Cython 으로 약 100배 가속, 32색 palette indexed PNG 로 저장 용량 약 75% 절감. 운영 뷰어 web app 은 대용량 병렬 처리 + 사내 인증 시스템 연동까지 직접 구현. Stage 1 ConvNeXtV2 backbone + fine-tune LR 분리, Stage 2 ROI YOLO cascade gate 는 wafer-level confidence 가 낮은 difficult sample 만 Stage 2 로 넘기는 방식 (confidence ≥ gate 인 wafer 는 Stage 2 skip, 일부는 일일 sampling 재검증 + Normal drift 추적으로 false-negative 차단). Unknown 은 self-supervised embedding + HDBSCAN grouping. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 직접 설계 / 구현.
 - 성과: **[실전 현업 데이터]** Known 2-stage weighted F1 **0.95** (16 class / 1,500 labeled / 4:1 split, ladder 0.78 → 0.87 → 0.92 → 0.95), Unknown 13 후보 group 중 **7개 실제 불량 현업 확인** 완료. **[양산 운영]** 2025년 5월부터 DRAM 전제품 라인 일 약 2만 wafer / 1시간 주기 처리 중. **[후속 개발]** chip-CNN object-id map val_f1 **0.9946** (양산 deploy 는 validation 후 결정), Unknown 신규 recipe (MoCo Queue / NV-Retriever / NeCo) 별도 트랙. 전수 자동 추론 확장은 2026년 9월 GPU 할당 후 단계 확장 계획.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zone 해석 도메인 위에 ConvNeXtV2 wafer 분류 + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping + chip-CNN object-id map 후속을 결합했습니다. backbone 은 본 과제 결함이 국소 영역에 몰리는 특성상 CNN 계열의 local receptive field 가 더 어울린다고 판단해 ConvNeXtV2 채택 (MaxViT 와 동일 F1 0.87 에 파라미터 **26%** / FLOPs **39%** 감소, 자문: 연세대학교 인공지능학과 전해곤 교수). cascade gate 는 wafer confidence 가 gate 보다 낮을 때만 Stage 2 로 넘겨 throughput 손실 없이 헷갈리는 class 분리력만 보강합니다.
+Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zone 해석 도메인 위에 ConvNeXtV2 wafer 분류 + ROI YOLO 2-stage 보정 + self-supervised contrastive embedding + HDBSCAN grouping + chip-CNN object-id map 후속을 결합했습니다. backbone 은 본 과제 결함이 국소 영역에 몰리는 특성상 CNN 계열의 local receptive field 가 더 어울린다고 판단해 ConvNeXtV2 채택 (MaxViT 와 동일 F1 0.87 에 파라미터 **26%** / FLOPs **39%** 감소, 자문: 연세대학교 인공지능학과 전해곤 교수). Stage 2 는 wafer-level confidence 가 낮은 difficult sample 에 한해 헷갈리는 영역을 ROI 로 먼저 잘라내고 그 ROI 안에서 YOLO 가 chip 단위 object detection (bbox + class) 으로 다시 분류해, 그 출력 분포의 majority 로 최종 class 를 결정하는 구조입니다. 이 흐름으로 throughput 손실 없이 헷갈리는 sample 의 분리력만 선택적으로 보강합니다.
 
 ㅁ **P2. Chip Multi-label Classification (CutMix → CutMix + Pair Mask → FCM-PM)**
 
