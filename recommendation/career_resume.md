@@ -4,12 +4,13 @@
 |-----------|------------------------|
 | Computer Vision | Image Classification, Object Detection, Multi-label Classification, Feature Representation Learning, Image-based Failure Detection |
 | Deep Learning | CNN Backbone Modeling, Transfer Learning, Fine-tuning, Loss Function Design, Regularization |
-| Self-Supervised Learning | Contrastive Learning, Self-supervised Representation Learning, Embedding Learning |
+| Self-Supervised Learning | Contrastive Learning, InfoNCE, Hard Negative Mining, Task-Adaptive Pretraining, Embedding Learning |
 | Unsupervised Learning | Clustering, Novelty Detection, Anomaly Detection, Out-of-Distribution Detection |
-| Synthetic Data Generation / Data Augmentation | Synthetic Dataset Generation, Data Augmentation, Mixup, CutMix, Noise Injection |
-| Model Optimization / Model Selection | Hyperparameter Optimization, Model Selection, Threshold Optimization, Calibration, Ensemble, Knowledge Distillation |
+| Synthetic Data Generation / Data Augmentation | Synthetic Dataset Generation, Data Augmentation, CutMix, Region-based Mixing Augmentation, Loss Masking, Noise Injection |
+| Model Optimization / Model Selection | Hyperparameter Optimization, Model Selection, Margin-based Checkpoint Selection, Threshold Optimization, Calibration, Ensemble, Knowledge Distillation |
 | Data Engineering / MLOps | ETL Pipeline, Batch Processing, Object Storage Integration, Model Evaluation Pipeline, Experiment Tracking |
-| AI Systems Engineering | Backend API, Web Application, Data Visualization, Access Control, Single Sign-On |
+| High-Performance Computing | Cython Acceleration, Numba, pyvips, Large-scale Image Encoding, Palette-indexed PNG Compression |
+| AI Systems Engineering | FastAPI Backend, Vanilla JavaScript Frontend, WebGL2 Visualization, Role-Based Access Control (RBAC), SAML Single Sign-On |
 
 ## 2. 업무경력
 
@@ -33,7 +34,7 @@
 
 Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zone 해석 도메인 위에 ConvNeXtV2 wafer 분류 + ROI YOLO 2-stage 보정 + self-supervised contrastive embedding + HDBSCAN grouping + chip-CNN object-id map 후속을 결합했습니다. backbone 은 본 과제 결함이 국소 영역에 몰리는 특성상 CNN 계열의 local receptive field 가 더 어울린다고 판단해 ConvNeXtV2 채택 (MaxViT 와 동일 F1 0.87 에 파라미터 **26%** / FLOPs **39%** 감소, 자문: 연세대학교 인공지능학과 전해곤 교수). Stage 2 는 wafer-level confidence 가 낮은 difficult sample 에 한해 헷갈리는 영역을 ROI 로 먼저 잘라내고 그 ROI 안에서 YOLO 가 chip 단위 object detection (bbox + class) 으로 다시 분류해, 그 출력 분포의 majority 로 최종 class 를 결정하는 구조입니다. 이 흐름으로 throughput 손실 없이 헷갈리는 sample 의 분리력만 선택적으로 보강합니다.
 
-ㅁ **P2. Chip Multi-label Classification (CutMix → CutMix + Pair Mask → FCM-PM)**
+ㅁ **P2. Chip Multi-label Classification (FCM-PM, val_margin)**
 
 **(1) 과제 개요 / 담당 역할 / 수행 업무 / 성과**
 
