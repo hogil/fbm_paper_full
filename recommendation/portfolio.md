@@ -56,51 +56,51 @@
 본인이 직접 잡은 P1 end-to-end 파이프라인은 raw log → wafer 이미지 변환 → 좌표 JSON → 운영 뷰어 노출 → Known 분류 / Unknown 검출 → 현업 검증 까지입니다. 단계별 모듈은 아래와 같습니다.
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  [SOURCE]  EDS Test raw log (Memory Cell Block 단위 Failbit hex 표현)       │
-│            • wafer 당 ~1,000만 cell, DRAM 전제품 라인                         │
-└──────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  [PIPELINE]  fail-map 변환 모듈 (본인 직접 설계 / 구현)                       │
-│  • Cython hex→Grade(0~7) 변환 루프 → 약 **100배** 가속                       │
-│  • 32색 palette indexed PNG 양자화 → 저장 용량 약 **75%** 감소                │
-│  • 출력 wafer image: **6400×6400** palette PNG (8-bit, 32색)                  │
-│  • chip grid **32×32** (1,024 chip / wafer, chip 당 200×200 pixel)            │
-│  • chip positions JSON 생성 → chip 좌표 확정 (후속 chip-CNN 입력 사용)        │
-└──────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  [VIEWER]  운영 뷰어 Web App (대량 wafer 조회 / 다양한 분석 편의 기능)        │
-│  • 사내 인증 시스템 (SSO) 연동                                                │
-│  • 일 약 **2만** wafer / **1시간 주기** batch 처리                            │
-│  • 기존 수작업 조회 1회 ~48매 한계 → 대량 wafer 조회 + 다양한 분석 편의 기능  │
-└──────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                ┌───────────────────┴───────────────────┐
-                ▼                                       ▼
-┌──────────────────────────────────┐   ┌──────────────────────────────────────┐
-│  Known 분기                       │   │  Unknown 분기                         │
-│  (등록 16-class)                  │   │  (self-supervised contrastive)        │
-├──────────────────────────────────┤   ├──────────────────────────────────────┤
-│  Stage 1: ConvNeXtV2             │   │  • InfoNCE + MoCo Queue (4096)        │
-│   wafer-level classifier         │   │    + NV-Retriever NEG 임계 0.72       │
-│           ↓ confidence < τ_gate  │   │  • HDBSCAN clustering                 │
-│  Stage 2: ROI YOLO refinement    │   │  • 운영 13 후보 group → 7 실제 불량   │
-│   (chip bbox + class 분포)       │   │    현업 확인 완료                     │
-│  → weighted F1 **0.95**           │   │  • 후속 synthetic benchmark metric    │
-│                                   │   │    은 대표 성과와 분리 관리           │
-└──────────────────────────────────┘   └──────────────────────────────────────┘
-                │                                       │
-                └───────────────────┬───────────────────┘
-                                    ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  [REVIEW]  운영 뷰어 결과 표시 + 현업 엔지니어 검증 cycle                     │
-│  • 신규 결함 후보 카탈로그 등재                                                │
-│  • Known classifier 학습 sample 보강                                          │
-└──────────────────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------------------+
+|  [SOURCE]  EDS Test raw log (Failbit hex per Memory Cell Block)              |
+|            wafer ~10M cells, all DRAM product lines                          |
++------------------------------------------------------------------------------+
+                                    |
+                                    v
++------------------------------------------------------------------------------+
+|  [PIPELINE]  fail-map conversion module (designed/implemented by author)     |
+|  - Cython hex -> Grade(0..7) loop  -> ~100x speed-up                         |
+|  - 32-color palette indexed PNG    -> ~75% storage reduction                 |
+|  - output wafer image: 6400 x 6400 palette PNG (8-bit, 32 colors)            |
+|  - chip grid 32 x 32 (1,024 chips / wafer, 200 x 200 px per chip)            |
+|  - chip positions JSON -> coordinates fixed (reused by chip-CNN downstream)  |
++------------------------------------------------------------------------------+
+                                    |
+                                    v
++------------------------------------------------------------------------------+
+|  [VIEWER]  internal viewer Web App (bulk wafer query + analysis utilities)   |
+|  - SAML SSO + in-house authentication integration                            |
+|  - ~20,000 wafers / day, 1-hour batch interval                               |
+|  - replaces manual ~48-wafer-per-query workflow with bulk + analysis tools   |
++------------------------------------------------------------------------------+
+                                    |
+                +-------------------+-------------------+
+                v                                       v
++--------------------------------------+   +--------------------------------------+
+|  Known branch                        |   |  Unknown branch                      |
+|  (16 registered classes)             |   |  (self-supervised contrastive)       |
++--------------------------------------+   +--------------------------------------+
+|  Stage 1: ConvNeXtV2 wafer           |   |  - InfoNCE + MoCo Queue (4096)       |
+|           classifier                 |   |    + NV-Retriever NEG threshold 0.72 |
+|       v   confidence < gate          |   |  - HDBSCAN clustering                |
+|  Stage 2: ROI YOLO refinement        |   |  - 13 candidate groups -> 7 real     |
+|           (chip bbox + class vote)   |   |    failures confirmed on-site        |
+|  ->       weighted F1 0.95           |   |  - synthetic benchmark metrics kept  |
+|                                      |   |    separate from headline result     |
++--------------------------------------+   +--------------------------------------+
+                |                                       |
+                +-------------------+-------------------+
+                                    v
++------------------------------------------------------------------------------+
+|  [REVIEW]  viewer overlays results + on-site engineer verification loop      |
+|  - new failure candidates added to catalog                                   |
+|  - Known classifier training samples refreshed                               |
++------------------------------------------------------------------------------+
 ```
 
 **[데이터]** 위 파이프라인의 [SOURCE] / [PIPELINE] 두 단계에 해당합니다. raw EDS Test log (wafer 당 약 1,000만 cell) 의 Failbit hex 표현을 Cython 변환 루프로 약 100배 가속해 Grade(0~7) 양자화하고, 32색 palette indexed PNG 양자화로 저장 용량을 약 75% 줄여 6400×6400 wafer 이미지와 32×32 chip grid (1,024 chip / wafer, chip 당 200×200 pixel), chip positions JSON 을 산출합니다. chip positions JSON 은 Stage 2 ROI YOLO 와 후속 chip-CNN object-id map 입력 좌표로 그대로 재사용됩니다.
@@ -138,33 +138,42 @@ M_obj(u,v) = argmax_k q_{u,v,k}
 **[최적화]** Known 2-stage 에서 결정적이었던 두 step 은 backbone 교체 (0.78 → 0.87) 와 cascade 결합 (0.92 → 0.95) 입니다. Unknown 검출은 실전 현업 데이터에서 13 후보 group 중 7개 실제 불량 확인을 대표 anchor 로 두고, contrastive recipe ablation (DenseCL / MoCo Queue / NV-Retriever 등) 은 추가 생성 데이터셋 기반 별도 트랙으로 분리 관리합니다.
 
 ```
-┌─ Stage 1: ConvNeXtV2 wafer classifier (16-class) ────────────────────────┐
-│ backbone 비교 ViT 0.81 / Swin 0.84 / EffV2 0.85 / MaxViT 0.87 / Conv 0.87 │
-│ MaxViT 대비 param −26% / FLOPs −39% / FT LR head 10× last stage 3×        │
-│ ladder: 0.78 → 0.87 (backbone) → 0.92 (Optuna)                            │
-└──────────────────────────────────┬────────────────────────────────────────┘
-                                   ▼
-       ┌─ cascade gate: confidence < τ_gate (difficult sample) ─┐
-       │                                                         │
-   conf ≥ gate                                          conf < gate
-       │                                                         │
-       ▼                                                         ▼
- Stage 1 채택            ┌─ Stage 2 (운영 절차로 모듈 선택) ────────────────┐
- (skip Stage 2,          │ (A) ROI-YOLO [현재 양산] — bbox + 좌표회귀       │
-  throughput≈0)          │     + class + NMS 동시 수행                       │
-       │                  │ (B) chip-CNN obj-id map [개발 중] — crop 256×256 │
-       │                  │     분류만 / val_f1 0.9946 / test_f1 0.9872      │
-       │                  └────────────────────┬─────────────────────────────┘
-       └───────────────────────────────────────┤
-                                               ▼
-┌─ OUTPUT: Known weighted F1 0.95 (16-class / 1,500 / 4:1) ────────────────┐
-│ ladder 0.92 → 0.95 (+0.03, cascade 결합)                                  │
-│ 운영 안전판: skip wafer 일일 sampling 재검증 + Stage 1 drift monitoring   │
-│             → τ_gate 주기 재조정 (FN 누적 차단)                            │
-└───────────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------------+
+|  Stage 1: ConvNeXtV2 wafer classifier (16 classes)                       |
+|  - backbone scan ViT 0.81 / Swin 0.84 / EffV2 0.85 / MaxViT 0.87         |
+|                  / ConvNeXtV2 0.87                                       |
+|  - vs MaxViT: params -26%, FLOPs -39%, head LR x10, last stage LR x3     |
+|  - ladder 0.78 -> 0.87 (backbone) -> 0.92 (Optuna)                       |
++----------------------------------+---------------------------------------+
+                                   |
+                                   v
+       +-----------------------------------------------------+
+       |  cascade gate: confidence < gate (difficult sample) |
+       +-----------------------------------------------------+
+                  conf >= gate                  conf < gate
+                       |                            |
+                       v                            v
++--------------------------+   +--------------------------------------------+
+|  Stage 1 only            |   |  Stage 2 (operational module selection)    |
+|  (skip Stage 2,          |   |  (A) ROI-YOLO [in production]              |
+|   ~zero throughput cost) |   |      - bbox + coord regression + class+NMS |
+|                          |   |  (B) chip-CNN obj-id map [in development]  |
+|                          |   |      - 256x256 crop classification only    |
+|                          |   |      - val_f1 0.9946 / test_f1 0.9872      |
++--------------------------+   +---------------------+----------------------+
+                |                                    |
+                +-----------------+------------------+
+                                  v
++--------------------------------------------------------------------------+
+|  OUTPUT: Known weighted F1 0.95 (16 class / 1,500 labeled / 4:1 split)   |
+|  - ladder 0.92 -> 0.95 (+0.03, cascade gain)                             |
+|  - operational guard: skip-wafer daily sampling re-check                 |
+|                       + Stage 1 distribution drift monitoring            |
+|                       -> gate periodic re-tuning (blocks FN accumulation)|
++--------------------------------------------------------------------------+
 ```
 
-학습 / 평가에 사용된 실제 wafer 이미지 예시 (2행 3열):
+합성 wafer 이미지 예시 (2행 3열, 본인 생성 평가셋):
 
 | Edge-Top Scratch | Edge-Ring Scratch_rot | Center Bank-Boundary (신규) |
 |:----------------:|:---------------------:|:---------------------------:|
@@ -172,7 +181,7 @@ M_obj(u,v) = argmax_k q_{u,v,k}
 | **BrokenRing** | **RingDots** | **CrescentArc (신규)** |
 | <img src="./figures/wafer_brokenring.png" width="180" /> | <img src="./figures/wafer_ringdots.png" width="180" /> | <img src="./figures/wafer_crescentarc.png" width="180" /> |
 
-Stage 1 만으로 헷갈리는 사례를 Stage 2 ROI YOLO 가 보정하는 흐름:
+Stage 1 만으로 헷갈리는 사례를 Stage 2 ROI YOLO 가 보정하는 흐름 (합성 예시):
 
 | Stage 1 (raw wafer) | Stage 2 ROI 영역 | Stage 2 chip 단위 box + class |
 |:-------------------:|:----------------:|:-----------------------------:|
