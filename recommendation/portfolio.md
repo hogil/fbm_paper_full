@@ -607,11 +607,11 @@ positive bits     negative bits
 +--------------------------------------------------------------------------+
 ```
 
-trend 합성 원리 (계측 밀도 Region, Noise 3분포, Anomaly 5종 수식):
+Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
-| 계측 밀도 Region × Noise 분포 × Anomaly 수식 |
-|:--------------------------------------------:|
-| <img src="./figures/p3_trend_generation_formula.png" alt="trend 합성 원리" width="900" /> |
+| Trend 합성 데이터 생성 설계 |
+|:---------------------------:|
+| <img src="./figures/p3_trend_generation_formula.png" alt="Trend 합성 데이터 생성 설계" width="900" /> |
 
 합성 trend chart 예시 (정상 + 일반 trend 불량 4종 + context 1종):
 
