@@ -491,18 +491,18 @@ positive bits     negative bits
 
   **Multi-label 학습 recipe 성능표 (per class 2000) [현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]**
 
-  | # | Recipe (per class 2000) | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Latency | Throughput | Params | Note |
-  |---|--------|--------|--------|--------|-----|--------|---------|---------|------------|--------|------|
-  | 1 | BCE + Label Smoothing | 0.1093 | TBD | TBD | 99.47% | 99.65% | 98.91% | 1x | 1x | 1x | ladder baseline |
-  | 2 | Sigmoid Focal Loss | 0.7980 | TBD | TBD | 45.72% | TBD | TBD | 1x | 1x | 1x | ladder baseline |
-  | 3 | Asymmetric Loss (ASL) | 0.6435 | TBD | TBD | 100.0% | TBD | TBD | 1x | 1x | 1x | ladder baseline |
-  | 4 | CutMix (random rectangle) | 0.9359 | TBD | TBD | 42.05% | 37.00% | 57.81% | 1x | 1x | 1x | ladder baseline |
-  | 5 | CutMix + Pair Mask | 0.9256 | TBD | TBD | 100.0% | TBD | TBD | 1x | 1x | 1x | ladder baseline |
-  | 6 | FCM-PM + val_f1 selection | **0.9652** | 1.0000 | 0.9517 | 0.15% | 0.00% | 0.62% | 1x | 1x | 1x | val_f1 기준 checkpoint |
-  | 7 | **FCM-PM + val_margin selection** | **0.9943** | **0.9918** | **0.9894** | **0.00%** | 0.00% | 0.00% | 1x | 1x | 1x | **제출 대표 모델** |
-  | 8 | vote_majority_bits Ensemble※ | **0.9941** | **1.0000** | **0.9893** | **0.00%** | 0.00% | 0.00% | 3x | 1/3x | 3x | champion ensemble |
-  | 9 | Knowledge Distillation (single student, baseline) | 0.9265 | 0.9785 | TBD | 0.00% | 0.00% | 0.00% | 1x | 1x | 1x | 압축 후보 — collapse 회피 첫 안정 |
-  | 10 | Knowledge Distillation (single student, sweep best) | **0.9470** | TBD | TBD | **0.00%** | 0.00% | 0.00% | 1x | 1x | 1x | 압축 후보 — α / T sweep 최고점 |
+  | # | Recipe (per class 2000) | bit_F1 | single | 2combo | FAR | NI-FAR | OOD-FAR | Throughput | Params |
+  |---|--------|--------|--------|--------|-----|--------|---------|------------|--------|
+  | 1 | BCE + Label Smoothing | 0.1093 | TBD | TBD | 99.47% | 99.65% | 98.91% | 1x | 1x |
+  | 2 | Sigmoid Focal Loss | 0.7980 | TBD | TBD | 45.72% | TBD | TBD | 1x | 1x |
+  | 3 | Asymmetric Loss (ASL) | 0.6435 | TBD | TBD | 100.0% | TBD | TBD | 1x | 1x |
+  | 4 | CutMix (random rectangle) | 0.9359 | TBD | TBD | 42.05% | 37.00% | 57.81% | 1x | 1x |
+  | 5 | CutMix + Pair Mask | 0.9256 | TBD | TBD | 100.0% | TBD | TBD | 1x | 1x |
+  | 6 | FCM-PM + val_f1 selection | **0.9652** | 1.0000 | 0.9517 | 0.15% | 0.00% | 0.62% | 1x | 1x |
+  | 7 | **FCM-PM + val_margin selection (제출 대표)** | **0.9943** | **0.9918** | **0.9894** | **0.00%** | 0.00% | 0.00% | 1x | 1x |
+  | 8 | vote_majority_bits Ensemble※ (champion) | **0.9941** | **1.0000** | **0.9893** | **0.00%** | 0.00% | 0.00% | 1/3x | 3x |
+  | 9 | Knowledge Distillation (single student, baseline) | 0.9265 | 0.9785 | TBD | 0.00% | 0.00% | 0.00% | 1x | 1x |
+  | 10 | Knowledge Distillation (single student, sweep best) | **0.9470** | TBD | TBD | **0.00%** | 0.00% | 0.00% | 1x | 1x |
 
   본 표는 per class 2000 chip synthetic benchmark 기준의 잠정값이며, 추가 evaluation 이 마무리되면 정식 값으로 갱신할 예정입니다. row 8 의 ensemble 은 보조 안정성 실험으로 01_career_profile.md / 02_ai_portfolio.md 의 ensemble 수치와 동일한 실험이 아닙니다. row 1~7 흐름을 보면 CutMix 단독으로는 FAR 이 운영에 쓰기 어려운 구간에 남고, FCM-PM + val_margin 단계까지 와서야 bit_F1 0.9943 / Total FAR 0.00% 균형이 맞춰집니다. 제출 대표 성과는 row 7 (bit_F1 0.9943 / Total FAR 0.00%) 로 고정합니다.
 
