@@ -407,7 +407,7 @@ softmax 대신 sigmoid multi-label head 를 쓴 이유는 single failure 와 2-c
 
 **(1) 합성 — FCM-PM**
 
-Grade 0-7 양자화 chip 이미지는 pixel 보간 방식보다 원값을 보존하는 CutMix 계열이 적합합니다 (자문: 연세대학교 인공지능학과 박은병 교수). 다만 일반 CutMix 는 failure signal 이 특정 crop 에서 잘리거나 background 가 failure 로 오학습되는 문제가 있어, chip 전체 grid 를 cover 하는 Full-Cover Mixup 과 paired augmentation 인 Pair Mask 를 결합했습니다. Pair Mask 는 A-only / B-only 학습 chip 을 함께 넣어 single failure 단독 패턴을 유지하고 background false-positive 를 줄입니다. Pair Mask 제거 시 Total FAR 이 **100%** 까지 상승해, background loss 분리가 핵심임을 확인했습니다.
+FCM-PM 은 Full-Cover Mixup 으로 chip 전체 영역에 2-combo 학습 신호를 만들고, Pair Mask 로 single failure 단독 패턴과 background false-positive 억제를 함께 학습시키는 구조입니다 (Grade 0-7 양자화 의미 보존을 위해 CutMix 계열을 기반으로 채택, 자문: 연세대학교 인공지능학과 박은병 교수). Pair Mask 제거 시 Total FAR 이 **100%** 까지 상승해, 본 구조가 false alarm 억제에 필요함을 확인했습니다.
 
 FCM-PM 학습 augmentation 을 실제 chip 이미지에 적용한 예시입니다 (`complement` 모드, `n_groups=2`, pair-fill white — per-class 50 group2 SOTA iter26F: bit_F1 0.9953 / Total FAR 0.00%). 실제 운영 학습은 GRID=8 (총 64 cell) 이고, 아래 예시는 셀 분포가 한눈에 보이도록 GRID 만 4 (16 cell, 그룹당 8 cell) 로 줄였습니다 (1행 6열).
 
