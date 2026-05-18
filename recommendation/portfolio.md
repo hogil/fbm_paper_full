@@ -572,30 +572,30 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 합성 trend sample 을 normal / abnormal 두 class 로 학습하는 1차 Binary gate baseline 분류기로 시작했습니다. P3 는 데이터 생성이 주 성과인 PoC 라 모델은 단순 baseline 으로 두고, 전체 단계는 아래 logic flow 와 같습니다.
 
 ```
-+--------------------------------------------------------------------------+
-|  [SOURCE]  9-year BBD / Overlay / CD trend-judgment experience           |
-|  criteria (scatter / hunting / drift / spec-out risk) -> generator       |
-|  parameters: this coding step is the core asset of the project           |
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
+|  [SOURCE]  9-year BBD / Overlay / CD trend-judgment experience            |
+|  criteria (scatter / hunting / drift / spec-out risk) -> generator        |
+|  parameters: this coding step is the core asset of the project            |
++---------------------------------------------------------------------------+
                                     |
                                     v
-+--------------------------------------------------------------------------+
-|  [SYNTHESIZE]  encode domain distribution + bounded synthetic-normal     |
-|  (Region density 5 / Noise 3 / Anomaly 5)                                |
-|  -> 224x224 PNG, 3,500 normal + 3,500 abnormal = 7,000 samples           |
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
+|  [SYNTHESIZE]  encode domain distribution + bounded synthetic-normal      |
+|  (Region density 5 / Noise 3 / Anomaly 5)                                 |
+|  -> 224x224 PNG, 3,500 normal + 3,500 abnormal = 7,000 samples            |
++---------------------------------------------------------------------------+
                                     |
                                     v
-+--------------------------------------------------------------------------+
-|  [VALIDATE]  Binary gate baseline (normal / abnormal)                    |
-|  - F1 0.9967 (TN/FN/FP/TP = 746/1/4/749), normal threshold 0.9           |
-|  - 5-seed best F1 0.9987 (TN/FN/FP/TP = 748/0/2/750)                     |
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
+|  [VALIDATE]  Binary gate baseline (normal / abnormal)                     |
+|  - F1 0.9967 (TN/FN/FP/TP = 746/1/4/749), normal threshold 0.9            |
+|  - 5-seed best F1 0.9987 (TN/FN/FP/TP = 748/0/2/750)                      |
++---------------------------------------------------------------------------+
                                     |
                                     v
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
 |  [OUTPUT]  현업 데이터 적용을 위한 model 확보 (PoC confirmed)             |
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------+
 ```
 
 - **최적화**: 성능 향상을 위해 본인이 직접 시도한 기술적 해법
