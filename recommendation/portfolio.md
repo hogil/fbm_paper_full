@@ -299,7 +299,7 @@ Full-Cover Mixup 과 Pair Mask 적용으로 해결했습니다. Full-Cover Mixup
 
 마지막 문제는 best epoch 선택이었습니다. val_f1 이 test bit_F1 / FAR 과 상관성이 작아 test 단계에서 성능이 개선되지 않았습니다. 그래서 `val_margin = mean(score over positive bits) - max(score over negative bits)` 를 기준으로 잡았습니다 — positive 평균과 가장 위험한 negative 최대값의 차이를 직접 반영하기 때문에 test bit_F1 과의 상관성이 더 컸습니다 (Spearman ρ val_margin **+0.56** vs val_f1 **−0.10**).
 
-이후 운영 환경 약 80% Normal 분포에 대응해 max-prob < 0.55 입력을 Normal 로 강제하는 threshold gate 를 적용했고, ensemble 과 Knowledge Distillation 은 각각 안정성 검토와 1× 추론 비용 압축 후보로 분리했습니다.
+이후 운영 환경 약 80% Normal 분포에 대응해 max-prob < 0.55 입력을 Normal 로 강제하는 threshold gate 를 적용했습니다. ensemble 은 single model 이 현업에서 불안정해질 가능성에 대비해, Knowledge Distillation single student 는 ensemble 판단을 single model 수준의 추론 비용으로 줄이기 위해 이어서 개발했습니다.
 
 **ㅁ 문제정의**
 
