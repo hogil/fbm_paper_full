@@ -549,27 +549,27 @@ positive bits     negative bits
 
 ```
 +--------------------------------------------------------------------------+
-|  SOURCE: 9-year BBD / Overlay / CD trend-judgment experience             |
+|  [SOURCE]  9-year BBD / Overlay / CD trend-judgment experience           |
 |  criteria (scatter / hunting / drift / spec-out risk) -> generator       |
 |  parameters: this coding step is the core asset of the project           |
 +----------------------------------+---------------------------------------+
                                    v
 +--------------------------------------------------------------------------+
-|  Step 1-5: encode domain distribution + bounded synthetic-normal render  |
+|  [SYNTHESIZE]  encode domain distribution + bounded synthetic-normal     |
 |  (Region density 5 / Noise 3 / Anomaly 5, parameter detail in            |
 |   [기술 지표] - 도메인 코드화 / 정상성 보정 lines below)                  |
 |  -> 224x224 PNG, 3,500 normal + 3,500 abnormal = 7,000 samples           |
 +----------------------------------+---------------------------------------+
                                    v
 +--------------------------------------------------------------------------+
-|  Binary gate baseline (normal / abnormal)                                |
+|  [VALIDATE]  Binary gate baseline (normal / abnormal)                    |
 |  - F1 0.9967 (TN/FN/FP/TP = 746/1/4/749), normal threshold 0.9           |
 |  - 5-seed best F1 0.9987 (TN/FN/FP/TP = 748/0/2/750)                     |
 |  - training stabilizers: val-F1 median smoothing + val-loss spike guard  |
 +----------------------------------+---------------------------------------+
                                    v
 +--------------------------------------------------------------------------+
-|  OUTPUT: synthetic dataset is learnable (PoC confirmed)                  |
+|  [OUTPUT]  synthetic dataset is learnable (PoC confirmed)                |
 |  Next: feed real-line abnormal logs back as parameter-recalibration      |
 |  triggers and verify unseen-domain generalization                        |
 +--------------------------------------------------------------------------+
