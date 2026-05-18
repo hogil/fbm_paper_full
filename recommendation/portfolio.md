@@ -157,11 +157,7 @@ q_{u,v} = softmax(h_phi(c_{u,v}))
 M_obj(u,v) = argmax_k q_{u,v,k}
 ```
 
-세 줄을 풀어 쓰면 다음과 같습니다 (결함 class 개수를 `K` 로 두고, 예를 들어 K=4 면 결함 class 가 4 종이라는 뜻).
-
-- 첫째 줄 `c_{u,v} = crop(x, pos_{u,v})` — wafer 이미지 `x` 에서 (u,v) 위치의 chip 영역만 잘라 약 256x256 작은 이미지로 만듭니다 (`crop` = 잘라내기).
-- 둘째 줄 `q_{u,v} = softmax(h_phi(c_{u,v}))` — 잘라낸 chip 이미지를 chip-CNN (`h_phi`) 에 넣으면 결함 class K 종 각각에 대한 점수가 K 개 나옵니다. 이 점수를 `softmax` 로 합 1.0 의 확률값으로 바꿉니다. 예를 들어 K=4 일 때 결과는 `(0.85, 0.10, 0.03, 0.02)` 처럼 "class 1 일 확률 0.85, class 2 일 확률 0.10, class 3 일 확률 0.03, class 4 일 확률 0.02" 분포가 됩니다.
-- 셋째 줄 `M_obj(u,v) = argmax_k q_{u,v,k}` — 위에서 만든 K 개 확률값 중 가장 큰 값을 갖는 class 번호 `k` 를 하나 고르고 (`argmax` = 가장 큰 값의 위치를 골라준다는 뜻), 그 번호를 (u,v) 위치 chip 의 최종 결함 class 로 둡니다. wafer 전체 32×32 chip 위치마다 이 class 번호 하나씩 채우면 `M_obj` 라는 **32×32 결함 지도**가 만들어집니다. 각 chip 을 하나의 "object" 로 보고 그 object 의 ID (class 번호) 를 격자에 박아 둔 형태라 **object-id map** 이라고 부릅니다.
+세 줄은 차례로 (1) chip 좌표에서 약 256×256 patch 를 잘라내고, (2) chip-CNN 으로 결함 class 확률 분포를 뽑은 뒤, (3) 가장 큰 확률을 갖는 class 번호를 채워 32×32 결함 지도 `M_obj` 를 만든다는 뜻입니다. chip 마다 하나의 class 번호 (= object ID) 를 격자에 박아 두는 형태라 **object-id map** 으로 부릅니다.
 
 이 결함 지도가 그대로 Stage 2 의 출력이 됩니다 (수식 `p_chip_obj(y | crop(x))` 도 같은 뜻 — "chip crop 이미지를 입력했을 때 결함 class `y` 일 확률" 을 chip 마다 확정한 것이고, 통계 용어로 posterior 라고 부릅니다). 이 출력값이 기존 Stage 2 ROI-YOLO 자리를 그대로 대체할 수 있도록 모듈을 구성했습니다.
 
