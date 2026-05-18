@@ -17,8 +17,8 @@ FIGURES = Path(r"D:/project/fbm_paper/recommendation/figures")
 SEED = 20260518
 GRID = 8
 
-CHIP_A = FIGURES / "chip_eval_bank_boundary_selected.png"
-CHIP_B = FIGURES / "chip_eval_fork_selected.png"
+CHIP_A = FIGURES / "chip_eval_scratch_selected.png"
+CHIP_B = FIGURES / "chip_eval_scratch_rot_selected.png"
 
 OUT_A = FIGURES / "fcm_pm_step_a.png"
 OUT_B = FIGURES / "fcm_pm_step_b.png"
@@ -56,11 +56,10 @@ def grid_complete_cutmix(a: np.ndarray, b: np.ndarray, grid: int, rng: np.random
     return out, rects
 
 
-def pair_mask_corner_fill(a: np.ndarray, rects: list[tuple[int, int, int, int]]) -> np.ndarray:
-    corner = a[:8, :8].reshape(-1, 3).mean(axis=0).astype(np.uint8)
+def pair_mask_black_fill(a: np.ndarray, rects: list[tuple[int, int, int, int]]) -> np.ndarray:
     out = a.copy()
     for y0, y1, x0, x1 in rects:
-        out[y0:y1, x0:x1] = corner
+        out[y0:y1, x0:x1] = 0
     return out
 
 
@@ -86,7 +85,7 @@ def main() -> None:
     assert a.shape == b.shape, f"shape mismatch: {a.shape} vs {b.shape}"
 
     mixed, rects = grid_complete_cutmix(a, b, GRID, rng)
-    masked = pair_mask_corner_fill(a, rects)
+    masked = pair_mask_black_fill(a, rects)
 
     save_rgb(OUT_A, a)
     save_rgb(OUT_B, b)
@@ -94,8 +93,8 @@ def main() -> None:
     save_rgb(OUT_MASKED, masked)
 
     panels = [
-        label_panel(a, "A: bank_boundary"),
-        label_panel(b, "B: fork"),
+        label_panel(a, "A: scratch"),
+        label_panel(b, "B: scratch_rot"),
         label_panel(mixed, "FCM mixed (A+B)"),
         label_panel(masked, "Pair Mask (A-only)"),
     ]
