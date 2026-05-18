@@ -548,8 +548,8 @@ positive bits     negative bits
                                    v
 +--------------------------------------------------------------------------+
 |  [OUTPUT]  synthetic dataset is learnable (PoC confirmed)                |
-|  Next: feed real-line abnormal logs back as parameter-recalibration      |
-|  triggers and verify unseen-domain generalization                        |
+|  Current stage: ready for real production trend chart application        |
+|  Next: validate with real production trend charts                        |
 +--------------------------------------------------------------------------+
 ```
 
@@ -580,4 +580,4 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
 - **현업 임팩트**: L1 trend 모니터링 1차 스크리닝으로 누락 / 불량 누설 위험을 줄이고, 새 공정 / trend 유형이 들어와도 같은 generator 로 데이터를 빠르게 늘릴 수 있습니다 (현업 데이터 적용 직전).
 
-**P3 결론**: 본인 trend 판정 경험으로 만든 합성 trend sample **약 7,000개** + Binary F1 **0.9967** 로 학습 가능성 검증을 완료했고, 현재 실제 현업 데이터 적용 직전 단계입니다. 실전 abnormal log 기반 generator 재보정과 type 세분화 분류기는 후속 단계로 분리합니다.
+**P3 결론**: 본인 trend 판정 경험으로 만든 합성 trend sample **약 7,000개**와 Binary F1 **0.9967** 로 학습 가능성 검증을 완료했고, 현재 실제 현업 데이터 적용 직전 단계입니다.

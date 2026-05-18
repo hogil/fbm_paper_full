@@ -51,4 +51,4 @@ chip Grade 이미지, chip 내부 failure 위치 미상, multi-label co-occurren
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-본인이 BBD담당 / Overlay담당 / CD담당으로 9년간 trend chart 를 직접 판정해 온 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 가지고 있었고, 이 판단 기준을 직접 generator parameter 로 옮겨 합성 trend 데이터를 만들었습니다. 그 위에 Synthetic Data Engineering + Time-series Episode Simulation + Baseline Model Validation 을 결합했고, 다음 단계는 실전 abnormal log 로 generator parameter 를 재보정하는 feedback loop 입니다.
+본인이 BBD담당 / Overlay담당 / CD담당으로 9년간 trend chart 를 직접 판정해 온 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 가지고 있었고, 이 판단 기준을 직접 generator parameter 로 옮겨 합성 trend 데이터를 만들었습니다. 그 위에 Synthetic Data Engineering + Time-series Episode Simulation + Baseline Model Validation 을 결합했고, 다음 단계는 실제 현업 trend chart 기반 검증입니다.
