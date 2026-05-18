@@ -157,9 +157,9 @@ q_{u,v} = softmax(h_phi(c_{u,v}))
 M_obj(u,v) = argmax_k q_{u,v,k}
 ```
 
-세 줄은 차례로 (1) chip 좌표에서 약 256×256 patch 를 잘라내고, (2) chip-CNN 으로 결함 class 확률 분포를 뽑은 뒤, (3) 가장 큰 확률을 갖는 class 번호를 채워 32×32 결함 지도 `M_obj` 를 만든다는 뜻입니다. chip 마다 하나의 class 번호 (= object ID) 를 격자에 박아 두는 형태라 **object-id map** 으로 부릅니다.
+chip 좌표마다 crop → class 확률 → argmax 로 32×32 object-id map `M_obj` 를 채웁니다.
 
-이 결함 지도가 그대로 Stage 2 의 출력이 됩니다 (수식 `p_chip_obj(y | crop(x))` 도 같은 뜻 — "chip crop 이미지를 입력했을 때 결함 class `y` 일 확률" 을 chip 마다 확정한 것이고, 통계 용어로 posterior 라고 부릅니다). 이 출력값이 기존 Stage 2 ROI-YOLO 자리를 그대로 대체할 수 있도록 모듈을 구성했습니다.
+이 지도가 Stage 2 ROI-YOLO 출력을 대체하는 chip 단위 posterior 입니다.
 
 **[최적화]** Known 2-stage 의 성능은 실전 현업 데이터 (16 class / 1,500 labeled / 4:1 stratified split) 위에서 baseline 부터 단계별로 다음과 같이 향상시켰습니다.
 
