@@ -515,7 +515,7 @@ positive bits     negative bits
 
 **ㅁ 기술적 해결 방안**
 
-작업 흐름은 크게 세 단계로 정리했습니다. 먼저 본인의 trend 판정 경험을 generator parameter 에 반영하고, 합성 normal 산포는 상한 / 하한 두 수식으로 실전 baseline 안에 들어오도록 조정하며 abnormal 은 정상 산포에 묻히지 않게 분리합니다. 마지막으로 1차 Binary gate baseline 으로 생성 데이터의 학습 가능성을 검증하는데, 이 baseline 모델은 운영 후보가 아니라 데이터 검증용으로만 사용합니다.
+작업 흐름은 크게 세 단계로 정리했습니다. 먼저 trend 판정 경험을 generator parameter 에 반영하고, 합성 normal 산포는 상한 / 하한 두 수식으로 실전 baseline 안에 들어오도록 조정하며 abnormal 은 정상 산포에 묻히지 않게 분리합니다. 마지막으로 1차 Binary gate baseline 으로 생성 데이터의 학습 가능성을 검증했습니다.
 
 ```
 +--------------------------------------------------------------------------+
