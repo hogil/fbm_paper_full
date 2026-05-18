@@ -470,11 +470,11 @@ positive bits     negative bits
   | 4 | CutMix (random rectangle) | 0.9359 | 0.9566 | 0.9070 | 42.05% | 37.00% | 57.81% | 1x | 1x |
   | 5 | CutMix + Pair Mask | 0.9256 | 0.8538 | 0.9682 | 100.0% | 100.0% | 100.0% | 1x | 1x |
   | 6 | FCM-PM + val_f1 selection | **0.9652** | 1.0000 | 0.9517 | 0.15% | 0.00% | 0.62% | 1x | 1x |
-  | 7 | **FCM-PM + val_margin selection (제출 대표)** | **0.9943** | **0.9918** | **0.9894** | **0.00%** | 0.00% | 0.00% | 1x | 1x |
+  | 7 | **FCM-PM + val_margin selection** | **0.9943** | **0.9918** | **0.9894** | **0.00%** | 0.00% | 0.00% | 1x | 1x |
   | 8 | vote_majority_bits Ensemble※ (champion) | **0.9941** | **1.0000** | **0.9893** | **0.00%** | 0.00% | 0.00% | 1/3x | 3x |
   | 9 | Knowledge Distillation (single student) | **0.9470** | 0.9363 | 0.9187 | **0.00%** | 0.00% | 0.00% | 1x | 1x |
 
-  본 표는 주요 학습 recipe 별 성능 차이를 비교한 결과입니다. 제출 대표 성과는 FCM-PM + val_margin 단일 모델의 bit_F1 **0.9943** / Total FAR **0.00%** 입니다.
+  본 표는 주요 학습 recipe 별 성능 차이를 비교한 결과입니다. 최고 성능 single model 은 FCM-PM + val_margin 으로 bit_F1 **0.9943** / Total FAR **0.00%** 입니다.
 
 - **현업 임팩트**: 실제 chip 불량률 계산 및 trend 분석이 가능해지고, P1 chip-CNN object-id map 후속 단계 기반으로 이어집니다.
 
