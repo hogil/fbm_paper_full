@@ -456,7 +456,7 @@ positive bits     negative bits
 
 - **기술 지표** (단계별 적용 효과):
   - 학습 ladder: BCE+Label Smoothing → Focal / ASL loss 변형 → 단순 CutMix → **FCM-PM (Full-Cover Mixup + Pair Mask) + val_margin best-model selection** 순으로 단계별 적용해 bit_F1 0.1093 → **0.9943** / Total FAR 99.47% → **0.00%** 까지 향상시켰습니다.
-  - 핵심 근거: Pair Mask 제거 시 Total FAR 이 **100%** 로 치솟아, **background loss 분리가 false-positive 억제 핵심 요인**임을 직접 확인했습니다.
+  - Pair Mask ablation: 제거 시 Total FAR 이 **100%** 로 치솟아, background loss 분리가 false-positive 억제에 큰 비중을 차지함을 확인했습니다.
   - val_margin 기반 best-model selection 이 val_f1 보다 실제 test bit_F1 을 훨씬 정확히 예측 (Spearman ρ **+0.56 vs −0.10**) — best epoch 안정성 확보.
   - 추론 단계 보강: max-prob threshold gate + bit-level majority voting ensemble (champion `vote_majority_bits` bit_F1 0.9941 / Total FAR 0.00%) + Knowledge Distillation single student 압축 후보.
 
