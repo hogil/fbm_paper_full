@@ -24,8 +24,7 @@
 - 32색 palette indexed PNG 저장으로 이미지 저장 용량을 약 **75%** 줄였습니다.
 - 운영 뷰어 조회 한도를 1회 약 **48매** → **수천 wafer 초고속 조회**로 확장해 대량 wafer 동시 비교가 가능해졌습니다.
 - 적재 흐름은 일 약 **2만 장 wafer / 1시간 주기** 누적으로 운영 중입니다.
-- Known 2-stage 는 weighted F1 **0.95** 까지 도달했고, Unknown 검출은 특정 제품 실전 데이터에서 13개 후보 group 중 **7개가 실제 불량으로 확인**되어 운영 검출력과 신뢰성이 검증되었습니다.
-- Unknown 운영 데이터는 정답 label 이 없는 환경이라 정량 metric 대신 후보 group 압축과 현업 확인 결과로 검증했습니다.
+- Known 2-stage 는 weighted F1 **0.95**, Unknown 검출은 실제 운영 환경에 noise group 이 너무 많아 정량 metric 의 정합성이 낮다고 판단해, 학습한 model 을 실전 데이터에 직접 돌려 추출한 13개 후보 group 을 현업이 확인한 결과 **7개가 실제 불량으로 입증**되어 운영 검출력이 확인되었습니다.
 - chip-CNN object-id map 과 Unknown synthetic benchmark metric 은 생성 데이터 기반으로 개발 중인 트랙이라 대표 성과 (실전 현업 데이터 기반) 와 분리해 두었습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
