@@ -42,7 +42,7 @@ Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zo
 - 수행기간: 2025년 3월 ~ 현재
 - 담당 역할: 본인 80% / 관리자 20%
 - 수행 업무: CutMix 계열 채택 → chip 전체 grid 를 cover 하는 Full-Cover Mixup 으로 확장, Pair Mask binary mask 로 background bit 를 loss 에서 제외, val_margin = mean(pos bits) − max(neg bits) 로 best epoch 선택 (Spearman ρ +0.56 vs val_f1 −0.10), positive target 0.85 / negative target 0.15 (symmetric) 채택. 추론 단은 max-prob threshold gate (0.55) + Temperature Scaling + bit-level majority voting ensemble (champion `vote_majority_bits`) + Knowledge Distillation α/T sweep. data leakage 방지를 위해 single failure chip 원천을 chip 단위로 먼저 train / test split 후, 2-combo 와 Pair Mask 합성은 train 원천 chip 만 사용하고 test 원천 chip 은 합성 과정에서 완전히 배제했습니다.
-- 성과: FCM-PM val_margin 단일 모델 **bit_F1 0.9943 / Total FAR 0.00%** (현업 분포 모사 controlled benchmark 기준). Pair Mask 제거 ablation 에서 Total FAR 100% 로 치솟아 background loss masking 이 결정적 설계 요소임을 정량으로 확인. bit-level majority voting ensemble (champion `vote_majority_bits`) **bit_F1 0.9941 / Total FAR 0.00%** 으로 단일 모델이 흔들릴 때 다른 두 모델 합의로 보정하는 보조 검증 구조까지 확보, KD single student 는 KD_v7 (α=0.3, T=2) bit_F1 **0.9265** 첫 안정 → KD_v12 (α=0.3, T=3) bit_F1 **0.9470** KD sweep 최고점, 모두 대표 성과와 분리한 후속 압축 / 안정성 보조.
+- 성과: FCM-PM val_margin 단일 모델 **bit_F1 0.9943 / Total FAR 0.00%** (현업 분포 모사 controlled benchmark 기준). Pair Mask 제거 ablation 에서 Total FAR 100% 로 치솟아 background loss masking 이 결정적 설계 요소임을 정량으로 확인. bit-level majority voting ensemble (champion `vote_majority_bits`) **bit_F1 0.9941 / Total FAR 0.00%** 으로 단일 모델이 흔들릴 때 다른 두 모델 합의로 보정하는 보조 검증 구조까지 확보, KD single student 는 α / T sweep 으로 bit_F1 **0.9265 → 0.9470** 까지 끌어올린 압축 후보로 두었고, 모두 대표 성과와 분리한 후속 안정성 / 압축 보조.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
