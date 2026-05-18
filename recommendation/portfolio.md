@@ -18,14 +18,13 @@
 | 수행기간 | 2024년 10월 ~ 현재 |
 | 참여인원 | 본인 / 현업 엔지니어 / 관리자 |
 
-**양산 파이프라인 핵심 수치 요약**
+**P1 핵심 수치 요약**
 
 - Cython hex-to-grade 변환 재구성으로 데이터 처리 속도를 약 **100배** 향상시켰습니다.
 - 32색 palette indexed PNG 저장으로 이미지 저장 용량을 약 **75%** 줄였습니다.
 - 기존 1회 약 48매 조회 중심의 흐름을 일 약 **2만 장 wafer / 1시간 주기** 누적 비교 흐름으로 확장했습니다.
-- Known 2-stage 는 weighted F1 **0.95**, Unknown 검출은 특정 제품 실전 데이터 기반 13개 후보 group 중 7개 실제 불량 확인으로 분리해 보고합니다.
-
-**P1 결론**: 일 약 2만 장 wafer / 1시간 주기 처리 Failbit Map 운영 파이프라인, Known 2-stage weighted F1 **0.95** + Unknown 13 후보 → **7 실제 불량 현업 확인**. chip-CNN object-id map 과 Unknown synthetic benchmark metric 은 심화 질의 대비 항목으로 분리, Unknown 운영 데이터는 정답 label 부재로 후보 group 압축 + 현업 확인 결과로만 보고합니다.
+- Known 2-stage 는 weighted F1 **0.95** 까지 도달했고, Unknown 검출은 특정 제품 실전 데이터에서 13개 후보 group 중 **7개가 실제 불량으로 확인**되어 운영 검출력과 신뢰성이 검증되었습니다.
+- chip-CNN object-id map 과 Unknown synthetic benchmark metric 은 심화 질의 대비 항목으로 별도 관리하며, Unknown 운영 데이터는 정답 label 부재로 후보 group 압축 + 현업 확인 결과로 보고합니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -41,7 +40,7 @@
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: 본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어 교육을 거쳐 Failbit Map 의미와 분석 흐름을 확보한 뒤 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 양산 운영 시스템을 구성했습니다. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
 
-- **본인의 기술적 해결책이 과제 성패에 미친 영향**: wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0~7 로 풀어내는 변환 루프를 Cython 으로 재구성해 약 **100배** 가속을 확보했고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 같이 묶어 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터 — Known]** baseline **0.78** (ImageNet 사전학습 일반 CNN) → **0.87** (ConvNeXtV2 backbone 교체) → **0.92** (Optuna Bayesian hyperparameter sweep + LinearLR warmup / CosineAnnealing LR schedule) → **0.95** (wafer 신뢰도가 낮은 difficult sample 만 ROI YOLO 로 보내는 2-stage cascade 결합) 단계별 향상으로 weighted F1 **0.95** 까지 도달했습니다. **[실전 현업 데이터 — Unknown]** ConvNeXtV2 backbone 을 본 도메인 wafer 이미지로 Task-Adaptive Pretraining (TAPT) 한 뒤, Global InfoNCE 위에 chip 단위 grid 를 sliding 하며 patch-pair 를 학습하는 Local DenseCL loss 를 결합해 wafer 전역과 chip 국소 정보를 같이 학습하도록 만들었습니다. 그 결과 운영 단계에서 13개 후보 group 중 **7개 불량 확인**으로 검출력이 검증되었습니다. **[추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 은 fail-map 이 chip 좌표를 자동 확정해 두어 chip crop 추출 자체가 단순했고, 256×256 chip crop 안에서는 불량 영역이 차지하는 비율이 wafer 전체 대비 훨씬 커서 chip-CNN 단위 분류 성능이 쉽게 향상되었습니다 (val_f1 **0.9946**). 이 chip 단위 결과를 object-id map 으로 wafer 좌표계에 다시 합치면서 wafer 전체 F1 점수까지 같이 끌어올린 구조입니다. **[Unknown 추가 생성 데이터, 개발 중]** 현업 데이터와 유사하게 구성한 합성 평가셋에서 신규 class capture **1.000** (38/38) / noise **0.00%** / Completeness **0.9938** / Silhouette **0.781** 까지 같이 측정 중입니다. 양산 deploy 여부는 validation 후 운영 절차에 따라 결정합니다.
+- **본인의 기술적 해결책이 과제 성패에 미친 영향**: wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0~7 로 풀어내는 변환 루프를 Cython 으로 재구성해 약 **100배** 가속을 확보했고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 같이 묶어 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터 — Known]** baseline **0.78** (ImageNet 사전학습 일반 CNN) → **0.87** (ConvNeXtV2 backbone 교체) → **0.92** (Optuna Bayesian hyperparameter sweep + LinearLR warmup / CosineAnnealing LR schedule) → **0.95** (wafer 신뢰도가 낮은 difficult sample 만 ROI YOLO 로 보내는 2-stage cascade 결합) 단계별 향상으로 weighted F1 **0.95** 까지 도달했습니다. **[실전 현업 데이터 — Unknown]** ConvNeXtV2 backbone 을 본 도메인 wafer 이미지로 Task-Adaptive Pretraining (TAPT) 한 뒤, Global InfoNCE 위에 chip 단위 grid 를 sliding 하며 patch-pair 를 학습하는 Local DenseCL loss 를 결합해 wafer 전역과 chip 국소 정보를 같이 학습하도록 만들었습니다. 그 결과 운영 단계에서 13개 후보 group 중 **7개 불량 확인**으로 검출력이 검증되었습니다. **[추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 은 fail-map 이 chip 좌표를 사전 제공해 crop 추출이 단순하고, 256×256 crop 안에서는 불량 비율이 wafer 전체보다 커서 chip-CNN 분류가 빠르게 수렴합니다 (val_f1 **0.9946**). 그 결과를 wafer 좌표계로 합쳐 전체 F1 도 함께 향상되는 구조입니다. **[Unknown 추가 생성 데이터, 개발 중]** 현업 데이터와 유사하게 구성한 합성 평가셋에서 Global InfoNCE + MoCo Queue (size 4096) + NV-Retriever (negative similarity 임계 0.72) + NeCo neighbor consistency 4-tool 결합 + noise 임계 τ=0.5 후처리 recipe 로 신규 class capture **1.000** (38/38) / noise **0.00%** / Completeness **0.9938** / Silhouette **0.781** 까지 측정했습니다.
 
 **ㅁ 문제정의**
 
@@ -49,7 +48,7 @@
 |------|------|
 | 현장 난제 | (1) wafer Failbit Map 을 한 번에 약 48매까지만 느리게 조회할 수 있어 대량 wafer 분석이 어렵습니다. (2) wafer 당 약 1,000만 cell Grade map 을 분석 엔지니어가 수작업으로 판정해야 합니다. |
 | 기존 방식의 한계 | hex → Grade 변환을 Python loop 로 돌아 wafer 한 장 처리에 시간이 오래 걸렸고, 메모리 제약으로 동시 조회가 약 48매로 묶여 제품 / 시간 단위 누적 분석이 어려웠습니다. |
-| 기술적 / 환경적 제약 | 등록되지 않은 신규 결함 패턴은 known classifier 로 잡히지 않고, label 1,500장 / 16 class 의 작은 학습 set, 일 약 2만 장 wafer 처리, 1시간 주기 적재, 운영 뷰어 응답성이 한꺼번에 걸려 있었습니다. |
+| 기술적 / 환경적 제약 | Known 측은 label 1,500장 / 16 class 의 작은 학습 set 으로 16-class 분류 정확도를 끌어올려야 하고, Unknown 측은 등록되지 않은 신규 결함 패턴이 known classifier 로 잡히지 않아 정답 label 없는 운영 환경에서 별도 검출 경로를 만들어야 합니다. 동시에 일 약 2만 장 wafer 처리, 1시간 주기 적재, 운영 뷰어 응답성까지 같이 묶여 있었습니다. |
 
 **ㅁ 기술적 해결 방안**
 
@@ -85,13 +84,13 @@
 |  Known branch                        |   |  Unknown branch                      |
 |  (16 registered classes)             |   |  (self-supervised contrastive)       |
 +--------------------------------------+   +--------------------------------------+
-|  Stage 1: ConvNeXtV2 wafer           |   |  - InfoNCE + MoCo Queue (4096)       |
-|           classifier                 |   |    + NV-Retriever NEG threshold 0.72 |
-|       v   confidence < gate          |   |  - HDBSCAN clustering                |
-|  Stage 2: ROI YOLO refinement        |   |  - 13 candidate groups -> 7 real     |
-|           (chip bbox + class vote)   |   |    failures confirmed on-site        |
-|  ->       weighted F1 0.95           |   |  - synthetic benchmark metrics kept  |
-|                                      |   |    separate from headline result     |
+|  Stage 1: ConvNeXtV2 wafer           |   |  - ConvNeXtV2 backbone with TAPT     |
+|           classifier                 |   |    on in-domain wafer images         |
+|       v   confidence < gate          |   |  - Global InfoNCE                    |
+|  Stage 2: ROI YOLO refinement        |   |    + Grid Local DenseCL (patch loss) |
+|           (chip bbox + class vote)   |   |  - HDBSCAN clustering                |
+|  ->       weighted F1 0.95           |   |  - 13 candidate groups -> 7 real     |
+|                                      |   |    failures confirmed on-site        |
 +--------------------------------------+   +--------------------------------------+
                 |                                       |
                 +-------------------+-------------------+
