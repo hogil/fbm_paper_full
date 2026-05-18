@@ -27,7 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 FIGURES = Path(r"D:/project/fbm_paper/recommendation/figures")
 SEED = 20260518
-GRID = 8           # iter26F default
+GRID = 4           # demo-friendly (실제 iter26F SOTA 는 GRID=8)
 N_GROUPS = 2       # group2 SOTA
 WHITE = np.array([255, 255, 255], dtype=np.uint8)
 
