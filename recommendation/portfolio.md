@@ -23,7 +23,7 @@
 - Cython hex-to-grade 변환 재구성으로 데이터 처리 속도를 약 **100배** 향상시켰습니다.
 - 32색 palette indexed PNG 저장으로 이미지 저장 용량을 약 **75%** 줄였습니다.
 - 운영 뷰어 조회 한도를 1회 약 **48매** → **수천 wafer 초고속 조회**로 확장해 대량 wafer 동시 비교가 가능해졌습니다.
-- 적재 흐름은 일 약 **2만 장 wafer / 1시간 주기** 누적으로 운영 중입니다.
+- 운영 뷰어 / 적재 파이프라인은 일 약 **2만 장 wafer / 1시간 주기** 누적으로 양산 운영 중입니다 (Known / Unknown AI 모델 전수 자동 추론 적용은 GPU 할당 후 단계 확장 예정).
 - Known 2-stage 는 weighted F1 **0.95**, Unknown 검출은 실제 운영 환경에 다수의 noise group 이 존재해 정량 metric 의 정합성이 낮다고 판단해, 학습한 model 을 실전 데이터 2,000 장에 직접 돌려 추출한 13개 후보 group 을 현업이 확인한 결과 **7개가 실제 불량으로 입증**되어 운영 검출력이 확인되었습니다.
 - chip-CNN object-id map 과 Unknown synthetic benchmark metric 은 생성 데이터 기반으로 개발 중인 트랙이라 대표 성과 (실전 현업 데이터 기반) 와 분리해 두었습니다.
 
@@ -39,7 +39,7 @@
 
 **[본인이 독자적으로 수행한 핵심 모듈]**
 
-- **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: 본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어 교육을 거쳐 Failbit Map 의미와 분석 흐름을 확보한 뒤 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 양산 운영 시스템을 구성했습니다. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
+- **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**: 본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어 교육을 거쳐 Failbit Map 의미와 분석 흐름을 확보한 뒤 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현해 양산 운영에 들어가게 했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 Known / Unknown 분석 시스템까지 설계 / 학습 / 검증을 마쳤습니다 (AI 모델의 전수 자동 추론 적용은 AI 센터 GPU 할당 (**2026년 9월**) 일정에 맞춰 단계 확장 예정). 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**: wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환 루프를 Cython 으로 재구성해 약 **100배** 가속을 확보했고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 같이 묶어 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터 — Known]** baseline **0.78** (ImageNet 사전학습 일반 CNN) → **0.87** (ConvNeXtV2 backbone 교체) → **0.92** (Optuna Bayesian hyperparameter sweep + LinearLR warmup / CosineAnnealing LR schedule) → **0.95** (wafer 신뢰도가 낮은 difficult sample 만 ROI YOLO 로 보내는 2-stage cascade 결합) 단계별 향상으로 weighted F1 **0.95** 까지 도달했습니다. **[실전 현업 데이터 — Unknown]** ConvNeXtV2 backbone 을 본 도메인 wafer 이미지로 Task-Adaptive Pretraining (TAPT) 한 뒤, Global InfoNCE + Queue (size 16384) + negative similarity filter (cos > 0.72) + Local InfoNCE (grid36_full, window=4) 를 결합해 wafer 전역과 sub-pattern 까지 같이 학습하도록 만들었습니다. 그 결과 운영 단계에서 13개 후보 group 중 **7개 불량 확인**으로 검출력이 검증되었습니다. **[추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 은 이미지 생성 시 chip 좌표를 같이 만들어 두어 crop 추출이 단순하고, 약 256x256 crop 안에서는 불량 비율이 wafer 전체보다 커서 chip-CNN 분류가 빠르게 수렴합니다 (val_f1 **0.9946**). 그 결과를 wafer 좌표계로 합쳐 전체 F1 도 함께 향상되는 구조입니다. **[Unknown 추가 생성 데이터, 개발 중]** 현업 데이터와 유사하게 구성한 synthetic benchmark 에서 Global InfoNCE + MoCo Queue (size 4096) + NV-Retriever (negative similarity 임계 0.72) + NeCo neighbor consistency 4-tool 결합 + noise 임계 τ=0.5 후처리 recipe 로 신규 class capture **1.000** (38/38) / noise **0.00%** / Completeness **0.9938** / Silhouette **0.781** 까지 측정했습니다.
 
