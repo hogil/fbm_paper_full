@@ -32,7 +32,7 @@
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zone 해석 도메인 위에 ConvNeXtV2 wafer 분류 + ROI YOLO 2-stage 보정 + self-supervised contrastive embedding + HDBSCAN grouping + chip-CNN object-id map 후속을 결합했습니다. backbone 은 본 과제 결함이 국소 영역에 몰리는 특성상 CNN 계열의 local receptive field 가 더 어울린다고 판단해 ConvNeXtV2 채택 (MaxViT 와 동일 F1 0.87 에 파라미터 **26%** / FLOPs **39%** 감소, 자문: 연세대학교 인공지능학과 전해곤 교수). Stage 2 는 wafer-level confidence 가 낮은 difficult sample 에 한해 헷갈리는 영역을 ROI 로 먼저 잘라내고 그 ROI 안에서 YOLO 가 chip 단위 object detection (bbox + class) 으로 다시 분류해, 그 출력 분포의 majority 로 최종 class 를 결정하는 구조입니다. 이 흐름으로 throughput 손실 없이 헷갈리는 sample 의 분리력만 선택적으로 보강합니다.
+Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zone 해석 도메인 위에 ConvNeXtV2 wafer 분류 + ROI YOLO 2-stage 보정 + self-supervised contrastive embedding + HDBSCAN grouping + chip-CNN object-id map 후속을 결합했습니다. backbone 은 본 과제 결함이 국소 영역에 몰리는 특성상 CNN 계열의 local receptive field 가 더 어울린다고 판단해 ConvNeXtV2 채택 (MaxViT 와 동일 F1 0.87 에 파라미터 **26%** / FLOPs **39%** 감소, 자문: 연세대학교 인공지능학과 전해곤 교수). Stage 2 는 wafer 신뢰도가 낮은 difficult sample 만 처리합니다. 우선 헷갈리는 영역을 ROI 로 잘라낸 다음, 그 ROI 안에서 YOLO 가 chip 단위 object detection (bbox + class) 으로 다시 분류하고, 출력 box 들의 majority class 로 최종 결과를 정합니다. 이렇게 신뢰도가 충분한 wafer 는 Stage 2 를 건너뛰기 때문에 throughput 부담 없이, 헷갈리는 sample 만 다시 분류해 정확도를 끌어올립니다.
 
 ㅁ **P2. Chip Multi-label Classification (FCM-PM, val_margin)**
 
@@ -42,7 +42,7 @@ Failbit Map, DRAM EDS Test Grade 0-7 양자화 이미지, wafer-level failure zo
 - 수행기간: 2025년 3월 ~ 현재
 - 담당 역할: 본인 80% / 관리자 20%
 - 수행 업무: CutMix 계열 채택 → chip 전체 grid 를 cover 하는 Full-Cover Mixup 으로 확장, Pair Mask binary mask 로 background bit 를 loss 에서 제외, val_margin = mean(pos bits) − max(neg bits) 로 best epoch 선택 (Spearman ρ +0.56 vs val_f1 −0.10), positive target 0.85 / negative target 0.15 (symmetric) 채택. 추론 단은 max-prob threshold gate (0.55) + Temperature Scaling + bit-level majority voting ensemble (champion `vote_majority_bits`) + Knowledge Distillation α/T sweep. data leakage 방지를 위해 single failure chip 원천을 chip 단위로 먼저 train / test split 후, 2-combo 와 Pair Mask 합성은 train 원천 chip 만 사용하고 test 원천 chip 은 합성 과정에서 완전히 배제했습니다.
-- 성과: FCM-PM val_margin 단일 모델 **bit_F1 0.9943 / Total FAR 0.00%** (현업 분포 모사 controlled benchmark 기준). Pair Mask 제거 ablation 에서 Total FAR 100% 로 치솟아 background loss masking 이 결정적 설계 요소임을 정량으로 확인. bit-level majority voting ensemble (champion `vote_majority_bits`) **bit_F1 0.9941 / Total FAR 0.00%** 운영 안전판, KD single student 는 KD_v7 (α=0.3, T=2) bit_F1 **0.9265** 첫 안정 → KD_v12 (α=0.3, T=3) bit_F1 **0.9470** KD sweep 최고점, 모두 대표 성과와 분리한 후속 압축 / 안정성 보조.
+- 성과: FCM-PM val_margin 단일 모델 **bit_F1 0.9943 / Total FAR 0.00%** (현업 분포 모사 controlled benchmark 기준). Pair Mask 제거 ablation 에서 Total FAR 100% 로 치솟아 background loss masking 이 결정적 설계 요소임을 정량으로 확인. bit-level majority voting ensemble (champion `vote_majority_bits`) **bit_F1 0.9941 / Total FAR 0.00%** 으로 단일 모델이 흔들릴 때 다른 두 모델 합의로 보정하는 보조 검증 구조까지 확보, KD single student 는 KD_v7 (α=0.3, T=2) bit_F1 **0.9265** 첫 안정 → KD_v12 (α=0.3, T=3) bit_F1 **0.9470** KD sweep 최고점, 모두 대표 성과와 분리한 후속 압축 / 안정성 보조.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 

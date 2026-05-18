@@ -114,16 +114,20 @@
 - **도메인 판단**: ViT, Swin 같은 전역 attention 기반 backbone 은 wafer 전체 구조를 보는 데 강합니다. 다만 본 과제의 결함은 특정 zone 이나 국소 chip 영역에 몰리는 경우가 많아, CNN 계열의 local receptive field 와 계층적 feature extraction 이 더 어울린다고 판단했습니다 (자문: 연세대학교 인공지능학과 전해곤 교수).
 - **비교 결과**: 동일 4:1 stratified split 에서 Optuna sweep 으로 hyperparameter 를 정렬한 뒤 측정했습니다. 결과는 ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87 입니다.
 - **최종 선택**: ConvNeXtV2 는 MaxViT 와 동일한 F1 0.87 을 유지하면서 파라미터 26% (119.5M → 88.6M), FLOPs 39% (74.2G → 45.1G) 감소가 따라와 양산 inference 비용 측면에서 최종 backbone 으로 채택했습니다.
-- **과적합 제어**: 본 과제는 label 이 1,500장 / 16 class 로 작은 편입니다. backbone 전체를 풀 미세조정하면 좁은 class 분포에 빠르게 과적합될 수 있어, ConvNeXtV2 block 본체의 학습률은 낮게 두고 분류 head 와 마지막 stage 만 분리해 올렸습니다.
-- **Layer-wise learning rate**: backbone block 본체에 가장 낮은 base learning rate 를 적용하고, 마지막 stage 는 그 약 3배, 분류 head 는 약 10배로 올려 학습했습니다. backbone 사전 학습 표현은 그대로 보존하고 분류 head 만 본 과제 분포에 맞춰 빠르게 적응시키는 구조입니다.
 
 **(2) Stage 2 ROI 보정 — cascade gate 와 보정 결정 로직**
 
-Stage 1 만으로는 center 영역의 비슷한 class 들이 헷갈리는 한계가 남아, wafer-level confidence 가 낮은 difficult sample 만 ROI YOLO 로 넘기는 cascade gate 를 두었습니다. confidence ≥ gate 인 wafer 는 Stage 2 를 건너뛰어 throughput 손실 없이 헷갈리는 sample 의 분리력만 선택적으로 보강합니다. skip 된 wafer 일부는 일일 sampling 으로 Stage 2 재검증 + Stage 1 분포 drift monitoring 으로 gate 를 주기적으로 재조정합니다. 단계별 ladder 는 [구현 성과] 기술 지표에 모았습니다.
+Stage 1 만으로는 center 영역의 비슷한 class 들을 잘 가르지 못하는 한계가 남아, wafer 신뢰도가 낮은 difficult sample 만 Stage 2 (ROI YOLO) 로 다시 보내도록 cascade gate 를 두었습니다. 신뢰도가 임계값 이상인 wafer 는 Stage 2 를 건너뛰기 때문에 throughput 부담 없이, 헷갈리는 sample 만 다시 분류해 정확도를 끌어올리는 구조입니다. Stage 2 를 건너뛴 wafer 중 일부는 매일 sampling 해서 Stage 2 로 재검증하고, Stage 1 의 입력 분포 drift 를 같이 추적해 임계값을 주기적으로 다시 맞춥니다. 단계별 ladder 수치는 [구현 성과] 기술 지표에 정리했습니다.
 
 **(3) 후속 보정 — chip-CNN object-id map 재구성 (개발 중)**
 
-Stage 1 wafer-level CNN 은 그대로 두고 Stage 2 ROI-YOLO 자리를 chip-CNN object-id map 으로 대체하는 후속 모듈을 개발 중이며 (val_f1 **0.9946** / test_f1 0.9872 / 5-seed 평균 0.9838 ± 0.0092), deploy 는 validation 검증 후 운영 절차에 따라 결정합니다.
+Stage 1 wafer-level CNN 은 그대로 두고 Stage 2 ROI-YOLO 자리를 chip-CNN object-id map 으로 대체하는 후속 모듈을 개발 중입니다 (val_f1 **0.9946** / test_f1 0.9872 / 5-seed 평균 0.9838 ± 0.0092, deploy 여부는 validation 후 운영 절차에 따라 결정).
+
+**왜 굳이 새 모듈로 대체하는가**
+
+- ROI-YOLO 는 chip 위치를 모르는 상태에서 가능한 후보 bounding box 를 무수히 그려놓고 그 중 맞는 박스를 추리는 방식이라, 박스가 셀 수 없이 많이 떠서 잘못된 박스를 거르는 비용도 함께 누적됩니다.
+- chip-CNN 은 fail-map 이 chip 좌표를 이미 확정해 둔 자리에 들어가 chip crop 하나만 분류하면 되기 때문에, **정확도가 더 높고 추론도 더 빠릅니다** (chip 단위 정확도 0.9872 / 0.9838).
+- 새 결함 class 가 추가될 때도 chip-CNN 은 chip crop 분류 라벨만 추가하면 되어 class 확장 부담이 가볍습니다.
 
 chip-CNN object-id map 의 내부 흐름은 아래 식으로 정리했습니다.
 
@@ -133,17 +137,30 @@ q_{u,v} = softmax(h_phi(c_{u,v}))
 M_obj(u,v) = argmax_k q_{u,v,k}
 ```
 
-`c_{u,v}` 는 wafer 내 (u,v) 위치의 chip crop (256×256 입력), `h_phi` 는 chip-CNN, `M_obj` 는 chip 위치별 failure family map 입니다. 이 map 이 Stage 2 의 posterior p_chip_obj(y | crop(x)) 로 들어가, 기존 Stage 2 ROI-YOLO 자리를 대체할 수 있는 모듈 형태로 구성됩니다.
+세 줄을 일상 표현으로 풀면 다음과 같습니다 (결함 class 개수를 `K` 로 두고, 예를 들어 K=4 면 결함 class 4 종이라는 뜻).
 
-**[최적화]** Known 2-stage 에서 결정적이었던 두 step 은 backbone 교체 (0.78 → 0.87) 와 cascade 결합 (0.92 → 0.95) 입니다. Unknown 검출은 실전 현업 데이터에서 13 후보 group 중 7개 실제 불량 확인을 대표 anchor 로 두고, contrastive recipe ablation (DenseCL / MoCo Queue / NV-Retriever 등) 은 추가 생성 데이터셋 기반 별도 트랙으로 분리 관리합니다.
+- 첫째 줄 `c_{u,v} = crop(x, pos_{u,v})` — wafer 이미지 `x` 에서 (u,v) 위치의 chip 영역만 잘라 256×256 작은 이미지로 만듭니다 (`crop` = 잘라내기).
+- 둘째 줄 `q_{u,v} = softmax(h_phi(c_{u,v}))` — 잘라낸 chip 이미지를 chip-CNN (`h_phi`) 에 넣으면 결함 class K 종 각각에 대한 점수가 K 개 나옵니다. 이 점수를 `softmax` 로 합 1.0 의 확률값으로 바꿉니다. 예를 들어 K=4 일 때 결과는 `(0.85, 0.10, 0.03, 0.02)` 처럼 "class 1 일 확률 0.85, class 2 일 확률 0.10, class 3 일 확률 0.03, class 4 일 확률 0.02" 분포가 됩니다.
+- 셋째 줄 `M_obj(u,v) = argmax_k q_{u,v,k}` — 위에서 만든 K 개 확률값 중 가장 큰 값을 갖는 class 번호 `k` 를 하나 고르고 (`argmax` = 가장 큰 값의 위치를 골라준다는 뜻), 그 번호를 (u,v) 위치 chip 의 최종 결함 class 로 둡니다. wafer 전체 32×32 chip 위치마다 이 class 번호 하나씩 채우면 `M_obj` 라는 **32×32 결함 지도**가 만들어집니다. 각 chip 을 하나의 "object" 로 보고 그 object 의 ID (class 번호) 를 격자에 박아 둔 형태라 **object-id map** 이라고 부릅니다.
+
+이 결함 지도가 그대로 Stage 2 의 출력입니다 (수식 `p_chip_obj(y | crop(x))` 도 같은 뜻 — "chip crop 이미지를 입력했을 때 결함 class `y` 일 확률" 을 chip 마다 확정해 둔 것이고, 통계 용어로 posterior 라고 부릅니다). 이 출력값이 기존 Stage 2 ROI-YOLO 자리를 그대로 대체할 수 있도록 모듈을 구성했습니다.
+
+**[최적화]** Known 2-stage 의 성능은 실전 현업 데이터 (16 class / 1,500 labeled / 4:1 stratified split) 위에서 baseline 부터 단계별로 다음과 같이 끌어올렸습니다.
+
+- **baseline**: 일반 ImageNet 사전학습 CNN 으로 시작한 1차 학습이 weighted F1 **0.78** 정도였습니다. 16 class 중 center 영역의 비슷한 결함 끼리 헷갈리는 사례가 가장 컸습니다.
+- **backbone 교체**: ViT / Swin / EffNetV2 / MaxViT / ConvNeXtV2 를 동일 split 에서 비교한 뒤, 본 과제 결함이 국소 영역에 몰리는 특성에 맞는 ConvNeXtV2 로 교체해 **0.87** 로 올렸습니다.
+- **Optuna hyperparameter 정렬 + LR schedule**: learning rate, weight decay, augmentation 강도, class weight, batch size 를 Bayesian sweep 으로 정렬하고, 학습률은 LinearLR warmup (시작 LR 을 base 의 0.05 부터 5 epoch 에 걸쳐 base 까지 올림) 뒤 CosineAnnealing (base → 1e-6) 으로 감쇠시키는 schedule 을 적용해 **0.92** 에 도달했습니다.
+- **2-stage cascade**: wafer 신뢰도가 낮은 difficult sample 만 ROI YOLO 로 보내 헷갈리는 케이스를 다시 분류하게 만든 결합으로 최종 weighted F1 **0.95** 까지 완성했습니다.
+
+Unknown 검출은 정답 label 이 없어 같은 식의 ladder 를 만들 수 없습니다. 실전 anchor 는 **13개 후보 group 중 7개 실제 불량 확인** 으로만 보고하고, 합성 평가셋 기반의 contrastive recipe ablation (Global InfoNCE → MoCo Queue → NV-Retriever 등) 은 추가 생성 데이터셋 별도 트랙으로 분리 관리합니다.
 
 ```
 +--------------------------------------------------------------------------+
 |  Stage 1: ConvNeXtV2 wafer classifier (16 classes)                       |
 |  - backbone scan ViT 0.81 / Swin 0.84 / EffV2 0.85 / MaxViT 0.87         |
 |                  / ConvNeXtV2 0.87                                       |
-|  - vs MaxViT: params -26%, FLOPs -39%, head LR x10, last stage LR x3     |
-|  - ladder 0.78 -> 0.87 (backbone) -> 0.92 (Optuna)                       |
+|  - vs MaxViT: params -26%, FLOPs -39%                                    |
+|  - ladder 0.78 -> 0.87 (backbone) -> 0.92 (Optuna) -> 0.95 (cascade)     |
 +----------------------------------+---------------------------------------+
                                    |
                                    v
@@ -476,7 +493,7 @@ positive bits     negative bits
 
 **(4) 추론 단계 보강 — Threshold gate / Ensemble / Knowledge Distillation**
 
-운영 환경 약 80% Normal 분포에 대응해, max-prob<0.55 입력을 Normal 로 강제하는 threshold gate 를 두어 운영 false-positive 를 한 단계 더 억제했습니다. 학습 단계에서는 positive target 0.85 / negative target 0.15 로 negative 측 보수성을 같이 잡았고, bit-level majority voting ensemble (champion `vote_majority_bits`) 은 SOTA 단일 모델이 현업 데이터에서 흔들릴 경우를 대비해 서로 다른 3 모델의 bit 단위 majority voting 으로 운영 안전판을 둔 구조입니다. 단일 모델이 흔들리는 cell 도 다른 두 모델 합의로 보정되며, bit_F1 **0.9941** / Total FAR **0.00%** 로 단일 대표 (0.9943) 와 동급 수준에 zero FAR 까지 확인됐습니다. Knowledge Distillation (single student) 는 CutMix 활성 batch 의 distillation loss 를 제외하는 설정으로 학생 모델 collapse 를 회피했습니다. α / T sweep 으로 KD_v7 (α=0.3, T=2) 에서 bit_F1 **0.9265** 첫 안정, KD_v12 (α=0.3, T=3) 에서 bit_F1 **0.9470** / Total FAR **0.00%** 까지 끌어올려 KD sweep 현 최고점을 확보했습니다. 같은 sweep 에서 α=0.25 (KD_v11, bit_F1 0.9192) 와 T=4 (KD_v13, 0.9347) 는 KD_v12 대비 열등해 α=0.30 / T=3 이 본 데이터 sweet spot 임을 정량으로 확인했습니다. 대표 모델보다 bit_F1 이 낮아 후속 압축 후보로만 두었습니다.
+운영 환경 약 80% Normal 분포에 대응해, max-prob<0.55 입력을 Normal 로 강제하는 threshold gate 를 두어 운영 false-positive 를 한 단계 더 억제했습니다. 학습 단계에서는 positive target 0.85 / negative target 0.15 로 negative 측 보수성을 같이 잡았고, bit-level majority voting ensemble (champion `vote_majority_bits`) 은 SOTA 단일 모델이 현업 데이터에서 흔들릴 경우를 대비해 서로 다른 3 모델의 bit 단위 majority voting 으로 출력을 보강하는 검증 구조로 두었습니다. 단일 모델이 흔들리는 cell 도 다른 두 모델 합의로 보정되며, bit_F1 **0.9941** / Total FAR **0.00%** 로 단일 대표 (0.9943) 와 동급 수준에 zero FAR 까지 확인됐습니다. Knowledge Distillation (single student) 는 CutMix 활성 batch 의 distillation loss 를 제외하는 설정으로 학생 모델 collapse 를 회피했습니다. α / T sweep 으로 KD_v7 (α=0.3, T=2) 에서 bit_F1 **0.9265** 첫 안정, KD_v12 (α=0.3, T=3) 에서 bit_F1 **0.9470** / Total FAR **0.00%** 까지 끌어올려 KD sweep 현 최고점을 확보했습니다. 같은 sweep 에서 α=0.25 (KD_v11, bit_F1 0.9192) 와 T=4 (KD_v13, 0.9347) 는 KD_v12 대비 열등해 α=0.30 / T=3 이 본 데이터 sweet spot 임을 정량으로 확인했습니다. 대표 모델보다 bit_F1 이 낮아 후속 압축 후보로만 두었습니다.
 
 **[최적화]** 합성 단계에서는 CutMix → CutMix + Pair → FCM-PM 순서로 단계별 효과를 직접 측정했고, false-positive 와 bit_F1 의 trade-off 가 어디서 깨지는지를 아래 ablation 표로 추적했습니다.
 
@@ -492,7 +509,7 @@ positive bits     negative bits
   - 학습 ladder: BCE+Label Smoothing → Focal / ASL loss 변형 → 단순 CutMix → **FCM-PM (Full-Cover Mixup + Pair Mask) + val_margin best-model selection** 순으로 단계별 적용해 bit_F1 0.1093 → **0.9943** / Total FAR 99.47% → **0.00%** 까지 끌어올렸습니다.
   - 핵심 근거: Pair Mask 제거 시 Total FAR 이 **100%** 로 치솟아, **background loss 분리가 false-positive 억제 핵심 요인**임을 직접 확인했습니다.
   - val_margin 기반 best-model selection 이 val_f1 보다 실제 test bit_F1 을 훨씬 정확히 예측 (Spearman ρ **+0.56 vs −0.10**) — best epoch 안정성 확보.
-  - 운영 안전판: max-prob threshold gate + bit-level majority voting ensemble (champion `vote_majority_bits` bit_F1 0.9941 / Total FAR 0.00%) + Knowledge Distillation single student 압축 후보.
+  - 추론 단계 보강: max-prob threshold gate + bit-level majority voting ensemble (champion `vote_majority_bits` bit_F1 0.9941 / Total FAR 0.00%) + Knowledge Distillation single student 압축 후보.
 
   **Multi-label 학습 recipe 성능표 (per class 2000) [현업 failure chip 원천 + 도메인 확률분포 기반 생성/검증]**
 
@@ -515,7 +532,7 @@ positive bits     negative bits
   - 실전 single failure chip 원천 위에 부족한 2-combo 결함을 도메인 분포로 합성해 multi-label 학습 / 평가가 가능해졌습니다. 현업에서는 2-combo label 수와 균형을 얻기 어려워 사실상 막혀 있던 분류 문제를, 반도체 도메인 (Grade 0-7 의미와 failure 위치 / 강도 / 조합 분포) 위에서 다시 푼 방법론입니다.
   - 현업 eval 환경을 얻기 어려운 상황에서 Normal / Invalid / OOD negative 평가셋을 현업 분포에 가깝게 직접 설계한 점도 본 과제 변별 포인트입니다.
   - 정량으로는 bit F1 0.9943, Normal / Invalid / OOD negative Total FAR 0.00% 로 양산 적용 전 false-positive 리스크 검증을 마쳤습니다.
-  - val_margin 기반 best-model 선택은 작은 validation set 의 plateau 흔들림을 제어하는 안전판으로 같이 들어 있습니다.
+  - val_margin 기반 best-model 선택은 작은 validation set 에서 val_f1 이 여러 epoch 에 동률로 붙어 best 가 흔들리는 문제를 제어하는 추가 검증 기준으로 같이 들어 있습니다.
   - 이 구조는 P1 의 wafer-level 판단을 chip 좌표계로 정밀화하는 후속 기반으로도 이어집니다.
 
 
