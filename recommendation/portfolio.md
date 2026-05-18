@@ -80,15 +80,13 @@
                 v                                       v
 +--------------------------------------+   +--------------------------------------+
 |  Known branch                        |   |  Unknown branch                      |
-|  (16 registered classes)             |   |  (self-supervised contrastive)       |
+|  (16 registered classes)             |   |  (unregistered pattern discovery)    |
 +--------------------------------------+   +--------------------------------------+
-|  Stage 1: ConvNeXtV2 wafer           |   |  - ConvNeXtV2 backbone with TAPT     |
-|           classifier                 |   |  - Global InfoNCE + Queue (16384)    |
-|       v   confidence < gate          |   |    + NEG sim filter (cos > 0.72)     |
-|  Stage 2: ROI YOLO refinement        |   |    + Local InfoNCE (grid36, win=4)   |
-|           (chip bbox + class vote)   |   |  - HDBSCAN clustering                |
-|  ->       weighted F1 0.95           |   |  - 13 candidate groups -> 7 real     |
-|                                      |   |    failures confirmed on-site        |
+|  ConvNeXtV2 wafer classifier         |   |  Self-supervised embedding           |
+|       v confidence < gate            |   |       v                              |
+|  ROI YOLO refinement                 |   |  HDBSCAN candidate grouping          |
+|       v                              |   |       v                              |
+|  weighted F1 0.95                    |   |  13 groups -> 7 real failures        |
 +--------------------------------------+   +--------------------------------------+
                 |                                       |
                 +-------------------+-------------------+
