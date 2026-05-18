@@ -299,13 +299,13 @@ Full-Cover Mixup 과 Pair Mask 적용으로 해결했습니다. Full-Cover Mixup
 
 마지막 문제는 best epoch 선택이었습니다. val_f1 이 test bit_F1 / FAR 과 상관성이 작아 test 단계에서 성능이 개선되지 않았습니다. 그래서 `val_margin = mean(score over positive bits) - max(score over negative bits)` 를 기준으로 잡았습니다 — positive 평균과 가장 위험한 negative 최대값의 차이를 직접 반영하기 때문에 test bit_F1 과의 상관성이 더 컸습니다 (Spearman ρ val_margin **+0.56** vs val_f1 **−0.10**).
 
-이후 운영 환경 약 80% Normal 분포에 대응해 max-prob < 0.55 입력을 Normal 로 강제하는 threshold gate 를 적용했습니다. ensemble 은 single model 이 현업에서 불안정해질 가능성에 대비해, Knowledge Distillation single student 는 ensemble 판단을 single model 수준의 추론 비용으로 줄이기 위해 이어서 개발했습니다.
+이후 운영 환경 약 80% Normal 분포에 대응해 max-prob < 0.55 입력을 Normal 로 강제하는 threshold gate 를 적용했습니다. ensemble 은 single model 이 현업에서 불안정해질 가능성에 대비해, Knowledge Distillation single student 는 ensemble 판단을 single model 수준의 추론 비용으로 실행하기 위해 개발했습니다.
 
 **ㅁ 문제정의**
 
 | 항목 | 내용 |
 |------|------|
-| 현장 난제 | chip 내부 failure 위치를 사전에 알 수 없고, single failure chip 만 가지고 multi-label 평가로 확장해야 합니다. |
+| 현장 난제 | 한 chip 에 여러 failure 가 같이 나타나면 test 수치만으로는 구분이 어렵고, Failbit Map 이미지로 봐야 패턴이 드러납니다. 이를 이미지 기반 multi-label classification 으로 자동 구분하는 것이 본 과제의 출발점입니다. |
 | 기존 방식의 한계 | 일반 CutMix 는 일부 영역만 잘라 붙이다 보니 failure signal 이 잘려 버리거나 background 가 failure 로 학습되어 버려서, Normal / Invalid / OOD negative 평가에서 false-positive 가 운영에 쓰기 어려운 수준까지 올라갑니다. |
 | 기술적 / 환경적 제약 | 2-combo label 부족, 작은 validation set 의 best epoch plateau, OOD / negative false-positive 억제, 압축 후보의 1× inference cost 제약이 한꺼번에 묶여 있습니다. |
 
