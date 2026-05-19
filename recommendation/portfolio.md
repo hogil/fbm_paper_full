@@ -499,7 +499,7 @@ positive bits     negative bits
   | 8 | vote_majority_bits Ensemble (champion) | **0.9956** | **1.0000** | **0.9921** | **0.00%** | 0.00% | 0.00% | 5x | 1/5x | 5x |
   | 9 | Knowledge Distillation (single student) | **0.9799** | 1.0000 | 0.9638 | **0.00%** | 0.00% | 0.00% | 1x | 1x | 1x |
 
-  본 표는 주요 학습 recipe 별 성능 차이를 비교한 결과입니다. 최고 성능 single model 은 FCM-PM + val_margin 으로 bit_F1 **0.9927** / Total FAR **0.00%** 입니다.
+  본 표는 주요 학습 recipe 별 성능 차이를 비교한 결과입니다. 대표 single model 은 FCM-PM + val_margin 이며, bit_F1 **0.9927** / Total FAR **0.00%** 를 달성했습니다.
 
 - **현업 임팩트**: 실제 chip 불량률 계산 및 trend 분석이 가능해지고, P1 chip-CNN object-id map 후속 단계 기반으로 이어집니다.
 
