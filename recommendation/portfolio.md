@@ -464,7 +464,7 @@ positive bits     negative bits
 
 운영 환경 약 80% Normal 분포에 대응해 max-prob < 0.55 입력을 Normal 로 강제하는 threshold gate 로 false-positive 를 줄였습니다. bit-level majority voting ensemble 은 single model 과적합에 대비한 robust 아키텍처고, Knowledge Distillation single student 는 ensemble 의 단점인 pred 갯수 증가 문제를 해결하는 방식입니다.
 
-**(4) 학습 hyperparameter sweep — grid 분할 / pos·neg target**
+**(4) 학습 hyperparameter sweep — grid 분할 / pos / neg target**
 
 합성 단계에서는 CutMix → CutMix + Pair → FCM-PM 순서로 단계별 효과를 직접 측정했고, false-positive 와 bit_F1 의 trade-off 가 어디서 깨지는지를 **[구현 성과]** ablation 표로 추적했습니다.
 
