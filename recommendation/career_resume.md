@@ -47,8 +47,8 @@ chip Grade 이미지, chip 내부 failure 위치 미상, multi-label co-occurren
 - 과제 개요: 실전 abnormal label 이 부족한 trend chart 영역에서, 본인 trend 판정 경험을 generator parameter 로 옮겨 학습 가능한 합성 trend 데이터를 만든 PoC.
 - 수행기간: 2026년 1월 ~ 현재
 - 담당 역할: trend episode generator 설계, 도메인 parameter (Region 5종 / Noise 3종 / Anomaly 5종) 정의, 합성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증, 현업 적용 전 PoC 검증
-- 수행 업무 및 성과: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **9년** 경험을 generator parameter 로 옮겨 합성 trend sample 약 **7,000개**를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인해 학습 가능한 데이터 생성 구조를 갖췄습니다.
+- 수행 업무 및 성과: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **10년** 경험을 generator parameter 로 옮겨 합성 trend sample 약 **7,000개**를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인해 학습 가능한 데이터 생성 구조를 갖췄습니다.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
-본인이 BBD담당 / Overlay담당 / CD담당으로 9년간 trend chart 를 직접 판정해 온 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 가지고 있었고, 이 판단 기준을 직접 generator parameter 로 옮겨 합성 trend 데이터를 만들었습니다. 그 위에 Synthetic Data Engineering + Time-series Episode Simulation + Baseline Model Validation 을 결합했고, 다음 단계는 실제 현업 trend chart 기반 검증입니다.
+본인이 BBD담당 / Overlay담당 / CD담당으로 10년간 trend chart 를 직접 판정해 온 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 가지고 있었고, 이 판단 기준을 직접 generator parameter 로 옮겨 합성 trend 데이터를 만들었습니다. 그 위에 Synthetic Data Engineering + Time-series Episode Simulation + Baseline Model Validation 을 결합했고, 다음 단계는 실제 현업 trend chart 기반 검증입니다.

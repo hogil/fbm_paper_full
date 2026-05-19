@@ -514,7 +514,7 @@ positive bits     negative bits
 | 수행기간 | 2026년 1월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 / 동료 엔지니어 (공동 연구자) |
 
-**P3 핵심 요약**: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **9년** trend 판정 경험을 generator parameter (Region 5종 / Noise 3종 / Anomaly 5종) 로 옮겨 합성 trend sample **약 7,000개** (normal 3,500 + abnormal 3,500) 를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인한 PoC 입니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
+**P3 핵심 요약**: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **10년** trend 판정 경험을 generator parameter (Region 5종 / Noise 3종 / Anomaly 5종) 로 옮겨 합성 trend sample **약 7,000개** (normal 3,500 + abnormal 3,500) 를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인한 PoC 입니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -530,7 +530,7 @@ positive bits     negative bits
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-BBD담당 / Overlay담당 / CD담당으로 **9년간** trend chart 를 직접 판정해 온 경험을 generator parameter 에 적용했습니다. 먼저 **Noise 3분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 Region 5단계** (dense / sparse / very_sparse / thin / missing) 를 본인이 정의해 합성 normal baseline 을 실전 환경에 맞춰 구현하고, normal 산포 상한 / 하한 두 가지 수식까지 직접 설계했습니다. 그 위에 **mean shift / standard deviation / spike / drift / context** 5종 불량을 어느 강도에서 실제 불량으로 이어지는지 기준을 정해 generator parameter 로 코드화했습니다.
+BBD담당 / Overlay담당 / CD담당으로 **10년간** trend chart 를 직접 판정해 온 경험을 generator parameter 에 적용했습니다. 먼저 **Noise 3분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 Region 5단계** (dense / sparse / very_sparse / thin / missing) 를 본인이 정의해 합성 normal baseline 을 실전 환경에 맞춰 구현하고, normal 산포 상한 / 하한 두 가지 수식까지 직접 설계했습니다. 그 위에 **mean shift / standard deviation / spike / drift / context** 5종 불량을 어느 강도에서 실제 불량으로 이어지는지 기준을 정해 generator parameter 로 코드화했습니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
