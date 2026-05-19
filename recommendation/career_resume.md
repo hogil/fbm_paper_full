@@ -8,7 +8,7 @@
 | Unsupervised Learning / Anomaly Detection | HDBSCAN Clustering, Novelty Candidate Grouping, Out-of-Distribution Detection, Trend Anomaly Detection |
 | Synthetic Data Generation | Domain-Distribution-based Pixel Sampling, FCM-PM (Full-Cover CutMix + Pair Mask), Trend Episode Simulation |
 | Model Selection / Inference Optimization | Margin-based Checkpoint Selection (val_margin), Threshold Gating (max-prob), Temperature Scaling, Bit-level Majority Voting Ensemble, Knowledge Distillation, Cascade Confidence Gate |
-| Data Engineering | EDS Raw Log ETL Pipeline, Batch Image Processing (~20k wafer / day), Chip Positions JSON Indexing, Model Evaluation Pipeline |
+| Data Engineering | Image ETL Pipeline, Large-scale Batch Image Processing, Metadata Indexing, Model Evaluation Pipeline |
 | High-Performance Computing | Cython JIT Acceleration (~100x speed-up), Numba JIT, pyvips Large-scale Image Encoding, Palette-indexed PNG Compression (~75%) |
 | AI Systems Engineering | FastAPI Backend, Vanilla JS Frontend, WebGL2 Visualization, RBAC, SAML SSO |
 
