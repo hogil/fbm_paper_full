@@ -288,7 +288,7 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 chip failure 형태와 유사한 single 4 class + 2-combo 6 종을 FCM-PM (Full-Cover Mixup + Pair Mask) + val_margin best-model selection 으로 학습한 multi-label classification 입니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
+**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 EDS Failbit Map 에서 관찰되는 single failure 형태를 기준으로 4 class 를 구성하고 2-combo 6 종을 FCM-PM (Full-Cover Mixup + Pair Mask) 으로 합성해, val_margin best-model selection 까지 묶어 학습했습니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -596,7 +596,7 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
                                     |
                                     v
 +---------------------------------------------------------------------------+
-|  [OUTPUT]  production model ready for field deployment (PoC confirmed)    |
+|  [OUTPUT]  synthetic trend dataset is learnable (PoC confirmed)           |
 +---------------------------------------------------------------------------+
 ```
 
