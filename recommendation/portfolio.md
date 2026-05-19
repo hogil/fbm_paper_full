@@ -288,7 +288,7 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: FCM-PM + val_margin 단일 모델 bit_F1 **0.9927** / Total FAR **0.00%**, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과 확인.
+**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 chip failure 형태와 유사한 single 4 class + 2-combo 6 종을 FCM-PM (Full-Cover Mixup + Pair Mask) + val_margin best-model selection 으로 학습한 multi-label classification 입니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -513,7 +513,7 @@ positive bits     negative bits
 | 수행기간 | 2026년 1월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 / 동료 엔지니어 (공동 연구자) |
 
-**P3 핵심 요약**: 본인 trend 판정 경험을 반영해 **약 7,000개**의 합성 trend sample 을 생성했고, Binary F1 **0.9967** 로 학습 가능성 검증을 완료했습니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
+**P3 핵심 요약**: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **9년** trend 판정 경험을 generator parameter (Region 5종 / Noise 3종 / Anomaly 5종) 로 옮겨 합성 trend sample **약 7,000개** (normal 3,500 + abnormal 3,500) 를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인한 PoC 입니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
