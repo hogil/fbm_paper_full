@@ -47,7 +47,7 @@ chip Grade 이미지, chip 내부 failure 위치 미상, multi-label co-occurren
 - 과제 개요: 실전 abnormal label 이 부족한 trend chart 영역에서, 본인 trend 판정 경험을 generator parameter 로 옮겨 학습 가능한 합성 trend 데이터를 만든 PoC.
 - 수행기간: 2026년 1월 ~ 현재
 - 담당 역할: trend episode generator 설계, 도메인 parameter (Region 5종 / Noise 3종 / Anomaly 5종) 정의, 합성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증, 현업 적용 전 PoC 검증
-- 수행 업무 및 성과: trend 이상은 단순 threshold 만으로 판정하기 어렵고 수작업 chart 판독에 의존하다 보니 초보 담당자 누락과 모니터링 시간 부담이 누적되었으나, 실전 abnormal data 의 양과 label 균형 확보가 어려워 AI 검증 자체가 막혀 있었습니다. 이를 풀기 위해 본인 BBD / Overlay / CD 담당 9년 경험을 바탕으로 계측 밀도 Region, Noise 분포, Anomaly 5종을 generator parameter 에 반영해 normal / abnormal 합쳐 약 **7,000개** trend sample 을 만들었고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인해 학습 가능한 데이터 생성 구조를 갖췄습니다.
+- 수행 업무 및 성과: trend 이상 감지는 단순 수작업 판단만으로는 한계가 있고 초보 담당자 누락과 모니터링 시간 부담이 누적되었으나, 실전 abnormal data 의 양과 label 균형 확보가 어려워 AI 검증 자체가 막혀 있었습니다. 이를 풀기 위해 본인 BBD / Overlay / CD 담당 9년 경험을 바탕으로 계측 밀도 Region, Noise 분포, Anomaly 5종을 generator parameter 에 반영해 normal / abnormal 합쳐 약 **7,000개** trend sample 을 만들었고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인해 학습 가능한 데이터 생성 구조를 갖췄습니다.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
