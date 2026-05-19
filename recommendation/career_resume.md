@@ -3,11 +3,11 @@
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|------------------------|
 | Computer Vision | Wafer-level Image Classification, ROI-based Object Detection (YOLO), Chip Multi-label Classification, Trend Chart Classification |
-| Deep Learning | ConvNeXtV2 Backbone (FCMAE pretrained), Fine-tuning, Loss Function Design (BCE / Focal / Asymmetric Loss / Pair Mask), Label Smoothing, LinearLR Warmup + Cosine Annealing |
+| Deep Learning (Architecture & Training) | ConvNeXtV2 Backbone (FCMAE pretrained), Transfer Learning / Fine-tuning, Loss Function Design (BCE / Focal / Asymmetric Loss / Pair Mask), Label Smoothing, LinearLR Warmup + Cosine Annealing, EMA, Optuna Hyperparameter Sweep |
 | Self-Supervised Learning | Global InfoNCE, Local DenseCL, MoCo Queue, NV-Retriever Negative Similarity Filter, NeCo, Task-Adaptive Pretraining (TAPT) |
 | Unsupervised Learning / Anomaly Detection | HDBSCAN Clustering, Novelty Candidate Grouping, Out-of-Distribution Detection, Trend Anomaly Detection |
 | Synthetic Data Generation | Domain-Distribution-based Pixel Sampling, FCM-PM (Full-Cover CutMix + Pair Mask), Trend Episode Simulation |
-| Model Optimization / Selection | Optuna Hyperparameter Sweep, Margin-based Checkpoint Selection (val_margin), Threshold Gating (max-prob), Temperature Scaling, Bit-level Majority Voting Ensemble, Knowledge Distillation, Cascade Confidence Gate, EMA |
+| Model Selection / Inference Optimization | Margin-based Checkpoint Selection (val_margin), Threshold Gating (max-prob), Temperature Scaling, Bit-level Majority Voting Ensemble, Knowledge Distillation, Cascade Confidence Gate |
 | Data Engineering | EDS Raw Log ETL Pipeline, Batch Image Processing (~20k wafer / day), Chip Positions JSON Indexing, Model Evaluation Pipeline |
 | High-Performance Computing | Cython JIT Acceleration (~100x speed-up), Numba JIT, pyvips Large-scale Image Encoding, Palette-indexed PNG Compression (~75%) |
 | AI Systems Engineering | FastAPI Backend, Vanilla JS Frontend, WebGL2 Visualization, RBAC, SAML SSO |
