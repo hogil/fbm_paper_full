@@ -327,7 +327,7 @@ BCE / Focal / ASL 단순 loss 변형만으로는 2-combo recall 과 false alarm 
 
 - **데이터**: 데이터 수집 경로, 전처리 기법 및 피처 엔지니어링 근거
 
-실제 현업 chip 의 single failure 4 class 위에 두 결함씩 조합한 2-combo 6 종을 합성해, 현업 failure 와 유사한 학습 / 평가 데이터를 만들었습니다. negative 측은 Normal (정상 chip 분포 모사) + Invalid + OOD wafer-pattern + OOD synthetic 까지 같이 둬, single 4 + 2-combo 6 + negative 6 = 16+ class × 약 3,850 chip 규모의 controlled benchmark 가 나왔습니다.
+single failure 4 class 와 두 결함씩 조합한 2-combo 6 종 모두 현업 chip 의 failure 형태와 유사하게 생성해, 학습 / 평가 데이터를 만들었습니다. negative 측은 Normal (정상 chip 분포 모사) + Invalid + OOD wafer-pattern + OOD synthetic 까지 같이 둬, single 4 + 2-combo 6 + negative 6 = 16+ class × 약 3,850 chip 규모의 controlled benchmark 가 나왔습니다.
 
 data leakage 방지를 위해 single failure chip 원천을 chip 단위로 먼저 train / test 로 split 한 뒤, 2-combo 와 Pair Mask 합성은 train 원천 chip 만 사용했습니다. test 원천 chip 은 합성 과정에서 완전히 배제해, train / test 사이 chip 단위 누수가 없도록 정리했습니다.
 
@@ -478,7 +478,7 @@ positive bits     negative bits
 
 - **기술 지표** (단계별 적용 효과):
   - 학습 ladder: BCE+Label Smoothing → Focal / ASL loss 변형 → 단순 CutMix → **FCM-PM (Full-Cover Mixup + Pair Mask) + val_margin best-model selection** 순으로 단계별 적용해 bit_F1 0.1093 → **0.9943** / Total FAR 99.47% → **0.00%** 까지 향상시켰습니다.
-  - Pair Mask ablation: 제거하면 Total FAR 이 **100%** 까지 올라가, background loss 분리가 false-positive 를 억제했습니다.
+  - Pair Mask ablation: 제거하면 Total FAR 이 **100%** 까지 올라가, background loss 분리가 false-positive 발생을 억제했습니다.
   - val_margin 기반 best-model selection 이 val_f1 보다 실제 test bit_F1 을 훨씬 정확히 예측 (Spearman ρ **+0.56 vs −0.10**) — best epoch 안정성 확보.
   - 추론 단계 보강: max-prob threshold gate + bit-level majority voting ensemble (champion `vote_majority_bits` bit_F1 0.9941 / Total FAR 0.00%) + Knowledge Distillation single student 압축 후보.
 
