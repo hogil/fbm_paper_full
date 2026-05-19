@@ -18,7 +18,7 @@
 | 수행기간 | 2024년 10월 ~ 현재 |
 | 참여인원 | 본인 / 현업 엔지니어 / 관리자 |
 
-**P1 핵심 요약**: 대량 Failbit Map 조회 한계 (한 번에 약 48매) 와 담당자 수작업 판정 부담을 줄이기 위해 EDS raw log → wafer image 운영 파이프라인 (Cython 약 **100배** 가속 / palette PNG 약 **75%** 절감 / 일 약 **2만 wafer / 1시간 주기** 처리) 을 먼저 구축하고, 그 위에 Known 2-stage 분류 (weighted F1 **0.95**) 와 Unknown self-supervised grouping (13 후보 중 **7건 실제 불량** 확인) 을 결합한 운영형 AI 시스템입니다. **DRAM D1A / B / C / D 분석 파트에서 매일 사용 중**이며 **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 현업 임팩트와 함께, **AI 센터 주관 DS AI Best Practice Good Challenger 상** 과 **MTC 고등급 제안 1등급** 수상으로 사내 성과를 인정받았습니다.
+**P1 핵심 요약**: 대량 Failbit Map 조회 한계 (한 번에 약 48매) 와 담당자 수작업 판정 부담을 줄이기 위해 EDS raw log → wafer image 운영 파이프라인 (Cython 약 **100배** 가속 / palette PNG 약 **75%** 절감 / 일 약 **2만 wafer / 1시간 주기** 처리) 을 먼저 구축하고, 그 위에 Known 2-stage 분류 (weighted F1 **0.95**) 와 Unknown self-supervised grouping (13 후보 중 **7건 실제 불량** 확인) 을 결합한 운영형 AI 시스템입니다. **DRAM D1a/b/c/d 분석 파트에서 매일 사용 중**이며 **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 현업 임팩트와 함께, **AI 센터 주관 DS AI Best Practice Good Challenger 상** 과 **MTC 고등급 제안 1등급** 수상으로 사내 성과를 인정받았습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -277,7 +277,7 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
   | 7 | 최종 recipe + 후처리 (noise 임계 τ=0.5) | 1.000 | 0.00% | 0.9938 | 0.9424 | 0.868 | 0.960 | 0.781 |
 
 
-- **현업 임팩트**: 설비 불량 조기 감지 및 불량 wafer list 확보가 가능해집니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 양산 운영 중이며 **DRAM D1A / B / C / D 분석 파트에서 매일 사용 중**, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 비즈니스 효과를 창출했습니다. Known / Unknown 모델 전수 자동 추론은 AI 센터 GPU 할당 (2026년 9월) 후 단계 확장합니다.
+- **현업 임팩트**: 설비 불량 조기 감지 및 불량 wafer list 확보가 가능해집니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 양산 운영 중이며 **DRAM D1a/b/c/d 분석 파트에서 매일 사용 중**, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 비즈니스 효과를 창출했습니다. Known / Unknown 모델 전수 자동 추론은 AI 센터 GPU 할당 (2026년 9월) 후 단계 확장합니다.
 
 **ㅁ P2. Chip Multi-label Classification (FCM-PM, val_margin)**
 

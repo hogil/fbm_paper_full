@@ -21,7 +21,7 @@
 - 과제 개요: DRAM 전제품 라인 Failbit Map raw log 변환 파이프라인 + 사내 운영 뷰어 web app + Known 2-stage 분류 + Unknown self-supervised 검출을 결합한 AI 시스템 (운영 뷰어는 일 약 2만 wafer / 1시간 주기 양산 운영, Known / Unknown 모델은 GPU 할당 대기 단계).
 - 수행기간: 2024년 10월 ~ 현재
 - 담당 역할: 데이터 파이프라인 설계 및 구현, Failbit Map 이미지 변환 최적화, 운영 뷰어 연동, Known 2-stage 모델 개발 및 튜닝, Unknown self-supervised 검출 구조 설계, 현업 검증 flow 구축
-- 수행 업무 및 성과: Failbit Map 대량 조회 한계와 수작업 판정 부담을 해결하기 위해, 데이터 변환 파이프라인 / 사내 운영 뷰어 web app / Known 분류 + Unknown 신규 패턴 검출 AI 모델을 직접 설계 / 구현 / 검증했습니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 (**D1A / B / C / D**) 에서 매일 양산 운영 중이며, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 현업 임팩트와 함께 Known weighted F1 **0.95** / Unknown 13 후보 중 **7건 실제 불량** 확인까지 달성했습니다. 본 과제는 **AI 센터 주관 DS AI Best Practice Good Challenger 상** 과 **MTC 고등급 제안 1등급** 수상으로 사내 성과를 인정받았습니다.
+- 수행 업무 및 성과: Failbit Map 대량 조회 한계와 수작업 판정 부담을 해결하기 위해, 데이터 변환 파이프라인 / 사내 운영 뷰어 web app / Known 분류 + Unknown 신규 패턴 검출 AI 모델을 직접 설계 / 구현 / 검증했습니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 (**D1a/b/c/d**) 에서 매일 양산 운영 중이며, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 현업 임팩트와 함께 Known weighted F1 **0.95** / Unknown 13 후보 중 **7건 실제 불량** 확인까지 달성했습니다. 본 과제는 **AI 센터 주관 DS AI Best Practice Good Challenger 상** 과 **MTC 고등급 제안 1등급** 수상으로 사내 성과를 인정받았습니다.
 
 **(2) 과제 관련 도메인 / AI 기술 / 모델 / 방법론**
 
