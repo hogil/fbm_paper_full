@@ -2,15 +2,15 @@
 
 | 기술 분야 | 대표 적용 기법 / 방식 |
 |-----------|------------------------|
-| Computer Vision | Image Classification, Object Detection, Multi-label Classification, Feature Representation Learning, Image-based Failure Detection |
-| Deep Learning | CNN Backbone Modeling, Transfer Learning, Fine-tuning, Loss Function Design, Regularization |
-| Self-Supervised Learning | Contrastive Learning, InfoNCE, Hard Negative Mining, Task-Adaptive Pretraining, Embedding Learning |
-| Unsupervised Learning | Clustering, Novelty Detection, Anomaly Detection, Out-of-Distribution Detection |
-| Synthetic Data Generation / Data Augmentation | Synthetic Dataset Generation, Data Augmentation, CutMix, Region-based Mixing Augmentation, Loss Masking, Noise Injection |
-| Model Optimization / Model Selection | Hyperparameter Optimization, Model Selection, Margin-based Checkpoint Selection, Threshold Optimization, Calibration, Ensemble, Knowledge Distillation |
-| Data Engineering / MLOps | ETL Pipeline, Batch Processing, Object Storage Integration, Model Evaluation Pipeline, Experiment Tracking |
-| High-Performance Computing | Cython Acceleration, Numba, pyvips, Large-scale Image Encoding, Palette-indexed PNG Compression |
-| AI Systems Engineering | FastAPI Backend, Vanilla JavaScript Frontend, WebGL2 Visualization, Role-Based Access Control (RBAC), SAML Single Sign-On |
+| Computer Vision | Wafer-level Image Classification, ROI-based Object Detection (YOLO), Chip Multi-label Classification, Trend Chart Classification |
+| Deep Learning | ConvNeXtV2 Backbone (FCMAE pretrained), Fine-tuning, Loss Function Design (BCE / Focal / Asymmetric Loss / Pair Mask), Label Smoothing, LinearLR Warmup + Cosine Annealing |
+| Self-Supervised Learning | Global InfoNCE, Local DenseCL, MoCo Queue, NV-Retriever Negative Similarity Filter, NeCo, Task-Adaptive Pretraining (TAPT) |
+| Unsupervised Learning / Anomaly Detection | HDBSCAN Clustering, Novelty Candidate Grouping, Out-of-Distribution Detection, Trend Anomaly Detection |
+| Synthetic Data Generation | Domain-Distribution-based Pixel Sampling, Alpha-mask Region Synthesis, Smoothstep Probability Transition, Pink-noise Baseline, Full-Cover Mixup (FCM), Pair Mask Loss Masking, CutMix, Trend Episode Simulation, Multi-noise Injection (Gaussian / Laplacian / Correlated) |
+| Model Optimization / Selection | Optuna Hyperparameter Sweep, Margin-based Checkpoint Selection (val_margin), Threshold Gating (max-prob), Temperature Scaling, Bit-level Majority Voting Ensemble, Knowledge Distillation, Cascade Confidence Gate, EMA |
+| Data Engineering | EDS Raw Log ETL Pipeline, Batch Image Processing (~20k wafer / day), Chip Positions JSON Indexing, Model Evaluation Pipeline |
+| High-Performance Computing | Cython JIT Acceleration (~100x speed-up), Numba JIT, pyvips Large-scale Image Encoding, Palette-indexed PNG Compression (~75%) |
+| AI Systems Engineering | FastAPI Backend, Vanilla JS Frontend, WebGL2 Visualization, RBAC, SAML SSO |
 
 ## 2. 업무경력
 
