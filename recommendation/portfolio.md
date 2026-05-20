@@ -38,7 +38,7 @@
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
-raw log → wafer image 파이프라인에서 wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환 루프를 Cython 으로 재구성해 속도를 약 **100배** 증가시켰고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 통해 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. Known 2-stage 는 ConvNeXtV2 backbone 교체와 ROI YOLO cascade 결합으로 **[실전 현업 데이터]** weighted F1 **0.78 → 0.95** ladder 를 달성했고, Unknown 측면은 self-supervised contrastive embedding 과 HDBSCAN grouping 으로 **[실전 현업 데이터]** 13개 후보 group 중 **7개 불량 확인**까지 검증했습니다. chip-CNN object-id map 과 Unknown synthetic benchmark 는 현재 후속 개발 단계입니다.
+raw log → wafer image 파이프라인에서 wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환 루프를 Cython 으로 재구성해 속도를 약 **100배** 증가시켰고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 통해 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. Known 2-stage 는 ConvNeXtV2 backbone 교체와 ROI YOLO cascade 결합으로 weighted F1 **0.78 → 0.95** ladder 를 달성했고, Unknown 측면은 self-supervised contrastive embedding 과 HDBSCAN grouping 으로 13개 후보 group 중 **7개 불량 확인**까지 검증했습니다. 후속 개발은 생성 데이터로 Known 은 chip-CNN object-id map, Unknown 은 SOTA recipe ablation 으로 진행하고 있습니다.
 
 **ㅁ 문제정의**
 
