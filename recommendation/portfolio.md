@@ -62,6 +62,14 @@ raw EDS Test log (wafer 당 약 1,000만 cell) 의 Failbit hex 표현을 Cython 
 
 chip-CNN object-id map 과 Unknown contrastive 후속 트랙은 현업 데이터 적용 전 개발 편의와 정확한 metric 측정을 위해 별도 생성 데이터로 평가 환경을 만들어 개발하고 있습니다.
 
+생성 wafer 이미지 예시:
+
+| Edge-Top Scratch | Edge-Ring Scratch_rot | Center Bank-Boundary (신규) |
+|:----------------:|:---------------------:|:---------------------------:|
+| <img src="./figures/wafer_edge_top_scratch.png" width="180" /> | <img src="./figures/wafer_edge_ring_scratch_rot.png" width="180" /> | <img src="./figures/wafer_center_bank_boundary.png" width="180" /> |
+| **BrokenRing** | **RingDots** | **CrescentArc (신규)** |
+| <img src="./figures/wafer_brokenring.png" width="180" /> | <img src="./figures/wafer_ringdots.png" width="180" /> | <img src="./figures/wafer_crescentarc.png" width="180" /> |
+
 - **알고리즘**: 선정한 모델 아키텍쳐와 선택 사유 (Logic Flow 중심)
 
 모델 선택과 결합 구조는 본 과제 데이터 특성에 맞춰 다음과 같이 설계했습니다. P1 end-to-end 파이프라인은 raw log → wafer 이미지 변환 → 좌표 JSON → 운영 뷰어 노출 → Known 분류 / Unknown 검출 → 현업 검증 까지로 설계했고, 모듈은 아래와 같습니다.
@@ -219,14 +227,6 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 |                       -> gate periodic re-tuning (blocks FN accumulation)|
 +--------------------------------------------------------------------------+
 ```
-
-생성 wafer 이미지 예시:
-
-| Edge-Top Scratch | Edge-Ring Scratch_rot | Center Bank-Boundary (신규) |
-|:----------------:|:---------------------:|:---------------------------:|
-| <img src="./figures/wafer_edge_top_scratch.png" width="180" /> | <img src="./figures/wafer_edge_ring_scratch_rot.png" width="180" /> | <img src="./figures/wafer_center_bank_boundary.png" width="180" /> |
-| **BrokenRing** | **RingDots** | **CrescentArc (신규)** |
-| <img src="./figures/wafer_brokenring.png" width="180" /> | <img src="./figures/wafer_ringdots.png" width="180" /> | <img src="./figures/wafer_crescentarc.png" width="180" /> |
 
 후속 chip-CNN object-id map 재구성 흐름은 다음과 같습니다.
 
