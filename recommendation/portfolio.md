@@ -239,14 +239,14 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
                                    v
 +--------------------------------------------------------------------------+
 |  chip-CNN object-id map reconstruction                                   |
-|  c_{u,v}   = crop(x, pos_{u,v}), ~256x256 input                          |
-|  q_{u,v}   = softmax(h(c_{u,v}))           <- chip classification only   |
-|  M_obj(u,v) = argmax_k q_{u,v,k}           <- 32x32 object-id map        |
-|  metrics   val_f1 0.9946 / test_f1 0.9872 / 5-seed 0.9838 +/- 0.0092     |
+|  c_{u,v}  = crop(x, pos_{u,v})            <- chip crop at coord (u, v)   |
+|  id_{u,v} = classify(c_{u,v})             <- chip class id               |
+|  M_obj    = place id_{u,v} on (u,v) grid  <- 32x32 object-id map         |
+|  metrics  val_f1 0.9946 / test_f1 0.9872 / 5-seed 0.9838 +/- 0.0092      |
 +---------------------------------+----------------------------------------+
                                    v
 +--------------------------------------------------------------------------+
-|  M_obj feeds Stage 2 posterior p_chip_obj(y | crop(x))                   |
+|  M_obj replaces ROI-YOLO chip-level output (Stage 2 candidate)           |
 |  Deploy decision: ROI-YOLO (in production) OR chip-CNN (in development)  |
 |  picked at Stage 2 slot after validation passes operational checks       |
 +--------------------------------------------------------------------------+
