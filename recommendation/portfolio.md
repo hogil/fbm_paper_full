@@ -127,7 +127,7 @@ Stage 1 만으로는 center 영역처럼 결함이 겹치는 영역의 class 들
 |:-------------------:|:----------------:|:-----------------------------:|
 | <img src="./figures/wafer_center_scratch.png" height="240" /> | <img src="./figures/p1_roi_crop_real.png" height="240" /> | <img src="./figures/p1_chip_yolo_box_real.png" height="240" /> |
 
-좌측 raw wafer 는 Stage 1 wafer-level CNN 만 보면 비슷한 형상의 class 로 오인되는 사례입니다. Stage 2 ROI YOLO 가 chip 단위 box 와 class 라벨을 다수 출력하고, 그 분포 majority 로 다시 정확한 class 로 잡아주는 구조입니다.
+좌측 raw wafer 는 Stage 1 wafer-level CNN 만 보면 비슷한 형상의 class 로 오인되는 사례입니다. Stage 2 ROI YOLO 는 ROI 영역에서 chip 단위 object detection 으로 각 chip 의 불량 class 를 분류한 뒤, 그 chip class 분포로 wafer 의 최종 class 를 예측하는 구조입니다.
 
 **(3) 후속 보정 — chip-CNN object-id map 재구성 (개발 중)**
 
