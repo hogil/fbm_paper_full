@@ -364,7 +364,7 @@ single 4 class 의 모든 2조합으로 만든 2-combo eval 이미지 예시:
 |:---------:|:------------:|:----------------:|:--------------:|:------------------:|:---------------------:|
 | <img src="./figures/chip_combo_bb_fork_selected.png" width="130" /> | <img src="./figures/chip_combo_bb_scratch_selected.png" width="130" /> | <img src="./figures/chip_combo_bb_scratch_rot_selected.png" width="130" /> | <img src="./figures/chip_combo_fork_scratch_selected.png" width="130" /> | <img src="./figures/chip_combo_fork_scratch_rot_selected.png" width="130" /> | <img src="./figures/chip_combo_scratch_scratch_rot_selected.png" width="130" /> |
 
-Normal / Invalid / OOD negative eval 이미지 예시:
+Normal / Invalid / OOD negative eval 생성 이미지 예시:
 
 | Normal | Invalid | OOD Starburst | OOD CenterDonut | OOD CrossScratch | OOD DiagonalSmear |
 |:------:|:-------:|:-------------:|:---------------:|:----------------:|:-----------------:|
