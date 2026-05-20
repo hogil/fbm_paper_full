@@ -131,7 +131,7 @@ Stage 1 만으로는 center 영역처럼 결함이 겹치는 영역의 class 들
 
 **(3) 후속 보정 — chip-CNN object-id map 재구성 (개발 중)**
 
-ROI-YOLO 는 wafer 전체 이미지에서 chip 위치를 bounding box 로 detection 해야 해 추론 비용이 크고, wafer 이미지에서는 chip 내 결함이 작게 보여 성능에 한계가 있습니다. 반면 chip-CNN object-id map 은 이미 산출한 chip 좌표로 작은 chip crop 만 분류하므로 추론 비용이 낮고, chip 이미지에서는 결함이 크게 보여 분류 성능도 좋습니다. Stage 2 대체 후보로 개발 중이며 (val_f1 **0.9946** / test_f1 0.9872 / 5-seed 평균 0.9838 ± 0.0092), 양산 적용 여부는 실제 현업 데이터에 적용해 본 뒤 결정합니다.
+ROI-YOLO 는 wafer 전체 이미지에서 chip 위치를 bounding box 로 detection 해야 해 추론 비용이 크고, wafer 이미지에서는 chip 내 결함이 작게 보여 성능에 한계가 있습니다. 반면 chip-CNN object-id map 은 이미 산출한 chip 좌표로 작은 chip crop 만 분류하므로 추론 비용이 낮고, chip 이미지에서는 결함이 크게 보여 분류 성능도 좋습니다. Stage 2 후보를 대체하기 위해 개발 중이며, 현재 성능은 val_f1 **0.9946** / test_f1 0.9872 / 5-seed 평균 0.9838 ± 0.0092 입니다.
 
 <table>
   <thead>
