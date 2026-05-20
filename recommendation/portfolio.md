@@ -34,7 +34,7 @@
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-현업 경험을 바탕으로 분석 담당자로부터 Failbit Map 분석법을 교육받고 설계했습니다. Failbit Map 데이터 파이프라인, 운영 뷰어 web app, Known / Unknown AI 모델, 후속 chip-CNN object-id map 보정 구조까지 본 과제 전 영역을 직접 담당했습니다. AI 모델 구동을 위한 GPU 도 수요 조사를 통해 확보했습니다 (GPU 할당 **2026년 9월**).
+현업 경험을 바탕으로 분석 담당자로부터 Failbit Map 분석법을 교육받고 설계했습니다. Failbit Map 데이터 파이프라인, 운영 뷰어 web app, Known / Unknown AI 모델, 후속 chip-CNN object-id map 보정 구조까지 전 영역을 직접 담당했습니다. AI 모델 구동을 위한 GPU 도 수요 조사를 통해 확보했습니다 (GPU 할당 **2026년 9월**).
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
@@ -72,7 +72,7 @@ chip-CNN object-id map 과 Unknown contrastive 후속 트랙은 현업 데이터
 
 - **알고리즘**: 선정한 모델 아키텍쳐와 선택 사유 (Logic Flow 중심)
 
-모델 선택과 결합 구조는 본 과제 데이터 특성에 맞춰 다음과 같이 설계했습니다. P1 end-to-end 파이프라인은 raw log → wafer 이미지 변환 → 좌표 JSON → 운영 뷰어 노출 → Known 분류 / Unknown 검출 → 현업 검증 까지로 설계했고, 모듈은 아래와 같습니다.
+모델 선택과 결합 구조는 데이터 특성에 맞춰 다음과 같이 설계했습니다. P1 end-to-end 파이프라인은 raw log → wafer 이미지 변환 → 좌표 JSON → 운영 뷰어 노출 → Known 분류 / Unknown 검출 → 현업 검증 까지로 설계했고, 모듈은 아래와 같습니다.
 
 ```
 +------------------------------------------------------------------------------+
@@ -125,8 +125,8 @@ chip-CNN object-id map 과 Unknown contrastive 후속 트랙은 현업 데이터
 
 먼저 Transformer 와 CNN 을 같은 split 에서 비교했습니다.
 
-- **도메인 판단**: ViT, Swin 같은 전역 attention 기반 backbone 은 wafer 전체 구조를 보는 데 강합니다. 다만 본 과제의 결함은 특정 zone 이나 국소 chip 영역에 몰리는 경우가 많아, CNN 계열의 local receptive field 와 계층적 feature extraction 이 더 어울린다고 판단했습니다 (자문: 연세대학교 인공지능학과 전해곤 교수).
-- **비교 결과**: 동일 4:1 stratified split / 동일 학습 조건으로 backbone 만 바꿔 baseline 성능을 측정했습니다. 결과는 ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87 로, 본 과제 결함이 국소 영역에 몰리는 특성에 맞는 ConvNeXtV2 를 최종 backbone 으로 채택했습니다.
+- **도메인 판단**: ViT, Swin 같은 전역 attention 기반 backbone 은 wafer 전체 구조를 보는 데 강합니다. 다만 결함은 특정 zone 이나 국소 chip 영역에 몰리는 경우가 많아, CNN 계열의 local receptive field 와 계층적 feature extraction 이 더 어울린다고 판단했습니다 (자문: 연세대학교 인공지능학과 전해곤 교수).
+- **비교 결과**: 동일 4:1 stratified split / 동일 학습 조건으로 backbone 만 바꿔 baseline 성능을 측정했습니다. 결과는 ViT 0.81 / Swin 0.84 / EffNetV2 0.85 / MaxViT 0.87 / ConvNeXtV2 0.87 로, 결함이 국소 영역에 몰리는 특성에 맞는 ConvNeXtV2 를 최종 backbone 으로 채택했습니다.
 - **최종 선택**: ConvNeXtV2 는 MaxViT 와 동일한 F1 0.87 을 유지하면서 파라미터 26% (119.5M → 88.6M), FLOPs 39% (74.2G → 45.1G) 감소로 양산 inference 비용 측면에서 효율이 좋아 최종 backbone 으로 채택했습니다.
 
 **(2) Stage 2 ROI 보정 — cascade gate 와 보정 결정 로직**
@@ -180,7 +180,7 @@ M_obj      = place id_{u,v} on (u,v) grid    -- 32x32 object-id map
 
 Known 2-stage 성능을 실전 현업 데이터 (16 class / 1,500 labeled / 4:1 stratified split) 로 baseline 부터 단계별로 다음과 같이 향상시켰습니다.
 
-- **baseline 선택**: 일반 ImageNet 사전학습 CNN 으로 시작한 1차 baseline 이 weighted F1 **0.78** 정도였고, ViT / Swin / EffNetV2 / MaxViT / ConvNeXtV2 를 동일 split 에서 비교한 뒤 본 과제 결함이 국소 영역에 몰리는 특성에 맞는 ConvNeXtV2 를 backbone 으로 선택해 **0.87** 까지 향상시켰습니다.
+- **baseline 선택**: 일반 ImageNet 사전학습 CNN 으로 시작한 1차 baseline 이 weighted F1 **0.78** 정도였고, ViT / Swin / EffNetV2 / MaxViT / ConvNeXtV2 를 동일 split 에서 비교한 뒤 결함이 국소 영역에 몰리는 특성에 맞는 ConvNeXtV2 를 backbone 으로 선택해 **0.87** 까지 향상시켰습니다.
 - **Optuna hyperparameter sweep**: learning rate, weight decay, augmentation 강도, class weight, batch size 를 Bayesian sweep 으로 탐색하고, 학습률은 LinearLR warmup (시작 LR 을 base 의 0.05 부터 5 epoch 에 걸쳐 base 까지 올림) 뒤 CosineAnnealing (base → 1e-6) 으로 감쇠시키는 schedule 을 적용해 **0.92** 에 도달했습니다.
 - **2-stage cascade**: 16 class 중 center 영역처럼 일부 class 들의 불량 위치가 겹치는 경우 분류 성능이 저하되어, confidence 가 낮은 wafer 만 ROI YOLO 로 보내 2단계 분류했고 최종 weighted F1 **0.95** 까지 올라갔습니다.
 
@@ -290,7 +290,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | chip single / 2-combo 생성, CutMix 계열 선정, Pair Mask loss masking 설계, FCM-PM 본 과제 신규 적용, val_margin 기반 best-model selection, Temperature Scaling, pos/neg target asymmetry sweep, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후보 검토 | 80% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | chip single / 2-combo 생성, CutMix 계열 선정, Pair Mask loss masking 설계, FCM-PM 신규 적용, val_margin 기반 best-model selection, Temperature Scaling, pos/neg target asymmetry sweep, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후보 검토 | 80% |
 | 2 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
@@ -299,7 +299,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본 과제에서 데이터 생성, 모델 아키텍처, loss 설정, augmentation, best-model selection 까지 Chip Multi-label Classification 전 영역을 단독으로 담당했습니다.
+데이터 생성, 모델 아키텍처, loss 설정, augmentation, best-model selection 까지 Chip Multi-label Classification 전 영역을 단독으로 담당했습니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
@@ -367,7 +367,7 @@ Normal / Invalid / OOD negative eval 생성 이미지 예시:
 
 - **알고리즘**: 선정한 모델 아키텍쳐와 선택 사유 (Logic Flow 중심)
 
-본 과제는 chip 한 장에 single failure 와 2-combo failure 가 동시에 나타날 수 있어, mutually exclusive 분류기인 softmax 대신 **sigmoid multi-label head** 를 채택했습니다. backbone 은 P1 backbone scan 에서 검증된 **ConvNeXtV2 (FCMAE pretrained)** 를 가져와 chip 이미지로 downstream task fine-tuning 을 다시 수행해 wafer-level 분류 기반과 일관성을 유지했습니다. 전체 단계 logic flow 는 아래와 같고, 단계별 성능 향상 기법은 **[최적화]** 에 정리합니다.
+한 chip 안에 single failure 와 2-combo failure 가 동시에 나타날 수 있어, mutually exclusive 분류기인 softmax 대신 **sigmoid multi-label head** 를 채택했습니다. backbone 은 P1 backbone scan 에서 검증된 **ConvNeXtV2 (FCMAE pretrained)** 를 가져와 chip 이미지로 downstream task fine-tuning 을 다시 수행해 wafer-level 분류 기반과 일관성을 유지했습니다. 전체 단계 logic flow 는 아래와 같고, 단계별 성능 향상 기법은 **[최적화]** 에 정리합니다.
 
 ```
 +--------------------------------------------------------------------------+
@@ -465,7 +465,7 @@ positive bits     negative bits
 생성은 CutMix → CutMix + Pair → FCM-PM 순서로 직접 비교했고, false-positive 와 bit_F1 의 trade-off 가 어느 조합에서 깨지는지는 **[구현 성과]** ablation 표를 보면 됩니다.
 
 - **cover grid sweep**: chip 분할 그룹 수 (partition count) 와 그룹 내 cell 세분화 배수 (grid multiplier) 를 범위로 sweep, **partition=3 / multiplier=1 조합이 bit_F1 0.9960** 으로 최적이었습니다.
-- **분할 선택 근거**: partition 수를 늘리면 chip 이 더 잘게 분할되어 공간 다양성은 증가하지만, partition≥4 부터는 failure 영역 자체가 너무 잘게 쪼개져 학습 모델이 failure 형태를 인식하기 어려워지면서 **분류 정확도가 오히려 감소합니다**. partition=3 부근이 본 과제 데이터에 최적이었습니다.
+- **분할 선택 근거**: partition 수를 늘리면 chip 이 더 잘게 분할되어 공간 다양성은 증가하지만, partition≥4 부터는 failure 영역 자체가 너무 잘게 쪼개져 학습 모델이 failure 형태를 인식하기 어려워지면서 **분류 정확도가 오히려 감소합니다**. partition=3 부근이 데이터에 최적이었습니다.
 - **pos / neg target 선택**: 본 데이터에서는 positive target 0.85 / negative target 0.15 (symmetric) 가 bit_F1 과 FAR 안정성을 동시에 만족했습니다. 비대칭 positive target 0.95 / negative target 0.30 trial 은 별도로 검토했지만 Normal / Invalid / OOD negative 평가에서 FAR collapse 가 확인되었습니다.
 
 **ㅁ 구현 성과**
