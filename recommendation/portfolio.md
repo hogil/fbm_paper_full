@@ -352,7 +352,7 @@ val_margin = mean_{k in P+}(p_k) - max_{j in P-}(p_j)
 FAR = FP_negative / N_negative
 ```
 
-학습 원천 single 4 class 예시 chip (1행 4열, 본인 생성 평가셋):
+single 4 class 생성 이미지 예시:
 
 | bank_boundary | fork | scratch | scratch_rot |
 |:-------------:|:----:|:-------:|:-----------:|
