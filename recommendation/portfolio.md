@@ -264,7 +264,7 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
   - **[Unknown 추가 생성 데이터, 개발 중]** 현업 데이터와 최대한 유사하게 구성한 별도 평가셋에서 신규 class **capture 1.000 (38/38 발견)** / **noise 0.00%** / **Completeness 0.9938** / **Silhouette 0.781** 까지 측정했습니다 (실전 운영 13/7 검증과 별도, 개발 단계 보조 지표).
   - **[Known 추가 생성 chip 데이터, 개발 중]** chip-CNN object-id map 보정 구조는 Stage 2 ROI-YOLO 자리를 대체할 후속 모듈로 개발 중이며 (test_f1 **0.9872**), 양산 적용은 실제 현업 데이터에 적용해 본 뒤 결정합니다.
 
-  **Unknown contrastive 구성요소 성능표 (per class 500, normal 2000) [후속 개발 / 추가 생성 데이터, 개발 중]**
+  **Unknown contrastive 구성요소 성능표 [생성 데이터로 개발]**
 
   | # | Recipe (per class 500, normal 2000) | M1 (capture) | M2 (noise %) | M3 (Completeness) | M4 (Homogeneity) | ARI | AMI | Sil |
   |---|--------|--------------|--------------|-------------------|------------------|-----|-----|-----|
