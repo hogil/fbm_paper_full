@@ -4,7 +4,7 @@
 |------|--------|-----------|----------|----------|------|----------|
 | 2024년 10월 ~ 현재 | P1. Failbit Map Known & Unknown 불량 분석 아키텍처 | 3인 협업. 운영 뷰어는 DRAM 전제품 라인 양산 운영 (일 약 2만 wafer 처리), Known / Unknown 모델은 GPU 할당 대기 | 데이터 파이프라인 설계 및 구현, Failbit Map 이미지 변환 최적화, 운영 뷰어 연동, Known 2-stage 모델 개발 및 튜닝, Unknown self-supervised 검출 구조 설계, 현업 검증 flow 구축 | 20% | 35% | 45% |
 | 2025년 3월 ~ 현재 | P2. Chip Multi-label Classification (FCM-PM, val_margin) | 2인 PoC. 16+ class × 약 3,850 chip controlled synthetic benchmark | multi-label 학습 데이터 설계, FCM-PM augmentation 설계, Pair Mask loss masking 구현, val_margin 기반 best-model selection, Normal / Invalid / OOD negative 평가셋 설계, threshold gate / ensemble / Knowledge Distillation 후속 검토 | 20% | 40% | 40% |
-| 2026년 1월 ~ 현재 | P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC | 3인 PoC. normal 3,500 + abnormal 3,500 = 총 7,000개 trend sample 구성 | trend episode generator 설계, 도메인 parameter (Region 5종 / Noise 3종 / Anomaly 5종) 정의, 합성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증, 현업 적용 전 PoC 검증 | 20% | 45% | 35% |
+| 2026년 1월 ~ 현재 | P3. Trend Episode 데이터 생성 기반 Anomaly-detection 검증 PoC | 3인 PoC. normal 3,500 + abnormal 3,500 = 총 7,000개 trend sample 구성 | trend episode generator 설계, 도메인 parameter (Region 5종 / Noise 3종 / Anomaly 5종) 정의, 생성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증, 현업 적용 전 PoC 검증 | 20% | 45% | 35% |
 
 ## 2. 대표 과제 상세 기술서
 
@@ -284,13 +284,13 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업에서 확보한 single failure 4 class 위에 현업 확보가 어려운 2-combo 6 종을 single 조합 + FCM-PM (Full-Cover CutMix + Pair Mask) 으로 합성하고 val_margin best-model selection 까지 묶어 학습했습니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
+**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 EDS Failbit Map 의 failure 패턴 도메인 기준으로 train 은 single only, eval 은 single + 2-combo 6 종까지 모두 생성하고, 학습은 single 만으로 FCM-PM (Full-Cover CutMix + Pair Mask) augmentation 을 적용해 2-combo prediction 성능까지 끌어올린 multi-label classification 입니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | chip single / 2-combo 합성, CutMix 계열 선정, Pair Mask loss masking 설계, FCM-PM 본 과제 신규 적용, val_margin 기반 best-model selection, Temperature Scaling, pos/neg target asymmetry sweep, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후보 검토 | 80% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | chip single / 2-combo 생성, CutMix 계열 선정, Pair Mask loss masking 설계, FCM-PM 본 과제 신규 적용, val_margin 기반 best-model selection, Temperature Scaling, pos/neg target asymmetry sweep, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후보 검토 | 80% |
 | 2 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 
 **ㅁ 개인별 기여 서술**
@@ -299,11 +299,11 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본인은 chip multi-label failure 검출 과제 전체 — 합성 데이터 설계, FCM-PM 학습 구조, val_margin 기반 best-model selection, Temperature Scaling, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후속 검토까지 — 를 본인 80% 리딩으로 직접 주도한 담당자입니다. Normal / Invalid / OOD negative 평가셋도 현업 분포에 가깝게 본인이 직접 설계했습니다.
+본인은 chip multi-label failure 검출 과제 전체 — 생성 데이터 설계, FCM-PM 학습 구조, val_margin 기반 best-model selection, Temperature Scaling, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축 후속 검토까지 — 를 본인 80% 리딩으로 직접 주도한 담당자입니다. Normal / Invalid / OOD negative 평가셋도 현업 분포에 가깝게 본인이 직접 설계했습니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
-기존 BCE / Focal / ASL 단순 loss 변형만으로는 2-combo recall 과 false alarm 억제를 동시에 만족시키기 어려웠던 한계를, 현업에서 확보한 single failure 4 class + 현업 확보가 어려운 2-combo 6 종 single 조합 합성 + FCM-PM (Full-Cover CutMix + Pair Mask) + val_margin best-model selection 결합 설계로 풀었습니다. FCM-PM 위 Pair Mask 제거 ablation 에서 Total FAR 이 **100%** 까지 올라가 background loss masking 이 false-positive 억제의 핵심 요인임을 정량으로 확인했고, 최종 FCM-PM val_margin 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 controlled benchmark 위에서 달성했습니다. bit-level majority voting ensemble 은 single model 의 현업 안정성에 대비해 함께 개발했고, Knowledge Distillation single student 는 ensemble 판단을 single model 수준 추론 비용으로 압축하기 위해 이어서 개발했습니다.
+기존 BCE / Focal / ASL 단순 loss 변형만으로는 2-combo recall 과 false alarm 억제를 동시에 만족시키기 어려웠던 한계를, 현업 failure 패턴 도메인 기준으로 single 4 class + 2-combo 6 종 chip 생성 + FCM-PM (Full-Cover CutMix + Pair Mask) + val_margin best-model selection 결합 설계로 풀었습니다. FCM-PM 위 Pair Mask 제거 ablation 에서 Total FAR 이 **100%** 까지 올라가 background loss masking 이 false-positive 억제의 핵심 요인임을 정량으로 확인했고, 최종 FCM-PM val_margin 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 controlled benchmark 위에서 달성했습니다. bit-level majority voting ensemble 은 single model 의 현업 안정성에 대비해 함께 개발했고, Knowledge Distillation single student 는 ensemble 판단을 single model 수준 추론 비용으로 압축하기 위해 이어서 개발했습니다.
 
 **ㅁ 문제정의**
 
@@ -315,7 +315,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **과제 수행 시 해결해야 했던 기술적 / 환경적 제약 조건**
 
-학습 데이터 측면은 2-combo 가 실제로는 발생하지만 현업에서 확보가 어려워 single 을 조합한 CutMix 계열 합성 학습 방법으로 multi-label 성능을 끌어올려야 했고, 일반 CutMix 는 일부 영역만 잘라 붙이는 방식이라 failure signal 이 잘려 버리거나 background 가 failure 로 학습되어 Normal / Invalid / OOD negative 평가에서 false-positive 가 운영에 쓰기 어려운 수준까지 올라갔습니다. 평가 측면은 작은 validation set 의 best epoch plateau 와 OOD / negative false-positive 억제를 같이 잡아야 했고, 운영 측면은 압축 후보의 1× inference cost 제약 안에서 답을 만들어야 했기 때문에, 데이터 합성 설계 / loss 제어 / best-model selection / 추론 단계 보강을 단일 학습 구조 안에서 함께 풀어야 했습니다.
+학습 데이터 측면은 현업 chip 확보가 어려워 train 은 single only, eval 은 single + 2-combo 모두 도메인 기준 생성으로 만들어야 했고, 학습은 single 만으로 2-combo prediction 성능을 끌어올려야 했습니다. 다만 일반 CutMix 는 일부 영역만 잘라 붙이는 방식이라 failure signal 이 잘려 버리거나 background 가 failure 로 학습되어 Normal / Invalid / OOD negative 평가에서 false-positive 가 운영에 쓰기 어려운 수준까지 올라갔습니다. 평가 측면은 작은 validation set 의 best epoch plateau 와 OOD / negative false-positive 억제를 같이 잡아야 했고, 운영 측면은 압축 후보의 1× inference cost 제약 안에서 답을 만들어야 했기 때문에, 데이터 생성 설계 / loss 제어 / best-model selection / 추론 단계 보강을 단일 학습 구조 안에서 함께 풀어야 했습니다.
 
 **ㅁ 기술적 해결 방안**
 
@@ -323,9 +323,9 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **데이터**: 데이터 수집 경로, 전처리 기법 및 피처 엔지니어링 근거
 
-현업 EDS Failbit Map 에서 확보한 single failure 4 class 위에, 실제로는 발생하지만 현업에서 확보가 어려운 2-combo 6 종을 single 조합으로 도메인 분포에 맞춰 합성했습니다. 합성 2-combo 는 failure 영역의 grade 0-7 픽셀을 확률 분포 기반 categorical sampling 으로 생성하고, noise 와 밀도까지 도메인 통계에 맞춰 control 했습니다. negative 측면은 Normal / Invalid / OOD 까지 같이 두어 약 3,850 chip 의 controlled benchmark 를 갖췄습니다.
+현업 EDS Failbit Map 의 single failure 패턴을 도메인 기준으로 train 은 single 4 class 만, eval 은 single + 2-combo 6 종까지 각각 생성했습니다. 생성 chip 은 failure 영역의 grade 0-7 픽셀을 확률 분포 기반 categorical sampling 으로 생성하고, noise 와 밀도까지 도메인 통계에 맞춰 control 했습니다. negative 측면은 Normal / Invalid / OOD 까지 같이 두어 약 3,850 chip 의 controlled benchmark 를 갖췄습니다.
 
-학습은 single only 로 두고 학습 중 FCM-PM 으로 2-combo augmentation 을 적용하며, 평가는 미리 생성한 2-combo eval set 까지 함께 두어 multi-label 검출력을 측정합니다. single chip 을 chip 단위로 먼저 train / test 로 split 한 뒤 평가용 2-combo 합성은 test 원천 single 만 사용해 train / test 누수를 차단했습니다.
+학습은 single only 로 두고 학습 중 FCM-PM 으로 single 만 가지고 2-combo augmentation 을 적용해 2-combo prediction 성능을 끌어올렸으며, 평가는 미리 생성한 single + 2-combo eval set 으로 multi-label 검출력을 측정합니다. 학습용 single 과 평가용 single + 2-combo 는 별도로 생성해 train / test 가 처음부터 분리되어 있습니다.
 
 **[P2 수식 요약]**
 
@@ -415,7 +415,7 @@ Normal / Invalid / OOD negative eval 생성 이미지 예시:
 
 본인 80% 리딩으로 직접 시도한 단계별 성능 향상 기법은 다음 4 단계입니다.
 
-**(1) 합성 — CutMix 계열 채택과 Full-Cover CutMix 확장**
+**(1) 생성 — CutMix 계열 채택과 Full-Cover CutMix 확장**
 
 Grade 0-7 양자화 chip 이미지에서는 생성 방식 선택이 곧 label 의미 보존 문제였습니다.
 
@@ -462,7 +462,7 @@ positive bits     negative bits
 
 **(4) 학습 hyperparameter sweep — grid 분할 / pos / neg target**
 
-합성은 CutMix → CutMix + Pair → FCM-PM 순서로 직접 비교했고, false-positive 와 bit_F1 의 trade-off 가 어느 조합에서 깨지는지는 **[구현 성과]** ablation 표를 보면 됩니다.
+생성은 CutMix → CutMix + Pair → FCM-PM 순서로 직접 비교했고, false-positive 와 bit_F1 의 trade-off 가 어느 조합에서 깨지는지는 **[구현 성과]** ablation 표를 보면 됩니다.
 
 - **cover grid sweep**: chip 분할 그룹 수 (partition count) 와 그룹 내 cell 세분화 배수 (grid multiplier) 를 범위로 sweep, **partition=3 / multiplier=1 조합이 bit_F1 0.9960** 으로 최적이었습니다.
 - **분할 선택 근거**: partition 수를 늘리면 chip 이 더 잘게 분할되어 공간 다양성은 증가하지만, partition≥4 부터는 failure 영역 자체가 너무 잘게 쪼개져 학습 모델이 failure 형태를 인식하기 어려워지면서 **분류 정확도가 오히려 감소합니다**. partition=3 부근이 본 과제 데이터에 최적이었습니다.
@@ -509,13 +509,13 @@ positive bits     negative bits
 | 수행기간 | 2026년 1월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 / 동료 엔지니어 (공동 연구자) |
 
-**P3 핵심 요약**: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **10년** trend 판정 경험을 generator parameter (Region 5종 / Noise 3종 / Anomaly 5종) 로 옮겨 합성 trend sample **약 7,000개** (normal 3,500 + abnormal 3,500) 를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인한 PoC 입니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
+**P3 핵심 요약**: 실전 abnormal label 부족으로 trend anomaly 모델 검증이 막혀 있던 한계를 풀기 위해, 본인 BBD / Overlay / CD 담당 **10년** trend 판정 경험을 generator parameter (Region 5종 / Noise 3종 / Anomaly 5종) 로 옮겨 생성 trend sample **약 7,000개** (normal 3,500 + abnormal 3,500) 를 만들고, 1차 Binary gate baseline 으로 **Binary F1 0.9967** 까지 확인한 PoC 입니다. 현재 실제 현업 데이터 적용 직전 단계입니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
 | NO | 성명 | Knox Id | 소속 | 역할 | 기여도 |
 |----|------|---------|------|------|--------|
-| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | trend episode 합성 generator 설계, Region 5종 / Noise 3종 / trend 불량 4종 + context 1종 parameter 코드화, 합성 normal 산포의 상한 / 하한을 같이 잡는 두 가지 수식 설계, 1차 Binary gate 검증 PoC 설계 / 구현 | 70% |
+| 1 | 최호길 | 개인정보 비공개 | 메모리제조센터 QIE그룹 | trend episode 생성 generator 설계, Region 5종 / Noise 3종 / trend 불량 4종 + context 1종 parameter 코드화, 생성 normal 산포의 상한 / 하한을 같이 잡는 두 가지 수식 설계, 1차 Binary gate 검증 PoC 설계 / 구현 | 70% |
 | 2 | 관리자 | 개인정보 비공개 | 관리조직 (공식 기록 대조) | 방향성, 일정, 리뷰 매니징 | 20% |
 | 3 | 동료 엔지니어 (공동 연구자) | 개인정보 비공개 | 관련 엔지니어 조직 (공식 기록 대조) | AI 모델 실행, 데이터 정리, 실험 결과 취합 | 10% |
 
@@ -525,11 +525,11 @@ positive bits     negative bits
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본인은 P3 trend anomaly 검증 PoC 전체 — trend episode generator 설계, 도메인 parameter (Noise 3분포 / 계측 밀도 Region 5단계 / Anomaly 5종) 정의, 합성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증까지 — 를 본인이 직접 주도한 담당자입니다. BBD / Overlay / CD 담당 **10년간** trend chart 를 직접 판정해 온 본인 경험을 generator parameter 에 그대로 옮긴 것이 본 과제 차별성의 핵심입니다.
+본인은 P3 trend anomaly 검증 PoC 전체 — trend episode generator 설계, 도메인 parameter (Noise 3분포 / 계측 밀도 Region 5단계 / Anomaly 5종) 정의, 생성 normal / abnormal sample 생성, 정상 산포 보정 수식 설계, 1차 Binary gate baseline 검증까지 — 를 본인이 직접 주도한 담당자입니다. BBD / Overlay / CD 담당 **10년간** trend chart 를 직접 판정해 온 본인 경험을 generator parameter 에 그대로 옮긴 것이 본 과제 차별성의 핵심입니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
-실전 abnormal label 이 부족해 막혀 있던 anomaly 검증을 본인 trend 판정 경험 기반 generator 로 풀었습니다. 본인 10년 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 정해 generator parameter 로 코드화하고, **Noise 3분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 Region 5단계** (dense / sparse / very_sparse / thin / missing) 를 정의해 합성 normal baseline 을 실전 환경에 맞췄으며, normal 산포 상한 / 하한 두 가지 수식까지 직접 설계해 **normal 3,500 + abnormal 3,500 = 총 7,000개** trend sample 을 만들었습니다. 1차 Binary gate baseline 에서 **Binary F1 0.9967 / Abnormal Recall 0.9987** (test 1,500 / threshold = 0.9) 로 생성 데이터만으로도 정상과 이상이 안정적으로 구분됨을 확인했고, 현재 **현업 데이터 적용 직전** 단계까지 진행했습니다.
+실전 abnormal label 이 부족해 막혀 있던 anomaly 검증을 본인 trend 판정 경험 기반 generator 로 풀었습니다. 본인 10년 경험에서 어떤 강도의 mean shift / standard deviation / spike / drift / context 가 실제 불량으로 이어지는지 기준을 정해 generator parameter 로 코드화하고, **Noise 3분포** (Gaussian / Laplacian / Correlated) 와 **계측 밀도 Region 5단계** (dense / sparse / very_sparse / thin / missing) 를 정의해 생성 normal baseline 을 실전 환경에 맞췄으며, normal 산포 상한 / 하한 두 가지 수식까지 직접 설계해 **normal 3,500 + abnormal 3,500 = 총 7,000개** trend sample 을 만들었습니다. 1차 Binary gate baseline 에서 **Binary F1 0.9967 / Abnormal Recall 0.9987** (test 1,500 / threshold = 0.9) 로 생성 데이터만으로도 정상과 이상이 안정적으로 구분됨을 확인했고, 현재 **현업 데이터 적용 직전** 단계까지 진행했습니다.
 
 **ㅁ 문제정의**
 
@@ -541,7 +541,7 @@ trend 이상 감지는 단순 수작업 판단만으로는 한계가 있고, 설
 
 - **과제 수행 시 해결해야 했던 기술적 / 환경적 제약 조건**
 
-학습 데이터 측면은 실전 abnormal data 의 양과 label 균형 확보가 어려워, trend domain knowledge 를 합성 데이터 parameter 로 옮기는 단계가 먼저 풀려야 뒤 학습 / 검증이 가능했습니다. 합성 정상성 측면은 normal 산포가 실전 baseline 통계 안에 들어와야 하고 abnormal 강도가 정상 산포에 묻히지 않도록 데이터 측면 / 학습 측면 제약을 동시에 잡아야 했습니다.
+학습 데이터 측면은 실전 abnormal data 의 양과 label 균형 확보가 어려워, trend domain knowledge 를 생성 데이터 parameter 로 옮기는 단계가 먼저 풀려야 뒤 학습 / 검증이 가능했습니다. 생성 정상성 측면은 normal 산포가 실전 baseline 통계 안에 들어와야 하고 abnormal 강도가 정상 산포에 묻히지 않도록 데이터 측면 / 학습 측면 제약을 동시에 잡아야 했습니다.
 
 **ㅁ 기술적 해결 방안**
 
@@ -549,15 +549,15 @@ trend 이상 감지는 단순 수작업 판단만으로는 한계가 있고, 설
 
 - **데이터**: 데이터 수집 경로, 전처리 기법 및 피처 엔지니어링 근거
 
-trend chart 판정 경험을 generator parameter 로 옮겨 합성 trend sample 약 7,000개 (normal 3,500 + abnormal 3,500) 를 만들었습니다. 계측 밀도 Region 5단계 (dense / sparse / very_sparse / thin / missing), Noise 3분포 (Gaussian / Laplacian / Correlated), Anomaly 5종 (mean shift / standard deviation / spike / drift / context) 을 generator parameter 에 반영했습니다.
+trend chart 판정 경험을 generator parameter 로 옮겨 생성 trend sample 약 7,000개 (normal 3,500 + abnormal 3,500) 를 만들었습니다. 계측 밀도 Region 5단계 (dense / sparse / very_sparse / thin / missing), Noise 3분포 (Gaussian / Laplacian / Correlated), Anomaly 5종 (mean shift / standard deviation / spike / drift / context) 을 generator parameter 에 반영했습니다.
 
-Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
+Trend 생성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
-| Trend 합성 데이터 생성 설계 |
+| Trend 생성 데이터 생성 설계 |
 |:---------------------------:|
-| <img src="./figures/p3_trend_generation_formula.png" alt="Trend 합성 데이터 생성 설계" width="900" /> |
+| <img src="./figures/p3_trend_generation_formula.png" alt="Trend 생성 데이터 생성 설계" width="900" /> |
 
-합성 trend chart 예시 (정상 + 일반 trend 불량 4종 + context 1종):
+생성 trend chart 예시 (정상 + 일반 trend 불량 4종 + context 1종):
 
 | Normal | Mean Shift | Standard Deviation Change |
 |:------:|:----------:|:-------------------------:|
@@ -567,7 +567,7 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
 - **알고리즘**: 선정한 모델 아키텍쳐와 선택 사유 (Logic Flow 중심)
 
-합성 trend sample 을 normal / abnormal 두 class 로 학습하는 1차 Binary gate baseline 분류기로 시작했습니다. P3 는 데이터 생성이 주 성과인 PoC 라 모델은 단순 baseline 으로 두고, 전체 단계는 아래 logic flow 와 같습니다.
+생성 trend sample 을 normal / abnormal 두 class 로 학습하는 1차 Binary gate baseline 분류기로 시작했습니다. P3 는 데이터 생성이 주 성과인 PoC 라 모델은 단순 baseline 으로 두고, 전체 단계는 아래 logic flow 와 같습니다.
 
 ```
 +---------------------------------------------------------------------------+
@@ -598,11 +598,11 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
 - **최적화**: 성능 향상을 위해 본인이 직접 시도한 기술적 해법
 
-합성 normal 산포가 실전 baseline 통계 안에 들어오게 하면서 abnormal 강도는 정상 산포에 묻히지 않도록 데이터 측 + 학습 측 두 축으로 제어했습니다.
+생성 normal 산포가 실전 baseline 통계 안에 들어오게 하면서 abnormal 강도는 정상 산포에 묻히지 않도록 데이터 측 + 학습 측 두 축으로 제어했습니다.
 
 데이터 측 정상성 제어
-- **정상성 하한 보장**: `target_baseline_std = max(baseline_std, 0.01)` — baseline 산포가 너무 작아질 때 최소 0.01σ 로 묶어 합성 normal 이 무리하게 평탄해지지 않도록 했습니다.
-- **정상성 상한 정렬**: `target_std ≤ fleet_within_std × 1.2` — 같은 설비군 산포 대비 1.2 배 이내로 상한을 두어 합성 normal 이 실전보다 과도하게 흔들리는 케이스를 차단했습니다.
+- **정상성 하한 보장**: `target_baseline_std = max(baseline_std, 0.01)` — baseline 산포가 너무 작아질 때 최소 0.01σ 로 묶어 생성 normal 이 무리하게 평탄해지지 않도록 했습니다.
+- **정상성 상한 정렬**: `target_std ≤ fleet_within_std × 1.2` — 같은 설비군 산포 대비 1.2 배 이내로 상한을 두어 생성 normal 이 실전보다 과도하게 흔들리는 케이스를 차단했습니다.
 
 학습 측 안정화 및 stack 선택
 - **학습 stack**: ConvNeXtV2-Tiny (ImageNet-22k→1k pretrained) backbone + AdamW + **FocalLoss** (FN 최소화 목적 운영 gate 에 맞는 손실) + **EMA** (Exponential Moving Average) 로 weight 흔들림 억제.
@@ -615,10 +615,10 @@ Trend 합성 데이터 생성 설계 (계측 밀도, Noise, Anomaly 수식):
 
 **[정량적/정성적 성과]**
 
-- **기술 지표** (단계별 적용 효과, P3 성과는 모두 **[합성 trend chart, PoC]** 기반이며 주 성과는 데이터 생성 자체입니다):
+- **기술 지표** (단계별 적용 효과, P3 성과는 모두 **[생성 trend chart, PoC]** 기반이며 주 성과는 데이터 생성 자체입니다):
   - 데이터: **normal 3,500 + abnormal 3,500 = 총 7,000개** trend sample, test split 1,500 (normal 750 / abnormal 5종 각 150).
   - 도메인 코드화: Region 5단계 (계측 밀도) × Noise 3분포 (Gaussian / Laplacian / Correlated) × 불량 5종 (mean shift / standard deviation / spike / drift / context) 를 generator parameter 로 직접 구현.
-  - 정상성 보정: `target_baseline_std = max(baseline_std, 0.01)` + `target_std ≤ fleet_within_std × 1.2` 두 식으로 합성 normal 통계는 실전 baseline 에 맞추고 abnormal 강도는 정상 산포에 묻히지 않게 분리.
+  - 정상성 보정: `target_baseline_std = max(baseline_std, 0.01)` + `target_std ≤ fleet_within_std × 1.2` 두 식으로 생성 normal 통계는 실전 baseline 에 맞추고 abnormal 강도는 정상 산포에 묻히지 않게 분리.
   - Binary gate baseline: test 1,500건 / normal threshold=0.9 기준 **Binary F1 0.9967 / Abnormal Recall 0.9987** (TN/FN/FP/TP=746/1/4/749), 5-seed best **F1 0.9987**, threshold sweep 임계 둔감 확인.
 
 - **현업 임팩트**: L1 trend 모니터링 1차 스크리닝으로 누락 / 불량 누설 위험을 줄이고, 새 공정 / trend 유형이 들어와도 같은 generator 로 데이터를 빠르게 늘릴 수 있습니다 (현업 데이터 적용 직전).
