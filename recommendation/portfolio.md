@@ -182,8 +182,6 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 - **Local InfoNCE (grid36_full, window=4)**: wafer 안 36 개 anchor 위치마다 patch-level positive 까지 같이 학습해 sub-pattern (edge ring 각도 등) 분리력 보강.
 - **HDBSCAN**: 학습된 embedding 위에서 자동 grouping → 후보 group 산출 (운영 검출력 13 → 7 은 **[구현 성과]** 참고).
 
-SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 참고).
-
 ```
 +--------------------------------------------------------------------------+
 |  Stage 1: ConvNeXtV2 wafer classifier (16 classes)                       |
