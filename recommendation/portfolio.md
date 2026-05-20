@@ -34,7 +34,7 @@
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어로부터 Failbit Map 분석법을 직접 교육받고 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현해 양산 운영에 들어가게 했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 Known / Unknown 분석 시스템까지 설계 / 학습 / 검증을 마쳤습니다 (AI 모델의 전수 자동 추론 적용은 AI 센터 GPU 할당 (**2026년 9월**) 일정에 맞춰 단계 확장 예정). 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
+본인은 wafer 단위 분석 경험을 바탕으로 현업 엔지니어로부터 Failbit Map 분석법을 직접 교육받고 AI 설계에 착수했습니다. raw log → wafer 이미지 변환 / 저장 / 조회 파이프라인 (fail-map) 과 사내 운영 뷰어 web app 을 직접 설계 / 구현해 양산 운영에 들어가게 했고, 그 위에 ConvNeXtV2 wafer-level classifier + ROI YOLO cascade 보정 + self-supervised contrastive embedding + HDBSCAN grouping 을 묶어 Known / Unknown 분석 시스템까지 설계 / 학습 / 검증을 마쳤고, AI 모델의 전수 자동 추론은 AI 센터 GPU 할당 (**2026년 9월**) 후 전면 적용합니다. 후속 chip-CNN object-id map (Stage 2 ROI-YOLO 자리 대체 후보) 도 본인이 직접 설계 / 구현 중입니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
@@ -277,7 +277,7 @@ SOTA recipe ablation 은 별도 synthetic benchmark 트랙 (**[구현 성과]** 
   | 7 | 최종 recipe + 후처리 (noise 임계 τ=0.5) | 1.000 | 0.00% | 0.9938 | 0.9424 | 0.868 | 0.960 | 0.781 |
 
 
-- **현업 임팩트**: 설비 불량 조기 감지 및 불량 wafer list 확보가 가능해집니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 양산 운영 중이며 **DRAM D1a/b/c/d 분석 파트에서 매일 사용 중**, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 비즈니스 효과를 창출했습니다. Known / Unknown 모델 전수 자동 추론은 AI 센터 GPU 할당 (2026년 9월) 후 단계 확장합니다.
+- **현업 임팩트**: 설비 불량 조기 감지 및 불량 wafer list 확보가 가능해집니다. 운영 뷰어는 2025년 5월부터 DRAM 전제품 라인 양산 운영 중이며 **DRAM D1a/b/c/d 분석 파트에서 매일 사용 중**, **공수 약 90% 절감 (연 약 26억 효과)** + **수율 +0.02% 개선 (P3WN 1건 약 97억 효과)** 의 비즈니스 효과를 창출했습니다. Known / Unknown 모델 전수 자동 추론은 AI 센터 GPU 할당 (2026년 9월) 후 전면 적용합니다.
 
 **ㅁ P2. Chip Multi-label Classification (FCM-PM, val_margin)**
 
