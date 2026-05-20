@@ -159,12 +159,12 @@ ROI-YOLO 는 wafer 전체 이미지에서 chip 위치를 bounding box 로 detect
 chip-CNN object-id map 의 내부 흐름을 식으로 정리하면 다음과 같습니다.
 
 ```
-c_{u,v}    = crop(x, pos_{u,v})          -- chip 좌표로 잘라낸 crop
-q_{u,v}    = softmax(h_phi(c_{u,v}))     -- crop 의 class 확률
-M_obj(u,v) = argmax_k q_{u,v,k}          -- chip 별 id, 좌표에 배치하면 object-id map
+c_{u,v}    = crop(x, pos_{u,v})          -- chip crop at coord (u, v)
+q_{u,v}    = softmax(h_phi(c_{u,v}))     -- class probability per crop
+M_obj(u,v) = argmax_k q_{u,v,k}          -- chip-wise id, placed by coord = object-id map
 ```
 
-chip 좌표 `(u, v)` 마다 crop 을 잘라 분류기에 통과시켜 class 확률을 얻고 argmax 로 chip 별 id `M_obj(u, v)` 를 결정한 뒤, 이 id 들을 chip 좌표 위치에 그대로 배치하면 wafer 한 장의 **32×32 object-id map** 이 완성됩니다. 이 map 으로 Stage 2 ROI-YOLO 의 chip 단위 분류 출력을 대체합니다.
+chip 좌표 `(u, v)` 마다 crop 을 잘라 분류기에 통과시켜 class 확률을 얻고 argmax 로 chip 별 id `M_obj(u, v)` 를 결정한 뒤, 이 id 들을 chip 좌표 위치에 그대로 배치하면 wafer 한 장의 **32×32 object-id map** 이 완성됩니다. 이 map 을 사용하여 학습하고 최종적으로 ROI-YOLO 를 대체합니다.
 
 - **최적화**: 성능 향상을 위해 본인이 직접 시도한 기술적 해법
 
