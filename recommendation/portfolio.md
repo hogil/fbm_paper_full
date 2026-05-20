@@ -311,7 +311,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **기존 방식의 한계 및 AI 도입의 구체적 배경**
 
-한 chip 에 여러 failure 가 같이 나타나면 test 수치만으로는 구분이 어렵고 Failbit Map 이미지로 봐야 패턴이 드러납니다. 현업 운영은 multi failure 가 검출되어야 하고 false positive 가 없어야 하기 때문에 multi-label classification 을 사용해야 했습니다.
+chip 단위 불량 검출은 기존에 EDS test 수치와 분석 담당자의 수작업 판독으로 이루어졌습니다. 한 chip 에 여러 failure 가 동시 발생하면 test 수치만으로는 구분이 어렵고 Failbit Map 이미지 패턴까지 봐야 했지만, 사람 판독은 기준이 흔들리고 처리량도 한정되어 multi failure 누락과 false positive 가 누적되었습니다. AI 기반 이미지 multi-label classification 으로 multi failure 자동 검출과 false positive 억제를 동시에 풀어야 했습니다.
 
 - **과제 수행 시 해결해야 했던 기술적 / 환경적 제약 조건**
 
