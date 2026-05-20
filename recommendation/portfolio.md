@@ -299,11 +299,11 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본인은 chip multi-label failure 검출 과제에서 현업 실제 chip 과 유사한 single / 2-combo 데이터 생성, FCM-PM (Full-Cover CutMix + Pair Mask) 학습 구조 설계, val_margin best-model selection, Temperature Scaling, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축까지 단일 흐름으로 직접 설계 / 구현 / 검증했습니다.
+본인은 본 과제에서 Chip Multi-label Image Classification 모델 학습 파이프라인 전 영역을 단독으로 담당했습니다. Domain-Distribution-based Synthetic Data Generation 으로 학습 / 평가용 chip 을 직접 생성하고, Augmentation Design 과 Loss Masking 으로 single only 학습 조건을 보완했으며, 그 위에 Margin-based Checkpoint Selection, Temperature Scaling Calibration, Threshold Gating, Bit-level Majority Voting Ensemble, Knowledge Distillation Compression 까지 후속 단계를 모두 직접 구성했습니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
-기존 BCE / Focal / ASL 단순 loss 변형만으로는 2-combo bit_F1 향상과 false alarm 억제를 동시에 만족시키기 어려웠던 한계를, FCM (Full-Cover CutMix) 으로 single 만 가지고 2-combo prediction 성능을 향상시키고 val_margin best-model selection 으로 false positive 를 감소시켰습니다. 최종 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했습니다. bit-level majority voting ensemble 은 single model 의 현업 불안정성에 대비해 함께 개발했고, Knowledge Distillation single student 는 ensemble 판단을 single model 수준 추론 비용으로 압축하기 위해서 개발했습니다.
+본인이 직접 설계한 FCM (Full-Cover CutMix) 은 single 만으로도 2-combo prediction 성능을 끌어올려 학습 데이터 부족 문제를 풀었고, Pair Mask 는 합성 chip 의 background 가 false positive 신호로 학습되지 않도록 loss 영역을 분리했습니다. val_margin 기반 best-model selection 은 작은 validation set 환경에서도 false positive 가 가장 안정적인 epoch 를 골라, 최종 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 의 multi-label 검출과 false alarm 동시 억제를 가능하게 만들었습니다. bit-level majority voting ensemble 은 single model 의 현업 불안정성에 대비해 함께 개발했고, Knowledge Distillation single student 는 ensemble 판단을 single model 수준 추론 비용으로 압축하기 위해 이어 개발했습니다.
 
 **ㅁ 문제정의**
 
