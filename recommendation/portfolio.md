@@ -284,7 +284,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: 운영에서는 2개 이상의 중복 failure 가 발생하지만 label 확보가 어려워, single 학습 만으로 2-combo prediction 성능을 향상시키는 FCM-PM (Full-Cover CutMix + Pair Mask) 을 직접 설계하고, 그 위에 val_margin best-model selection / Temperature Scaling / max-prob gate / ensemble / KD 까지 단일 흐름으로 이어 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했습니다.
+**P2 핵심 요약**: 운영에서는 2개 이상의 중복 failure 가 발생하지만 label 확보가 어려워, single 학습 만으로 2-combo prediction 성능을 향상시키는 FCM-PM (Full-Cover CutMix + Pair Mask) 을 직접 설계하고, 그 위에 val_margin best-model selection / Temperature Scaling / max-prob gate / ensemble / Knowledge Distillation 까지 개발했고 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
