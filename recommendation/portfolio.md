@@ -284,7 +284,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 EDS Failbit Map 에서 관찰되는 single failure 형태를 기준으로 4 class 를 구성하고 2-combo 6 종을 FCM-PM (Full-Cover CutMix + Pair Mask) 으로 합성해, val_margin best-model selection 까지 묶어 학습했습니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
+**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업에서 확보한 single failure 4 class 위에 현업 확보가 어려운 2-combo 6 종을 single 조합 + FCM-PM (Full-Cover CutMix + Pair Mask) 으로 합성하고 val_margin best-model selection 까지 묶어 학습했습니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
@@ -315,7 +315,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 
 - **과제 수행 시 해결해야 했던 기술적 / 환경적 제약 조건**
 
-학습 데이터 측면은 2-combo 가 실제로는 발생하지만 현업에서 확보가 어려워 single 을 조합해 합성으로 보강해야 했고, 일반 CutMix 는 일부 영역만 잘라 붙이는 방식이라 failure signal 이 잘려 버리거나 background 가 failure 로 학습되어 Normal / Invalid / OOD negative 평가에서 false-positive 가 운영에 쓰기 어려운 수준까지 올라갔습니다. 평가 측면은 작은 validation set 의 best epoch plateau 와 OOD / negative false-positive 억제를 같이 잡아야 했고, 운영 측면은 압축 후보의 1× inference cost 제약 안에서 답을 만들어야 했기 때문에, 데이터 합성 설계 / loss 제어 / best-model selection / 추론 단계 보강을 단일 학습 구조 안에서 함께 풀어야 했습니다.
+학습 데이터 측면은 2-combo 가 실제로는 발생하지만 현업에서 확보가 어려워 single 을 조합한 CutMix 계열 합성 학습 방법으로 multi-label 성능을 끌어올려야 했고, 일반 CutMix 는 일부 영역만 잘라 붙이는 방식이라 failure signal 이 잘려 버리거나 background 가 failure 로 학습되어 Normal / Invalid / OOD negative 평가에서 false-positive 가 운영에 쓰기 어려운 수준까지 올라갔습니다. 평가 측면은 작은 validation set 의 best epoch plateau 와 OOD / negative false-positive 억제를 같이 잡아야 했고, 운영 측면은 압축 후보의 1× inference cost 제약 안에서 답을 만들어야 했기 때문에, 데이터 합성 설계 / loss 제어 / best-model selection / 추론 단계 보강을 단일 학습 구조 안에서 함께 풀어야 했습니다.
 
 **ㅁ 기술적 해결 방안**
 
@@ -335,7 +335,7 @@ p_k = sigmoid(z_k),  k = 1..K
 L_BCE = -Σ_k [y_k log p_k + (1-y_k) log(1-p_k)]
 
 x_mixed   = paste B grid cells onto A   (Full-Cover CutMix)
-y_mixed   = y_A ∨ y_B                    (label union)
+y_mixed   = y_A ∪ y_B                    (label union)
 x_masked  = mask B-pasted cells of A     (paired aug.)
 y_masked  = y_A                          (A-only label)
 
