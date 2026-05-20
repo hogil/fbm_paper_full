@@ -284,7 +284,7 @@ Unknown 검출은 정답 label 이 없는 운영 환경이라 정량 metric 이 
 | 수행기간 | 2025년 3월 ~ 현재 |
 | 참여인원 | 본인 / 관리자 |
 
-**P2 핵심 요약**: single failure 학습만으로는 약했던 multi-label 검출과 일반 CutMix 의 false alarm 한계를 풀기 위해, 현업 EDS Failbit Map 의 failure 패턴 도메인 기준으로 train 은 single only, eval 은 single + 2-combo 6 종까지 모두 생성하고, 학습은 single 만으로 FCM-PM (Full-Cover CutMix + Pair Mask) augmentation 을 적용해 2-combo prediction 성능까지 끌어올린 multi-label classification 입니다. 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했고, FCM-PM 위에서 Pair Mask 만 제거하면 Total FAR **100%** 로 올라가 background loss 분리 효과를 확인했습니다.
+**P2 핵심 요약**: 한 chip 에 여러 failure 가 같이 나타나는 multi-label 검출이 본 과제의 핵심이었습니다. 현업에서는 2-combo 이상 결함의 label 확보가 어려운 반면 운영에서는 실제로 중복 failure 가 발생하기 때문에, train 은 현업 EDS Failbit Map 의 4 종 single failure pattern (bank_boundary / fork / scratch / scratch_rot) 을 그대로 재현해 single 만 사용하고, eval 은 single 4 + 2-combo 6 종에 Normal / Invalid / OOD 까지 포함해 약 **3,850 chip** 으로 구성했습니다. single 만으로 2-combo prediction 성능을 끌어올리기 위해 FCM-PM (Full-Cover CutMix + Pair Mask) 학습 구조를 직접 설계했고, 그 위에 val_margin 기반 best-model selection, Temperature Scaling, max-prob threshold gate, bit-level majority voting ensemble, Knowledge Distillation 압축까지 단일 흐름으로 묶어 단일 모델 **bit_F1 0.9927 / Total FAR 0.00%** 를 달성했습니다. FCM-PM 에서 Pair Mask 만 제거하면 Total FAR 가 **100%** 까지 올라가, background loss 분리가 false positive 억제의 결정적 축임을 확인했습니다.
 
 **ㅁ 과제 참여 인력 및 역할**
 
