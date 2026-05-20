@@ -38,7 +38,7 @@
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
-wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환 루프를 Cython 으로 재구성해 약 **100배** 가속을 확보했고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 통해 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터 — Known]** ConvNeXtV2 backbone 교체와 ROI YOLO 2-stage cascade 결합으로 weighted F1 **0.78 → 0.95** ladder 를 달성했습니다. **[실전 현업 데이터 — Unknown]** self-supervised contrastive embedding 과 HDBSCAN grouping 으로 13개 후보 group 중 **7개 불량 확인**까지 검증했습니다. chip-CNN object-id map 과 Unknown synthetic benchmark 는 현재 후속 개발 단계입니다.
+wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환 루프를 Cython 으로 재구성해 속도를 약 **100배** 증가시켰고, 32색 palette indexed PNG 양자화로 저장 용량 약 **75%** 절감을 통해 **일 약 2만 장 / 1시간 주기** 양산 운영 적재 흐름을 가능하게 했습니다. **[실전 현업 데이터 — Known]** ConvNeXtV2 backbone 교체와 ROI YOLO 2-stage cascade 결합으로 weighted F1 **0.78 → 0.95** ladder 를 달성했습니다. **[실전 현업 데이터 — Unknown]** self-supervised contrastive embedding 과 HDBSCAN grouping 으로 13개 후보 group 중 **7개 불량 확인**까지 검증했습니다. chip-CNN object-id map 과 Unknown synthetic benchmark 는 현재 후속 개발 단계입니다.
 
 **ㅁ 문제정의**
 
@@ -46,7 +46,7 @@ wafer 한 장 약 1,000만 cell 의 hex 값을 Grade 0-7 로 풀어내는 변환
 
 - **기존 방식의 한계 및 AI 도입의 구체적 배경**
 
-wafer Failbit Map 분석이 한 번에 약 48매까지로 묶여 제품 / 시간 단위 대량 wafer 누적 분석이 어렵고, wafer Failbit Map 판정 자체가 분석 엔지니어 수작업에 의존해 누락 위험과 모니터링 시간 부담이 누적되었습니다. 이를 AI 기반 자동 분석 / 분류로 옮겨, Known 16 class 분류는 자동화하고 Unknown 신규 패턴은 후보 group 까지 자동 추려 현업 검토 부담을 줄이는 시스템이 필요했습니다.
+wafer Failbit Map 분석이 한 번에 약 48매까지 로드되어 제품 / 시간 단위 대량 wafer 누적 분석이 어렵고, wafer Failbit Map 판정 자체가 분석 엔지니어 수작업에 의존해 누락 위험과 모니터링 시간 부담이 누적되었습니다. AI 기반 자동 분석 / 분류를 활용해, Known 16 class 분류는 자동화하고 Unknown 신규 패턴은 후보 group 까지 자동 추려 현업 검토 부담을 줄이는 시스템이 필요했습니다.
 
 - **과제 수행 시 해결해야 했던 기술적 / 환경적 제약 조건**
 
