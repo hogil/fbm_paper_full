@@ -525,7 +525,7 @@ positive bits     negative bits
 
 - **과제 내에서 타 구성원과 차별화되는 본인만의 구체적 담당 영역**
 
-본인은 P3 trend anomaly 검증 PoC 의 데이터 생성, 모델 학습, 검증까지 본인이 직접 담당했습니다.
+본인은 P3 trend anomaly 검증 PoC 의 데이터 생성, 도메인 parameter 정의, 정상 산포 보정, baseline 모델 학습, 1차 검증까지 본인이 직접 담당했습니다.
 
 - **본인의 기술적 해결책이 과제 성패에 미친 영향**
 
