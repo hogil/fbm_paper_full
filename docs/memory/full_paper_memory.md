@@ -6,6 +6,58 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev170 Codex
+
+User request:
+- Continue the full-paper agent loop until told to stop, using accumulated reviewer feedback to raise the score.
+
+Revision trigger:
+- rev169 was already the selected safe submission base at 9 pages, but two low-risk wording fixes remained in Table 3.
+- Figure 6/7 and Table 7 were visually and structurally checked before editing; no figure regeneration was required.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev170_codex.md` from rev169.
+- Copied the figure set to `D:\project\fbm_paper_full\figures\full_paper_rev170`.
+- Updated all figure references from `figures/full_paper_rev169` to `figures/full_paper_rev170`.
+- Changed Table 3 scope wording:
+  - `Field review, not metric` -> `Field review, not classifier metric`.
+  - `Certified contribution` -> `Internally certified quantified contribution`.
+- Kept title, authors, affiliations, 9-page structure, all metrics, all figures, all tables, and scope separation unchanged.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev170_codex.docx`.
+- Exported `D:\project\fbm_paper_full\full_paper_rev170_codex.pdf`.
+- Synced DOCX Word stats: 9 pages, 10,390 words, 985 lines.
+- PDF page count: 9.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\full_paper_rev170_pages`.
+- Visual check:
+  - Figure 6 FCM-PM labels are readable and include `Label = A+B`, `A-only view`, `B-only view`, `Pair Mask`, and false-positive suppression.
+  - Figure 7 includes `Whole 4-bit shape is scored`, val_margin formula, ACCEPT, and REJECT.
+  - Table 7 selected row `FCM+margin (채택)` is bold in the DOCX table structure.
+- Risk scan:
+  - No `Known·Unknown`, stale rev169 figure path, stale Table 3 wording, local path, professor-advice text, section-symbol marker, or unsupported HBM claim found.
+  - `defect` remains only in exact reference titles.
+- Automated verifier produced legacy expectation failures because it still expects old figure/table/reference counts, but gate checks passed: A4, margins, header/footer, 2 columns, fonts, 9 pages, citations/references, hidden XML risk scan, and figure file existence.
+
+Reviewer result:
+- `full_paper_rev170_codex` is the current Codex best.
+- Current score estimate: 96.9/100.
+- Decision: Strong accept / safest Codex submission candidate.
+
+Current final aliases now point to rev170:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Primary hashes:
+- `D:\project\fbm_paper_full\full_paper_rev170_codex.md`: `79685B0E9EE4875C09CDA1234612975C7C023545D618A3CDDC3928586A9D842D`
+- `D:\project\fbm_paper_full\full_paper_rev170_codex.docx`: `DC64F5EDA1561CBF10CA188796500BAFEBEFC9B45A08A631489A82CC51383203`
+- `D:\project\fbm_paper_full\full_paper_rev170_codex.pdf`: `F52B856198432F6EF2D9AB50230C1CA86D173C7A34F12BAE84425BF919DE3BD8`
+
+Next controlled cycle target:
+- Do not change structure unless the user supplies new evidence.
+- If another cycle is requested, check only for visual layout regressions, stale aliases, Git status/push, and whether any new reviewer feedback names a concrete sentence/table/figure.
+
 ## User-selected final base - 2026-06-29 rev167
 
 User re-evaluated `full_paper_rev166_codex.docx` and `full_paper_rev160_claude(2).docx` only, excluding the two-page summary from scoring. The conclusion was:

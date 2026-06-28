@@ -92,7 +92,7 @@ def _strip_md(t):
 
 def _figure(doc, path, caption, wide=False):
     p = _para(doc, C, after=2)
-    if FORCE_TWO_COLUMN and Path(path).name != "p1_fig_pipeline_arch.png":
+    if FORCE_TWO_COLUMN:
         wide = False
     img = ROOT / path
     if not img.exists():
@@ -104,8 +104,6 @@ def _figure(doc, path, caption, wide=False):
         if (not FORCE_TWO_COLUMN and
                 Path(path).name in {"fig02_pipeline_architecture.png", "fig06_fcm_pm.png", "fig07_probability_control.png",
                                     "p1_fig_pipeline_arch.png", "p2_fig_fcm_pm.png", "p2_fig_prob_control.png"}):
-            width_cm = 17.4
-        if wide and Path(path).name == "p1_fig_pipeline_arch.png":
             width_cm = 17.4
         p.add_run().add_picture(str(img), width=Cm(width_cm))
     else:
@@ -273,15 +271,8 @@ def build(input_path: Path, output_path: Path):
 
         if s == "<!-- wide-start -->":
             if FORCE_TWO_COLUMN:
-                span_fig = False
-                for k in range(idx + 1, min(idx + 5, len(lines))):
-                    ls = lines[k].strip()
-                    if ls.startswith("!["):
-                        span_fig = "p1_fig_pipeline_arch" in ls
-                        break
-                if not span_fig:
-                    idx += 1
-                    continue
+                idx += 1
+                continue
             ws = doc.add_section(WD_SECTION.CONTINUOUS)
             cx.set_page(ws)
             cx.set_one_column(ws)
@@ -291,7 +282,7 @@ def build(input_path: Path, output_path: Path):
             continue
 
         if s == "<!-- wide-end -->":
-            if FORCE_TWO_COLUMN and not in_wide:
+            if FORCE_TWO_COLUMN:
                 idx += 1
                 continue
             ts = doc.add_section(WD_SECTION.CONTINUOUS)
