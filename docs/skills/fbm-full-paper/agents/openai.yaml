@@ -1,0 +1,7 @@
+interface:
+  display_name: "FBM Full Paper"
+  short_description: "Research, write, and review the FBM full paper"
+  default_prompt: "Use $fbm-full-paper to research the project folders, draft the next full_paper_revNNN_codex paper, and score it with the internal reviewer rubric."
+
+policy:
+  allow_implicit_invocation: true
