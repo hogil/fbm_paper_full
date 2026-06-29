@@ -6,6 +6,57 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev200 Codex
+
+User request:
+- Stop adding content and fix the remaining full-paper submission risk: table layout and spacing.
+- Preserve the humanized rev196/rev197-style prose, validation scope, figures, and claims.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev200_codex.md` from the latest Codex line.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev200`.
+- Updated all figure references to `figures/full_paper_rev200`.
+- Shortened Table 2 caption and row text so the ROI-YOLO/object-id efficiency comparison no longer strains the column width.
+- Shortened Table 3 columns and scope text while preserving the meanings:
+  - Known F1 0.95 = field validation.
+  - Unknown 13→7 = field review, not classifier metric.
+  - object-id map = generated development, not deployed.
+  - FCM-PM = controlled synthetic benchmark.
+  - FBM generation/storage = internal measurement.
+  - Operational impact = internally certified contribution.
+- No new metric, claim, author, figure, reference, or scope was added.
+- The builder was not modified.
+
+DOCX/layout delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev200_codex.docx` with the official builder.
+- Applied a DOCX-only keep-together post-process to Table 3 so the validation-scope table stays as one block instead of splitting across pages.
+- Exported `D:\project\fbm_paper_full\full_paper_rev200_codex.pdf`.
+- Synced final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+  - `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Verification delta:
+- PDF page count: 9.
+- Rendered page 4: Table 2 no longer shows caption/body overflow or column intrusion.
+- Rendered page 6: Table 3 appears as a whole table at the top of the page; no page split.
+- Rendered page 7: Table 6 and Table 7 remain readable and do not overlap.
+- Rendered page 8/9: page 9 contains references [8]~[22] and is not a blank trailing page.
+- DOCX text scan found no raw markdown table syntax, broken dash characters, soft hyphen, known broken-spacing patterns, `P1`, `P2`, `Pipeline speed`, `candidate update`, `LLM agent`, or `Known·Unknown`.
+- Automated verifier report:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev200_verification_report.md`
+  - Status is still FAIL because the verifier has legacy expected counts and assumptions for older short drafts: expected 2-6 figures, 3-4 tables, 7-20 references, old Abstract-heading size, and old PDF metadata range.
+  - Useful core checks pass: markdown/DOCX/PDF exist, current figure folder and files exist, citation/reference consistency, hidden XML scan, A4/margins/header/footer, 2-column body, font mappings, title/author/abstract formatting, and PDF page count within the 4-10 page gate.
+
+Reviewer result:
+- `full_paper_rev200_codex` is the current Codex final candidate for table/spacing risk reduction.
+- Decision: submit-ready after visual table/layout check.
+- Score estimate: unchanged in substance; format risk reduced.
+
+Important note:
+- `full_paper_rev200_codex.docx` includes DOCX-only Table 3 keep-together post-processing. If the DOCX is rebuilt from markdown, reapply this post-process before using the file as final.
+- Do not start another revision cycle unless the user gives a specific remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev183 Codex
 
 User request:
