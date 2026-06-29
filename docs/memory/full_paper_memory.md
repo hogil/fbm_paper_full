@@ -6,6 +6,64 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev212 Codex
+
+User request:
+- Keep `rev211_codex` technical content, metrics, and validation scope unchanged.
+- Remove the remaining awkward expressions and broken text.
+- Replace the Abstract with the user-specified final wording.
+- Replace the Known/Unknown definition paragraph with the user-specified Korean wording.
+- Remove forbidden terms such as `좌표 보존 자료`, `좌표 보존 분석 자산`, `Known fail`, `Unknown fail`, `등록 failure`, `라벨 없는 신규 후보`, `검토군`, `신규 불량군`, `라벨 되먹임`, `후보 묶음`, `generated-chip development extension`, `controlled synthetic benchmark 기준 값`, `비슷한 것은 가깝게 다른 것은 멀게`, and `수동 — machine learning`.
+- Preserve the validation-scope separation and add no new metric.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev212_codex.md` from rev211.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev212`.
+- Updated all figure references to `figures/full_paper_rev212`.
+- Replaced the Abstract with the final user-provided version:
+  - Uses `같은 wafer 좌표계에 맞춘 데이터` wording instead of `좌표 보존 자료` / `좌표 보존 분석 자산`.
+  - Uses `기존 불량`, `신규 후보 패턴`, `13개 후보 그룹`, and `7개가 신규 불량으로 확인되었다`.
+  - Uses `생성 데이터로만 검증한 후속 항목`.
+  - Keeps field validation, field review, generated development, and controlled synthetic benchmark scope labels.
+- Replaced the Known/Unknown definition paragraph with the requested Korean paragraph.
+- Replaced the viewer/data pipeline sentence with: `이 값들은 viewer/data pipeline의 운영 효과이므로, Table 4~7의 모델 성능 지표와 합산하지 않았다.`
+- Updated Figure 9 caption to the requested final wording.
+- No new metric, figure, reference, author, validation scope, or claim was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev212_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev212_codex.pdf` with hidden Word COM.
+- PDF page count: 9.
+- PDF abstract line count: 12.
+- DOCX table count: 8.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\rev212_pages`.
+- Rendered checks:
+  - Page 1: Abstract remains within 15 lines and uses the final requested wording.
+  - Page 7: Table/Figure area remains readable and Figure 9 caption uses the requested wording.
+- DOCX/PDF text scan found 0 matches for:
+  - user-listed forbidden expressions
+  - broken Korean spacing targets
+  - soft hyphen / `￾`
+  - `Known fail` / `Unknown fail`
+  - `라벨 되먹임`
+  - `false alarm 0.00`
+  - `micro-F1(bit-F1)`
+  - `Information Noise`
+  - `InfoNCE(`
+  - `같은 지표처럼`
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev212_final_checklist.md`
+
+Current final aliases now point to rev212:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev212_codex` is the current final Codex candidate.
+- Decision: submit-ready on the requested wording-cleanup and broken-text axis.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev211 Codex
 
 User request:
