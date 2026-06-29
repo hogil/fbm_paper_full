@@ -6,6 +6,54 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev179 Codex
+
+User request:
+- Fix two remaining scope risks:
+  - The operation sentence could still be read as model serving being operated.
+  - Table 3 could be confused with the older `26.9 ms/chip · 20TB/120d` style expression.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev179_codex.md` from rev178.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev179`.
+- Updated all figure references to `figures/full_paper_rev179`.
+- Strengthened the system/operation sentence:
+  - The reported use scope is limited to FBM generation, search/view, overlay, and label review as review infrastructure.
+  - It explicitly does not mean Known/Unknown/chip model serving or object-id map production deployment has been completed.
+- Reframed the Unknown embedding timing sentence:
+  - `14.3 ms` / `24 ms` are model-path development/validation measurements.
+  - Table 3 `pipeline speed/storage` summarizes only Cython conversion speed and palette-storage efficiency.
+  - These values must not be read as model serving throughput.
+- Replaced `운영 추론 비용` wording with `모델 효율` / `개발 측정` in the Known backbone explanation.
+- Preserved Table 3 row:
+  - `Pipeline speed · storage | Cython 약 100× · palette 약 75% · 20TB/120 d | Internal measurement`
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev179_codex.docx`.
+- Synced DOCX Word stats: 9 pages, 10,657 words, 995 lines.
+- Exported `D:\project\fbm_paper_full\full_paper_rev179_codex.pdf`.
+- Rendered 9 pages and contact sheet to `D:\project\fbm_paper_full\tmp\docs\full_paper_rev179_pages`.
+- Visual check:
+  - Page 6 shows Table 3 with Cython/palette/20TB only, and the Unknown timing sentence says it is not model serving throughput.
+  - Page 7 shows the system/operation paragraph limiting use to review infrastructure and excluding model serving / object-id production deployment completion.
+- Automated verifier report:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev179_verification_report.md`
+  - Legacy expected count checks still fail, but current core gates pass: A4, margins, header/footer, 2-column body, 9 pages, current figure paths, citation/reference consistency, hidden XML scan, figure-file existence, and rendered page/contact-sheet existence.
+
+Reviewer result:
+- `full_paper_rev179_codex` is the current Codex best.
+- Current score estimate: 97.5/100.
+- Decision: Strong accept / safest Codex submission candidate with model-serving and pipeline-speed scope risks reduced.
+
+Current final aliases now point to rev179:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Next controlled cycle target:
+- Do not reintroduce broad deployment, model serving, or mixed pipeline/model-throughput wording.
+- Continue only with concrete reviewer feedback, rendered-page defects, or author/affiliation confirmation.
+
 ## Controlled cycle - 2026-06-29 rev178 Codex
 
 User request:
