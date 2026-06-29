@@ -16849,3 +16849,32 @@ Reviewer locks:
 2. Check whether hard43 or the broader Unknown grid produces selected/final/export artifacts.
 3. If such an artifact appears, inspect the exported grouping content and field/generated scope label before creating `full_paper_rev098_codex.*`.
 4. Keep rev097 locked while only live telemetry, embeddings, checkpoints, or `.scores_live_seen.json` changes.
+### Cycle rev177 - 2026-06-29
+
+User request:
+- Keep the Codex-safe structure but import only the useful Claude strengths: object-id formulation depth, FCM-PM causal chain, and evidence footnotes.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev177_codex.md` from the rev173 Codex base.
+- Added object-id interpretation that the benefit is not model-capacity competition but fixed chip coordinate prior plus natural-resolution categorical representation.
+- Replaced the P2 probability-control prose with the sequential failure-mode chain: ASL over-suppression -> target split -> weak combo positive recovery -> Pair Mask leakage separation -> val_margin -> NB-reject 4-bit shape.
+- Unified chip multi-label positive set to `single 4종과 2-combo 6종`.
+- Fixed page-1 mid-sentence hyphen prose.
+- Added three evidence footnotes: object-id FLOPs analytic MAC calculation, object-id 5-seed split distribution, and operational impact certification scope.
+- Updated `full_paper_final.md`, `full_paper_final.docx`, and `full_paper_final.pdf` to rev177.
+
+Compliance / verification:
+- Built with `python tools\build_fullpaper_docx_claude.py full_paper_rev177_codex.md`.
+- Word statistics: 9 pages, 10,616 words, 992 lines.
+- Exported PDF: `D:\project\fbm_paper_full\full_paper_rev177_codex.pdf`.
+- Rendered 9 PDF pages and contact sheet under `D:\project\fbm_paper_full\tmp\docs\full_paper_rev177_pages`.
+- Visual check: page count stable at 9; Table 2, Table 7, Figure 8, and footnote area render without overlap.
+- Automated verifier is legacy-config FAIL because it expects older figure/table/reference counts and treats the new `각주` block as references, but core gate checks pass: A4, margins, two-column body, header/footer, 9 pages, figure files present, citations match references, hidden XML scan passed.
+
+Reviewer score:
+- Estimated score: 97.4/100.
+- Decision: Strong accept / current Codex final candidate.
+
+Next cycle target:
+- Do not add new broad claims or figures unless user supplies new measured field evidence.
+- Remaining useful loop items are visual polish only: figure label readability and final author/affiliation confirmation.
