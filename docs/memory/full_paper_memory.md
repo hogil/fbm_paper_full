@@ -6,6 +6,49 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev208 Codex
+
+User request:
+- Remove awkward wording around `13개 검토군` and `신규 불량군`.
+- State the field Unknown result plainly: applying the model to 2,000 field wafer images produced 13 groups, and 7 were confirmed as real failures.
+- Keep technical content, metrics, validation scope, and structure unchanged.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev208_codex.md` from rev207.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev208`.
+- Updated all figure references to `figures/full_paper_rev208`.
+- Replaced all `13개 검토군` / `검토군` / `불량군` wording.
+- Revised the Unknown field-result wording in the Abstract, Related Work/positioning, Results, Impact, Table 6 caption, Table 8, and Conclusion to use the direct field statement:
+  - field wafer images 2,000.
+  - 13 groups produced.
+  - 7 confirmed as real failures by field review.
+- Kept Table 3 scope wording:
+  - `Field review, not classifier metric`.
+  - `Internally certified quantified contribution`.
+- No new metric, figure, reference, author, validation scope, or claim was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev208_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev208_codex.pdf` with hidden Word COM.
+- PDF page count: 9.
+- PDF abstract line count: 14.
+- Rendered page checks:
+  - Page 1: Abstract contains the direct `2,000 field wafer images -> 13 groups -> 7 real failures` wording and remains within 15 lines.
+  - Page 5: Figure 6/7 labels remain readable and Table 3 remains a 3-line table with scope wording intact.
+- DOCX/PDF text scan found no `13개 검토군`, `검토군`, `불량군`, `신규 불량군`, `Information Noise`, `false alarm 0.00`, soft hyphen, `￾`, common broken-spacing patterns, `P1`, or `P2`.
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev208_final_checklist.md`
+
+Current final aliases now point to rev208:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev208_codex` is the current final Codex candidate.
+- Decision: submit-ready after replacing the forced `검토군/불량군` wording with direct field wording.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev207 Codex
 
 User request:
