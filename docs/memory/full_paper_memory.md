@@ -6,6 +6,52 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev178 Codex
+
+User request:
+- Avoid broad wording such as "2025년부터 양산라인 전 제품에 배포·운영".
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev178_codex.md` from rev177.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev178`.
+- Updated all figure references to `figures/full_paper_rev178`.
+- Narrowed the operation sentence from a broad "전 제품 파트에서 매일 사용되는 review infrastructure로 운영" style to:
+  - "구축한 viewer/data pipeline은 2025년부터 DRAM D1a~D1d 관련 제품 파트의 FBM review infrastructure로 사용된다."
+- Preserved the following scope split:
+  - "이 운영 범위는 FBM 생성·조회·overlay·label review이며, Known/Unknown/chip model serving과 object-id map 양산 적용은 별도 단계로 분리한다."
+- Narrowed the operational-impact footnote from "전 제품·연환산 아님" to "P3WN 단일 사례 기준(연환산 아님)".
+- Removed broad-claim risk phrases from the rev178 body:
+  - `전 제품 파트`
+  - `양산라인`
+  - `배포·운영`
+  - `매일 사용되는`
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev178_codex.docx`.
+- Synced DOCX Word stats: 9 pages, 10,609 words, 991 lines.
+- Exported `D:\project\fbm_paper_full\full_paper_rev178_codex.pdf`.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\full_paper_rev178_pages`.
+- Visual check:
+  - Page 7 renders the narrowed operation sentence cleanly in the right column.
+  - The paper remains within the 4-10 page gate.
+- Automated verifier report:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev178_verification_report.md`
+  - The verifier still reports legacy expectation failures from old expected figure/table/reference counts, but current core gates pass: A4, margins, header/footer, 2-column body, 9 PDF pages, current figure paths, citation/reference consistency, hidden XML scan, and figure-file existence.
+
+Reviewer result:
+- `full_paper_rev178_codex` is the current Codex best.
+- Current score estimate: 97.4/100.
+- Decision: Strong accept / safest Codex submission candidate with reduced operational overclaim risk.
+
+Current final aliases now point to rev178:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Next controlled cycle target:
+- Do not reintroduce broad all-line/all-product deployment wording.
+- Continue only with concrete reviewer feedback, rendered-page defects, or author/affiliation confirmation.
+
 ## Controlled cycle - 2026-06-29 rev175 Codex
 
 User request:
