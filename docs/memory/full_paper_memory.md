@@ -17391,3 +17391,51 @@ Reviewer score:
 Next cycle target:
 - Stop unless the user identifies a concrete sentence that still reads artificial or a visible layout defect.
 - Do not add new metrics, figures, or claims.
+
+### Cycle rev188 - 2026-06-29
+
+User request:
+- Keep the technical content and validation scopes fixed, but further reduce the "organized AI summary" feel.
+- Focus on Abstract rhythm, first-impression prose, and information placement; keep detailed scope defense in Results/Discussion.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev188_codex.md` from rev187.
+- Copied figures to `D:\project\fbm_paper_full\figures\full_paper_rev188` and updated figure paths.
+- Applied a very narrow tone pass:
+  - Abstract: rewrote the opening as problem -> aligned data -> representative results -> scope -> meaning. It now avoids listing every data field in a specification-like chain and uses `한 번 보고 끝나는 그림이 아니라...` phrasing.
+  - Introduction/contribution: changed the start to `현업에서 반복해서 부딪힌 두 문제` and softened `generated-chip development result` to `생성 데이터 기준 후속 개발 결과`.
+  - Kept detailed scope defense out of the Abstract except for one summary sentence; Results and Discussion still carry the stricter field/generated/synthetic/operation separation.
+- No numerical values, validation scopes, figures, tables, references, author information, or operational claims were changed.
+
+Compliance / verification:
+- Built with `python tools\build_fullpaper_docx_claude.py full_paper_rev188_codex.md`.
+- Word statistics: 9 pages, 10,710 words, 995 lines.
+- Exported PDF: `D:\project\fbm_paper_full\full_paper_rev188_codex.pdf`.
+- Rendered 9 PDF pages and contact sheet under `D:\project\fbm_paper_full\tmp\docs\full_paper_rev188_pages`.
+- Updated final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+  - `D:\project\fbm_paper_full\full_paper_final.pdf`
+- Updated humanize checklist: `D:\project\fbm_paper_full\humanize_checklist.md`.
+- Automated verifier report: `D:\project\fbm_paper_full\docs\review\full_paper_rev188_verification_report.md`.
+- Verifier remains legacy-config FAIL because it expects older figure/table/reference counts and English `References`, but current core checks pass: current figure folder, no stale figure paths, standalone abbreviation scan, citation-reference consistency, hidden XML scan, A4/margins/header/footer, two-column body, and 9-page PDF.
+- Risk scan after edits:
+  - No stale `figures/full_paper_rev187` or `figures/full_paper_rev186`.
+  - No `P1` / `P2`.
+  - No `Known·Unknown`.
+  - No `Pipeline speed`.
+  - No `PoC`.
+  - No `model serving까지`.
+  - No `candidate update`.
+  - No `AI` or `LLM`.
+  - No broken dash characters (`—`, `–`, `‑`, `−`).
+  - No `본 연구는`, `본 논문은`, `전환하였다`, `분리하였다`, or `데 있다`.
+  - `defect` remains only inside exact reference titles.
+
+Reviewer score:
+- Estimated score: 95-96/100 under conservative scoring; 96+ if the reviewer values scope separation highly.
+- Decision: Strong accept / current Codex submission candidate.
+
+Next cycle target:
+- Stop broad rewriting. Further changes should be sentence-specific only.
+- Do not add new metrics, figures, or claims.
