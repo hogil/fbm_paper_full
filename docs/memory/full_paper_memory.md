@@ -6,6 +6,48 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev203 Codex
+
+User request:
+- Keep `full_paper_rev201_codex` as the final base.
+- Do not rewrite structure.
+- Make only the final InfoNCE wording polish and, if possible, 검토군/group expression consistency.
+- Re-check final PDF render.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev203_codex.md` from rev202, which itself only restored one result-section sentence to a more formal register.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev203`.
+- Updated figure references to `figures/full_paper_rev203`.
+- Removed the awkward `InfoNCE(Information Noise-Contrastive Estimation)` expansion and used `InfoNCE contrastive loss` with a plain functional explanation.
+- Aligned later method references to `InfoNCE loss`.
+- In the abstract, changed `7개 신규 failure group` to `7개 신규 불량군`.
+- In the conclusion, changed `7개 신규 failure` to `7개 신규 불량`.
+- No new metric, claim, figure, table, reference, author, or validation scope was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev203_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev203_codex.pdf`.
+- PDF page count: 9.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\rev203_pages`.
+- Rendered page 1: title remains two lines; no visible `파 이프라인` broken title spacing.
+- Rendered page 5: Figure 6/7 labels are readable; Table 3 remains a whole 3-line table at the bottom of the page with no overlap or page split.
+- Rendered page 9: references remain present; page 9 is not blank.
+- DOCX text scan found no `Information Noise`, no raw markdown table syntax, no broken dash characters, no soft hyphen, no known broken-spacing patterns, no `P1`, `P2`, `Pipeline speed`, `candidate update`, `LLM agent`, `Known·Unknown`, `false alarm 0.00%`, or `micro-F1(bit-F1)`.
+- The string scan still sees `Known fail` / `Unknown fail` as substrings inside the intended terms `Known failure` and `Unknown failure`; the rejected forms `Known fail은` / `Unknown fail은` are not present.
+- Automated verifier report:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev203_verification_report.md`
+  - Status remains FAIL due legacy expected counts and old assumptions, but current core checks pass: markdown/DOCX/PDF exist, current figure folder and files exist, citation/reference consistency, hidden XML scan, A4/margins/header/footer, 2-column body, font mappings, title/author/abstract formatting, and PDF page count within 4-10.
+
+Current final aliases now point to rev203:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev203_codex` is the current final Codex candidate.
+- Decision: submit-ready on the requested final polish axis.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev201 Codex
 
 User request:
