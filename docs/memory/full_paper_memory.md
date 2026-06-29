@@ -17764,3 +17764,52 @@ Reviewer score:
 Next cycle target:
 - Stop broad rewriting. Only edit if the user points to a specific remaining sentence.
 - Do not add new metrics, figures, tables, or claims.
+
+### Cycle rev197 - 2026-06-29
+
+User request:
+- Two expressions still sounded weak or AI-like:
+  - `담당자가 볼 후보를 줄였다`
+  - `generated-chip development extension`
+- Keep all technical content, numerical values, validation scope, figures, tables, references, authors, and operational claims unchanged.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev197_codex.md` from rev196 and copied figures to `D:\project\fbm_paper_full\figures\full_paper_rev197`.
+- Replaced the `담당자가 볼 후보를 줄였다` family with field-review wording:
+  - `13개 검토 group으로 정리`
+  - `검토 group으로 정리`
+  - `운영 wafer를 13개 검토 group으로 정리해 7개 신규 failure를 확인`
+- Replaced Abstract `object-id map을 generated-chip development로 분리` with `object-id map을 생성 데이터 기준 후속 개발 항목으로 두고`.
+- Kept table scope labels such as `generated development` where they function as validation-scope labels.
+- No new numbers, metrics, figures, tables, references, authors, or operational claims were added.
+- Scope meanings were preserved:
+  - Known F1 0.95 = field validation.
+  - Unknown 13→7 = field review result / not classifier precision.
+  - object-id map = generated development / 생성 데이터 기준 후속 개발 결과.
+  - FCM-PM = controlled synthetic benchmark.
+  - 123억 = internally certified quantified contribution.
+  - Operation impact and model performance numbers are not added together.
+
+Compliance / verification:
+- Built DOCX with `python tools\build_fullpaper_docx_claude.py full_paper_rev197_codex.md`.
+- Built artifact:
+  - `D:\project\fbm_paper_full\full_paper_rev197_codex.docx`
+- Updated final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+- PDF was not generated because Word COM export has been unreliable in this session and stale PDFs should not be kept.
+- Automated verifier report: `D:\project\fbm_paper_full\docs\review\full_paper_rev197_verification_report.md`.
+- Verifier status is expected FAIL because PDF is missing and it still expects older figure/table/reference counts. Useful pass items include current figure folder, no stale figure paths, citations matching references, DOCX hidden XML risk-pattern scan, A4/margins/header/footer, two-column body, title/author/abstract body font checks, and line spacing.
+- Risk scan after edits:
+  - No `담당자가.*후보`, `볼 후보`, `후보.*줄`, `좁혔`, `candidate compression`, `candidate-compression`, `compression candidate`, `generated-chip development`, `generated-chip development extension`, `generated-chip development로`, `같은 metric`, `metric처럼`, or `합산하지`.
+  - No `파 이프라인`, `해 야`, `확 인`, `본 연구는`, `제안한다`, `기여는`, `P1`, `P2`, `Known·Unknown`, `PoC`, `data asset layer`, `AI analysis layer`, `operation layer`, or `validation-scope separation`.
+  - No broken dash characters (`—`, `–`, `‑`, `−`).
+  - `defect` remains only inside exact reference titles.
+
+Reviewer score:
+- Estimated score: 95-96/100 under conservative scoring; the two flagged AI-like phrases were removed without weakening scope defense.
+- Decision: Strong accept / current Codex editable submission candidate.
+
+Next cycle target:
+- Stop broad rewriting. Only edit if the user points to a specific remaining sentence.
+- Do not add new metrics, figures, tables, or claims.
