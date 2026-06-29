@@ -6,6 +6,47 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev213 Codex
+
+User request:
+- Stop adding invented or AI-like wording.
+- Keep object-id map within the PPT-supported scope only: a Known Stage-2 follow-up that checks whether ROI-YOLO Stage-2 can be replaced by chip-coordinate fixed-crop chip classification on generated data.
+- Remove unsupported or invented object-id claims such as compound usage, disagreement, mid-fusion, cross-attention, R-only/raw-grade framing, and noise-injection robustness.
+- Remove awkward generated prose such as `라벨 체계 확정`, `범위를 맞춘 뒤`, `계측 근인`, `본 분석 구조의 확산 요청이 접수`, `후속 개발로 관리한다`, `검토 라벨`, `판단 결과`, and similar wording.
+
+Draft delta:
+- Created and rebuilt `D:\project\fbm_paper_full\full_paper_rev213_codex.md`, `.docx`, and `.pdf`.
+- Rewrote object-id map wording to match PPT scope only:
+  - Generated-data check for using chip coordinates and fixed-crop chip classification instead of ROI-YOLO Stage-2.
+  - No compound, 2-combo, FCM-PM, disagreement, mid-fusion, cross-attention, R-only/raw-grade, or noise-injection claim.
+- Replaced bureaucratic / AI-like phrasing:
+  - `DRAM YE팀과 평가할 wafer와 class를 정해` -> `DRAM YE팀과 함께 실제 wafer로 다시 확인`.
+  - `본 분석 구조의 확산 요청이 접수` -> `Flash YE에서도 같은 방식으로 ... 볼 수 있는지 요청이 들어와`.
+  - `후속 개발로 관리한다` -> `아직 생성 데이터 기준 결과이므로 실제 wafer에서 추가 확인이 필요하다`.
+- Kept validation-scope separation:
+  - Known F1 0.95 = field validation.
+  - Unknown 13→7 = field review result, not classifier precision.
+  - object-id map = generated data.
+  - FCM-PM = controlled synthetic benchmark.
+  - Operational impact = viewer/data pipeline, not model metric.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev213_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev213_codex.pdf` with hidden Word COM.
+- Rendered PDF pages to `D:\project\fbm_paper_full\tmp\docs\rev213_pages`.
+- PDF page count: 8.
+- Rendered page check: no blank trailing page; page 1 abstract within 15 lines; pages 7-8 have no table/figure overlap.
+- DOCX/PDF text scan found no user-rejected terms or broken characters:
+  - no `￾`, `해 야`, `의 심`, `보아 야`, `자 산`, `신 호`, `선 택`, `조 건`, `후 속`, `방 법`, `분 석 loop`.
+  - no `raw grade`, `R-only`, `disagreement`, `mid-fusion`, `cross-attention`, `compound`, `chip-object`, `라벨 체계`, `검토 라벨`, `판단 결과`, `본 분석 구조`, `확산 요청이 접수`.
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev213_final_checklist.md`
+
+Reviewer result:
+- `full_paper_rev213_codex` is the current cleaned Codex candidate.
+- Decision: use rev213 over rev212 for the object-id/PPT-scope and human wording cleanup.
+- Do not add new technical claims. Future edits should be limited to concrete user-reported defects or official-format issues.
+
 ## Controlled cycle - 2026-06-29 rev212 Codex
 
 User request:
