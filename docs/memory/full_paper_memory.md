@@ -6,6 +6,52 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev210 Codex
+
+User request:
+- Keep the latest Codex paper structure and only polish the final Abstract/terminology items.
+- Replace remaining awkward English/Korean terms: `false alarm 0.00%`, `micro-F1(bit-F1)`, `candidate group`, `review label`, `chip measure`, and any `generated-chip development extension`.
+- Keep the direct Unknown field statement: 2,000 field wafer images produced 13 groups, and 7 were confirmed as real failures.
+- Do not add new metrics or change validation scope.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev210_codex.md`.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev210`.
+- Updated all figure references to `figures/full_paper_rev210`.
+- Updated the Abstract and related prose:
+  - `review label` -> `검토 라벨`.
+  - `chip measure` -> `chip 계측값`.
+  - `false alarm 0.00%` -> `FAR 0.00%`.
+  - `micro-F1(bit-F1)` -> `bit-F1`.
+  - Incorrect InfoNCE expansion removed; use `InfoNCE contrastive loss`.
+  - `한 점수처럼 더하지 않는다` -> `같은 지표처럼 합산하지 않는다`.
+- No new metric, figure, reference, author, validation scope, or claim was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev210_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev210_codex.pdf` with hidden Word COM.
+- PDF page count: 9.
+- PDF abstract line count: 14.
+- DOCX table count: 8.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\rev210_pages`.
+- Rendered checks:
+  - Page 1: title remains within 2 lines; Abstract contains the direct `2,000 images -> 13 groups -> 7 real failures` wording.
+  - Page 5: Figure 6/7 labels remain readable; Table 3 remains a 3-line table with `Field review, not classifier metric` and `Internally certified quantified contribution`.
+  - Page 9: references are present; no blank trailing page.
+- DOCX/PDF text scan found no `false alarm 0.00`, `micro-F1(bit-F1)`, `candidate group`, `한 점수처럼`, `review label`, `chip measure`, `generated-chip development extension`, `Information Noise`, `InfoNCE(`, `검토군`, `불량군`, `P1`, `P2`, soft hyphen, `￾`, `해 야`, `의 심`, or `파 이프라인`.
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev210_final_checklist.md`
+
+Current final aliases now point to rev210:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev210_codex` is the current final Codex candidate.
+- Decision: submit-ready on the requested final terminology and formatting axis.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev208 Codex
 
 User request:
