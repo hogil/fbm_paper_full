@@ -6,6 +6,55 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev211 Codex
+
+User request:
+- Reduce the remaining Korean/English translation tone in the Abstract and related wording.
+- Avoid `검토군` / `불량군`.
+- Replace awkward mixed terms such as `map review`, `review label`, `chip measure`, and overly compressed `single-failure source 기반 2-combo controlled synthetic benchmark`.
+- Keep technical content, metrics, validation scope, and structure unchanged.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev211_codex.md` from rev210.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev211`.
+- Updated all figure references to `figures/full_paper_rev211`.
+- Revised the Abstract:
+  - `chip별 measure value, map review, 라벨 기록` -> `chip별 계측값과 Failbit Map 검토 결과, 검토 라벨`.
+  - `이 좌표 보존 자산 위에서` -> `이렇게 맞춘 자료 위에서`.
+  - Unknown sentence now uses an explicit path subject and result: applying the Unknown path to 2,000 field wafer images produced 13 groups, and 7 were confirmed as real failures.
+  - `single-failure source 기반 2-combo controlled synthetic benchmark` -> `single-failure chip만으로 만든 2-combo 통제 합성 평가셋`.
+  - Scope sentence changed to `결과는 field validation, field review, generated development, controlled synthetic benchmark로 구분해 제시했다`.
+- Revised Table 6 caption so the generated-development recipe benchmark is not mixed with the field 13→7 result.
+- Cleaned remaining mixed terms:
+  - `bin map review` -> `bin map 검토`.
+  - `chip 계측값` -> `chip별 계측값`.
+  - `label feedback` table wording -> `label registration`.
+- No new metric, figure, reference, author, validation scope, or claim was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev211_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev211_codex.pdf` with hidden Word COM.
+- PDF page count: 9.
+- PDF abstract line count: 13.
+- DOCX table count: 8.
+- Rendered pages to `D:\project\fbm_paper_full\tmp\docs\rev211_pages`.
+- Rendered checks:
+  - Page 1: Abstract remains within 15 lines and uses the revised wording.
+  - Page 7: Table 6 caption is separated from the field review result and Table 7 remains readable.
+- DOCX/PDF text scan found no `false alarm 0.00`, `micro-F1(bit-F1)`, `candidate group`, `한 점수처럼`, `review label`, `chip measure`, `map review`, `bin map review`, `generated-chip development extension`, `Information Noise`, `InfoNCE(`, `검토군`, `불량군`, `P1`, `P2`, soft hyphen, `￾`, `해 야`, `의 심`, or `파 이프라인`.
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev211_final_checklist.md`
+
+Current final aliases now point to rev211:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev211_codex` is the current final Codex candidate.
+- Decision: submit-ready on the requested final style and scope-caption axis.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev210 Codex
 
 User request:
