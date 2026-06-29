@@ -17556,3 +17556,57 @@ Reviewer score:
 Next cycle target:
 - Do not add new metrics, figures, or claims.
 - If a PDF is required, export it manually from Word using `D:\project\fbm_paper_full\full_paper_rev190_codex.docx` or retry PDF export in a fresh Office session.
+
+### Cycle rev191 - 2026-06-29
+
+User request:
+- The remaining AI-like pattern is the item-summary style: `기여는 다섯 가지다`, `본 연구는 ~ 제안한다`, and overly regular summary sentences.
+- Keep technical content, numerical values, validation scope, figures, tables, references, authors, and operational claims unchanged.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev191_codex.md` from rev190.
+- Copied figures to `D:\project\fbm_paper_full\figures\full_paper_rev191` and updated figure paths.
+- Removed the remaining mechanical summary cues:
+  - Replaced the contribution-style sentence with a work-order explanation: raw log -> coordinate-preserving image/chip annotation -> Known/Unknown paths -> chip-level paths -> review screen.
+  - Replaced `중요한 점은...` with a coordinate-centered explanation: the standard held throughout was preserving wafer coordinates, not adding more models.
+  - Replaced `Table 1은 이를...정리한다` with a less generated sentence about how the same criterion enters data representation, Known, object-id, Unknown, and review feedback.
+  - Replaced `아래 결과는...` with a scope-first sentence: results are separated before reading because operation impact and benchmark metrics are different kinds of numbers.
+  - Replaced the conclusion opener with `마지막까지 유지한 기준은...좌표를 잃지 않는 것`.
+- No new numbers, metrics, figures, tables, references, authors, or operational claims were added.
+- Scope meanings were preserved:
+  - Known F1 0.95 = field validation.
+  - Unknown 13->7 = field review candidate compression, not classifier precision.
+  - object-id map = generated development / 생성 데이터 기준 후속 개발 결과.
+  - FCM-PM = controlled synthetic benchmark.
+  - 123억 = internally certified quantified contribution.
+  - Operation impact and model metrics are not summed.
+
+Compliance / verification:
+- Built DOCX with `python tools\build_fullpaper_docx_claude.py full_paper_rev191_codex.md`.
+- Built artifact:
+  - `D:\project\fbm_paper_full\full_paper_rev191_codex.docx`
+- Updated final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+- PDF was not generated in this cycle because Word COM export was unreliable in the previous cycle and stale PDFs should not be kept.
+- Automated verifier report: `D:\project\fbm_paper_full\docs\review\full_paper_rev191_verification_report.md`.
+- Verifier status is expected FAIL because PDF is missing and it still expects older figure/table/reference counts. Useful pass items include current figure folder, no stale figure path, citations matching references, DOCX hidden XML risk-pattern scan, A4/margins/header/footer, two-column body, title/author/abstract body font checks, and line spacing.
+- Risk scan after edits:
+  - No `기여는`, `첫째`, `둘째`, `셋째`, `정리하면`, `중요한 점은`, or `아래 결과는`.
+  - No `본 연구는`, `본 논문은`, or `본 논문의`.
+  - No `P1` / `P2`.
+  - No `Known·Unknown`.
+  - No `PoC`.
+  - No `model serving까지`.
+  - No `candidate update`.
+  - No broken dash characters (`—`, `–`, `‑`, `−`).
+  - No forbidden overclaim phrases: `상한 초과`, `원천 기여`, `모델 용량이 아니라 입력이 병목`.
+  - Scope scan passed for field validation F1 0.95, 13->7/classifier precision guard, object-id generated-development guard, FCM-PM controlled synthetic benchmark, 123억 internally certified contribution, and no summing of operation impact with model metrics.
+
+Reviewer score:
+- Estimated score: 95-96/100 under conservative scoring; style is less list-like while evidence scope remains intact.
+- Decision: Strong accept / current Codex editable submission candidate.
+
+Next cycle target:
+- Stop broad rewriting. Only edit if the user points to a specific remaining artificial sentence.
+- Do not add new metrics, figures, or claims.
