@@ -74,6 +74,18 @@
 - 논문 질적 수준: 명확한 근거에서 결론을 도출해야 한다. field / generated / internal engineering measurement / future work 범위를 분리하고 unsupported claim은 넣지 않는다.
 - 게이트(FP Rule A~K 양식·10매·약어·금지 표현)는 채점 이전의 통과 조건으로 유지한다.
 
+## FP Rule O — 최신 사용자 편집 규칙 (★ 절대규칙 2026-06-29)
+- 초록은 `D:\project\fbm_paper\paper_codex_2page_rev167.docx`의 통과된 초록 흐름을 기준으로 삼고, chip multi-label 결과만 필요한 만큼 추가한다.
+- `Known failure`는 첫 등장 시 "이미 알려진 불량인 Known failure"로, `Unknown failure`는 첫 등장 시 "신규 불량인 Unknown failure"로 설명한다. 이후에는 `Known failure`와 `Unknown failure`로 통일한다.
+- `field validation weighted` 같은 압축 표현을 쓰지 않는다. `weighted F1`은 "class 비중을 반영한 weighted F1 score"처럼 풀어 쓰고, 본문과 표에서 `F1` 단독 표기는 피한다.
+- `운영형`, `검토 라벨`, `판단 결과`, `라벨 체계 확정`, `범위를 맞춘 뒤`, `계측 근인`, `본 분석 구조의 확산 요청이 접수`, `후속 개발로 관리한다` 같은 AI식 또는 번역투 표현을 쓰지 않는다.
+- measure value, FTN, QTN, BIN은 처음 나올 때 chip별 계측값이라는 점과 현장에서 불량 수, 검사 수, bin 판정 등을 빠르게 확인하는 항목이라는 점을 간략히 설명한다.
+- 서론은 layer별 개발 상세보다 현업 문제와 실제 가치 중심으로 쓴다. 기술 개요는 본론에, 관련 연구는 독립 2장에, UI/web app과 운영 성과는 결과/운영 적용 장에 둔다.
+- Flash YE 확산 요청은 현재 운영 현황이 아니라 향후 연구에만 보수적으로 쓴다.
+- object-id map은 PPT 범위대로 ROI-YOLO Stage-2를 chip 좌표 기반 fixed-crop 분류로 대체할 수 있는지 생성 데이터에서 확인한 항목으로만 쓴다. compound, disagreement, mid-fusion, cross-attention, raw grade류 새 claim을 넣지 않는다.
+- 그림 안 글자는 인쇄본에서 읽혀야 한다. 그림 크기를 키우거나 그림 안 글자 수를 줄이되 2단 양식은 유지한다.
+- 참고문헌 번호는 본문 첫 인용 순서를 따르고, 실제 존재하는 문헌인지 확인한다.
+
 ---
 
 # 사내 AI Specialist 추천서 작성 절대 규칙

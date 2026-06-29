@@ -1,5 +1,58 @@
 # Full Paper Memory
 
+## Controlled cycle - 2026-06-29 rev214 Codex
+
+User request:
+- Treat the latest structure/wording feedback as binding rules.
+- Base the Abstract on the accepted two-page draft at `D:\project\fbm_paper\paper_codex_2page_rev167.docx`, adding only the chip multi-label result.
+- Define first mentions as `이미 알려진 불량인 Known failure` and `신규 불량인 Unknown failure`.
+- Avoid compressed phrases such as `field validation weighted`; use `F1 score` rather than standalone `F1`.
+- Explain measure value / FTN / QTN / BIN briefly and explain why the field had to rely on measure values for a long time.
+- Add the reason for the 16-class setup: field-provided representative failure set sufficient for the validation objective.
+- Move technical overview to the main body, related work to section 2, UI/system operation to results, and discussion/future work under section 5.
+- Move Flash YE expansion wording to future work.
+- Keep object-id map within PPT-supported scope only: generated-data check of replacing ROI-YOLO Stage-2 with chip-coordinate fixed-crop classification.
+- Check references for first-citation order and real bibliographic details.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev214_codex.md`, `.docx`, and `.pdf`.
+- Added the new user rules to `D:\project\fbm_paper_full\PAPER_FULL_RULES.md` and synchronized the always-loaded full-paper summary in `D:\project\fbm_paper_full\CLAUDE.md`.
+- Rewrote the Abstract using the accepted two-page-draft flow:
+  - high-resolution FBM problem,
+  - large-scale map generation/viewing limitation,
+  - Known 2-stage classification,
+  - Unknown contrastive/HDBSCAN grouping,
+  - Cython 100x, palette 75%, Known weighted F1 score 0.95, Unknown 13 groups / 7 real failures,
+  - chip multi-label FCM-PM bit-F1 score 0.9927 / FAR 0.00%.
+- Reorganized the paper into:
+  - `1. 서론`,
+  - `2. 관련 연구`,
+  - `3. 본론`,
+  - `4. 실험 결과와 운영 적용`,
+  - `5. 결론` with `논의 및 한계`, `향후 연구`, and final conclusion.
+- Moved `기술 개요` out of Introduction and moved UI / web-app operation into the results/operation section.
+- Moved Flash YE wording from operation status to future work.
+- Added measure value explanation and the 16-class field-provided representative-set reason.
+- Replaced remaining F1 wording with `F1 score` / `bit-F1 score` where applicable.
+- Reordered references by first citation order and corrected spot-checked reference metadata for Lee 2024, Shin 2025, and Jang 2023.
+
+Verification delta:
+- Built with the official builder: `python tools\build_fullpaper_docx_claude.py full_paper_rev214_codex.md`.
+- Synchronized DOCX Word statistics: pages 8, words 9974.
+- Exported `D:\project\fbm_paper_full\full_paper_rev214_codex.pdf` with hidden Word COM.
+- Rendered PDF pages to `D:\project\fbm_paper_full\tmp\docs\full_paper_rev214_pages`.
+- PDF page count: 8.
+- Abstract rendered lines: 13 / 15.
+- Risk-pattern scan over MD, DOCX text, and PDF text found no soft hyphen, broken Korean spacing, P1/P2 wording, rejected object-id claims, rejected AI wording, or wrong InfoNCE expansion.
+- Reference order check passed: first citation order and reference list are `[1]` through `[22]`.
+- Final checklist: `D:\project\fbm_paper_full\docs\review\full_paper_rev214_final_checklist.md`.
+- `full_paper_final.md`, `.docx`, and `.pdf` now point to rev214.
+
+Reviewer result:
+- Current Codex candidate: `full_paper_rev214_codex`.
+- Decision: submit-ready on the latest structure, terminology, and document-quality criteria.
+- Remaining caution: legacy verifier still assumes older 2-6 figure / 3-4 table counts, so it reports expected-count failures that do not match the current full-paper scope. Use the rev214 checklist and render review for this revision.
+
 This is the persistent Codex memory for the Samsung Best Paper Awards full paper.
 
 ## Current objective
