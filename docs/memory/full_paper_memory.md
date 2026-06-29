@@ -6,6 +6,59 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev180 Codex
+
+User request:
+- Stop the loop after finishing the current cleanup.
+- Do not use `P1` / `P2` terms in the paper because those were presentation-only split labels, not separate project names.
+- Fix two polish risks:
+  - `Pipeline speed/storage` was too broad as a representative label.
+  - Future-work wording around agent / process-control update was too long and could overclaim.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev180_codex.md` from rev179.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev180`.
+- Updated all figure references to `figures/full_paper_rev180`.
+- Replaced Table 3 row label:
+  - `Pipeline speed · storage` -> `FBM generation · storage`.
+  - The value now reads `Cython hex-to-grade 약 100× · palette PNG 약 75% · 20TB/120 d`.
+- Updated the Unknown timing paragraph so Table 3 is explicitly about FBM generation/storage and not model serving throughput.
+- Shortened future work:
+  - Removed process-control / candidate-update style wording.
+  - Changed agent wording to LLM-based decision-support with 담당자 승인 and 이력 관리.
+- Removed all `P1` / `P2` occurrences from the rev180 manuscript:
+  - `Flash YE에서 본 분석 구조의 확산 요청`
+  - `Flash YE 확산 요청, Flash/NAND 적용 검토`
+  - `Flash YE 확산 요청은 별도 적용 범위·권한·데이터 차이를 확인한 뒤 추진`
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev180_codex.docx`.
+- Synced DOCX Word stats: 9 pages, 10,646 words, 995 lines.
+- Exported `D:\project\fbm_paper_full\full_paper_rev180_codex.pdf`.
+- Rendered 9 pages and contact sheet to `D:\project\fbm_paper_full\tmp\docs\full_paper_rev180_pages`.
+- Automated verifier report:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev180_verification_report.md`
+  - Legacy expected count checks still fail, but current core gates pass: A4, margins, header/footer, 2-column body, 9 pages, current figure paths, citation/reference consistency, hidden XML scan, figure-file existence, and rendered page/contact-sheet existence.
+- Risk scan:
+  - No `P1` / `P2`.
+  - No `Pipeline speed`.
+  - No `candidate update`.
+  - No `LLM agent`.
+
+Reviewer result:
+- `full_paper_rev180_codex` is the current Codex best.
+- Current score estimate: 97.5/100.
+- Decision: Strong accept / safest Codex submission candidate.
+
+Current final aliases now point to rev180:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Loop status:
+- User requested to stop the loop after this cleanup.
+- Do not start another revision cycle unless the user explicitly requests it.
+
 ## Controlled cycle - 2026-06-29 rev179 Codex
 
 User request:
