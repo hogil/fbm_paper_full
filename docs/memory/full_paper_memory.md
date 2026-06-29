@@ -6,6 +6,52 @@ This is the persistent Codex memory for the Samsung Best Paper Awards full paper
 
 Create a full paper from the seed two-page draft and project evidence. The paper must be useful to internal manufacturing reviewers and academically defensible.
 
+## Controlled cycle - 2026-06-29 rev207 Codex
+
+User request:
+- Fix the terminology drift introduced after rev206.
+- Keep the structure, metrics, validation scope, figures, and evidence unchanged.
+- Restore the main paper axis to `Known failure` / `Unknown failure`.
+- Remove submission-quality risks around broken spacing, soft hyphen, Table 3 wording, and title wrapping.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev207_codex.md` from rev206.
+- Copied figure assets to `D:\project\fbm_paper_full\figures\full_paper_rev207`.
+- Updated all figure references to `figures/full_paper_rev207`.
+- Restored the main terminology axis:
+  - `등록 failure` -> `Known failure`.
+  - `라벨 없는 신규 후보` / `신규 후보` as the method-section name -> `Unknown failure`.
+  - `Unknown 신규 패턴` table row -> `Unknown failure`.
+- Kept the field-review wording `13개 검토군` and `7개 신규 불량군` where it describes the operational review result.
+- Shortened the Korean title to `좌표 보존형 Failbit Map 기반 웨이퍼·칩 불량 분석 파이프라인` to avoid awkward title wrapping.
+- Strengthened Table 3 scope wording:
+  - `Field review, not metric` -> `Field review, not classifier metric`.
+  - `Internally certified contribution` -> `Internally certified quantified contribution`.
+- No new metric, claim, figure, reference, author, or validation scope was added.
+
+Verification delta:
+- Built `D:\project\fbm_paper_full\full_paper_rev207_codex.docx` with the official builder.
+- Exported `D:\project\fbm_paper_full\full_paper_rev207_codex.pdf` with hidden Word COM.
+- PDF page count: 9.
+- PDF abstract line count: 13.
+- Rendered page checks:
+  - Page 1: Korean title is two lines without broken `파 이프라인` spacing.
+  - Page 5: Figure 6/7 labels are readable; Table 3 is rendered as a 3-line table and contains the revised scope wording.
+  - Page 9: references are present; no blank trailing page.
+- DOCX/PDF text scan found no `등록 failure`, `라벨 없는 신규 후보`, `신규 후보 군집화`, `Unknown 신규 패턴`, `Information Noise`, `false alarm 0.00`, `micro-F1(bit-F1)`, `Field review, not metric`, `Internally certified contribution`, soft hyphen, `￾`, common broken-spacing patterns, raw markdown table syntax, `P1`, `P2`, or `Known·Unknown`.
+- Final checklist:
+  - `D:\project\fbm_paper_full\docs\review\full_paper_rev207_final_checklist.md`
+
+Current final aliases now point to rev207:
+- `D:\project\fbm_paper_full\full_paper_final.md`
+- `D:\project\fbm_paper_full\full_paper_final.docx`
+- `D:\project\fbm_paper_full\full_paper_final.pdf`
+
+Reviewer result:
+- `full_paper_rev207_codex` is the current final Codex candidate.
+- Decision: submit-ready after terminology restoration and submission-quality checks.
+- Do not start another revision cycle unless the user provides a concrete remaining defect.
+
 ## Controlled cycle - 2026-06-29 rev203 Codex
 
 User request:
