@@ -17664,3 +17664,57 @@ Reviewer score:
 Next cycle target:
 - Stop broad rewriting unless the user points to a specific remaining artificial sentence.
 - Do not add new metrics, figures, or claims.
+
+### Cycle rev194 - 2026-06-29
+
+User request:
+- Keep rev192 Codex as the base and perform only the last human prose polish plus table/figure-format checks.
+- Reduce the Abstract's `Known fail은 / Unknown fail은 / chip 수준에서는` repetitive structure.
+- Replace casual `Known fail` / `Unknown fail` wording where possible with `Known failure`, `Unknown failure`, `등록 failure`, or `신규 후보`.
+- Use `contrastive embedding` instead of the mixed Korean-English `대조학습 embedding`.
+- Keep all technical content, numerical values, validation scope, figures, tables, references, authors, and operational claims unchanged.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev194_codex.md` and copied figures to `D:\project\fbm_paper_full\figures\full_paper_rev194`.
+- Rewrote the Abstract around `등록 failure`, `라벨이 없는 신규 후보`, and chip-level scope to avoid a mechanical Known/Unknown/chip list.
+- Strengthened the Abstract ending to `좌표 보존 분석 자산`, with 담당자가 wafer를 다시 찾고 chip 근거를 확인하며 라벨을 다음 학습에 연결한다는 meaning.
+- Replaced `대조학습 embedding` with `contrastive embedding`.
+- Changed `Unknown 13->7` to `Unknown 13→7`.
+- Softened the object-id sentence into a human industrial-paper tone:
+  - chip 위치는 제품 layout으로 정해져 있고, 이 좌표를 쓰면 detector가 다시 위치를 찾을 필요가 줄어든다.
+  - object-id를 one-hot으로 두면 chip별 class 패턴이 wafer grid 위에 남는다.
+- Preserved the minimum scope-defense wording:
+  - Table 3 still says `Field review, not classifier metric` to prevent Unknown 13→7 being read as classifier precision.
+- No new numbers, metrics, figures, tables, references, authors, or operational claims were added.
+- Scope meanings were preserved:
+  - Known F1 0.95 = field validation.
+  - Unknown 13→7 = field review result / not classifier precision.
+  - object-id map = generated development / generated-chip development / 생성 데이터 기준 후속 개발 결과.
+  - FCM-PM = controlled synthetic benchmark.
+  - 123억 = internally certified quantified contribution.
+  - Operation impact and model performance numbers are not added together.
+
+Compliance / verification:
+- Built DOCX with `python tools\build_fullpaper_docx_claude.py full_paper_rev194_codex.md`.
+- Built artifact:
+  - `D:\project\fbm_paper_full\full_paper_rev194_codex.docx`
+- Updated final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+- PDF was not generated because Word COM export has been unreliable in this session and stale PDFs should not be kept.
+- Automated verifier report: `D:\project\fbm_paper_full\docs\review\full_paper_rev194_verification_report.md`.
+- Verifier status is expected FAIL because PDF is missing and it still expects older figure/table/reference counts. Useful pass items include current figure folder, no stale figure paths, citations matching references, DOCX hidden XML risk-pattern scan, A4/margins/header/footer, two-column body, title/author/abstract body font checks, and line spacing.
+- Risk scan after edits:
+  - No `Known fail은`, `Unknown fail은`, `대조학습 embedding`, `13->7`, `파 이프라인`, `해 야`, or `확 인`.
+  - No `candidate compression`, `candidate-compression`, `compression candidate`, `같은 metric`, `하나의 metric`, `metric처럼`, or `합산하지`.
+  - No `data asset layer`, `AI analysis layer`, `operation layer`, `validation-scope separation`, `기여는`, `본 연구는`, `제안한다`, `P1`, `P2`, `Known·Unknown`, or `PoC`.
+  - No broken dash characters (`—`, `–`, `‑`, `−`).
+  - `defect` remains only inside exact reference titles.
+
+Reviewer score:
+- Estimated score: 95-96/100 under conservative scoring; the prose is less abstract while preserving required scope defense.
+- Decision: Strong accept / current Codex editable submission candidate.
+
+Next cycle target:
+- Stop broad rewriting unless the user points to another exact phrase.
+- Do not add new metrics, figures, tables, or claims.
