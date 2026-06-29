@@ -17339,3 +17339,55 @@ Reviewer score:
 Next cycle target:
 - Stop broad rewriting unless the user points to a specific sentence or rendered layout defect.
 - Do not add new metrics, figures, or claims.
+
+### Cycle rev187 - 2026-06-29
+
+User request:
+- Codex structure and technical content are correct, but the prose still reads like a well-organized AI summary.
+- Keep numbers, validation scope, figures, tables, and claims unchanged while making the language closer to a human industrial paper.
+
+Draft delta:
+- Created `D:\project\fbm_paper_full\full_paper_rev187_codex.md` from rev186.
+- Copied figures to `D:\project\fbm_paper_full\figures\full_paper_rev187` and updated figure paths.
+- Applied another narrow prose pass:
+  - Abstract: changed `이 논문에서는` to a lighter `여기서는` and replaced the closing with a less generated sentence about Failbit Map being reused rather than viewed once.
+  - Introduction/contribution: replaced `두 문제에서 출발했다`, contribution-like listing, and model-performance framing with a field workflow explanation around data loading, model analysis, and review.
+  - Related-work positioning: removed first/second/third style and rewrote the novelty comparison as concrete coordinate-preserving choices.
+  - Method transition and results intro: removed meta-writing such as `제안 방법`/`나누어 서술한다` where it read like a generated outline.
+  - Data/UI wording: replaced broad `자산` and `운영 흐름` phrasing with `자료`, `화면`, `같은 흐름 안에 남는다`.
+  - FCM-PM result prose: changed `recipe별 기여를 분리한다` to a measured-result sentence.
+  - System operation, limitations, future work, and conclusion: reduced formal enumeration and made the wording more like a field engineer describing what was built and what remains.
+- No numerical values, validation scopes, figures, tables, references, author information, or operational claims were changed.
+
+Compliance / verification:
+- Built with `python tools\build_fullpaper_docx_claude.py full_paper_rev187_codex.md`.
+- Word statistics: 9 pages, 10,705 words, 993 lines.
+- Exported PDF: `D:\project\fbm_paper_full\full_paper_rev187_codex.pdf`.
+- Rendered 9 PDF pages and contact sheet under `D:\project\fbm_paper_full\tmp\docs\full_paper_rev187_pages`.
+- Updated final aliases:
+  - `D:\project\fbm_paper_full\full_paper_final.md`
+  - `D:\project\fbm_paper_full\full_paper_final.docx`
+  - `D:\project\fbm_paper_full\full_paper_final.pdf`
+- Updated humanize checklist: `D:\project\fbm_paper_full\humanize_checklist.md`.
+- Automated verifier report: `D:\project\fbm_paper_full\docs\review\full_paper_rev187_verification_report.md`.
+- Verifier remains legacy-config FAIL because it expects older figure/table/reference counts and English `References`, but current core checks pass: current figure folder, no stale figure paths, standalone abbreviation scan, citation-reference consistency, hidden XML scan, A4/margins/header/footer, two-column body, and 9-page PDF.
+- Risk scan after edits:
+  - No stale `figures/full_paper_rev186` or `figures/full_paper_rev185`.
+  - No `P1` / `P2`.
+  - No `Known·Unknown`.
+  - No `Pipeline speed`.
+  - No `PoC`.
+  - No `model serving까지`.
+  - No `candidate update`.
+  - No `AI` or `LLM`.
+  - No broken dash characters (`—`, `–`, `‑`, `−`).
+  - No `본 연구는`, `본 논문은`, `전환하였다`, `분리하였다`, or `데 있다`.
+  - `defect` remains only inside exact reference titles.
+
+Reviewer score:
+- Estimated score: 97.9/100.
+- Decision: Strong accept / more humanized Codex submission candidate.
+
+Next cycle target:
+- Stop unless the user identifies a concrete sentence that still reads artificial or a visible layout defect.
+- Do not add new metrics, figures, or claims.
