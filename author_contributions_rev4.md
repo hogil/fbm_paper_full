@@ -2,32 +2,32 @@
 
 본 문서는 단독 저자 논문에 대한 비저자 기여자 인정(non-author contributor acknowledgement)을 협의로 정리한 기록이며, 논문 author line(최호길 단독)과 충돌하지 않는다. 즉 논문의 저자는 최호길 단독이고, 아래에 정리한 관리자와 현업 엔지니어는 저자가 아니라 연구 과정에 기여한 사람으로 인정하는 것이다. 최종 기여 인정 비율은 아래 CRediT 역할 매핑을 질적 근거로 두고, 세 사람의 협의를 거쳐 합의한 값이다.
 
-정리 기준은 CRediT(Contributor Roles Taxonomy)다. 누가 무엇을 수행했는지는 학술 기여로 인정되는 11개 역할을 기준으로 정리했고, Resources / Supervision / Project administration 항목은 인정 역할에서 제외했다. 관리자의 방향성 제시와 진행 관리는 대부분 이 제외 항목(Supervision / Project administration)에 해당하므로 인정 역할에는 넣지 않았다. 다만 최종 기여 비율은 이 역할 표기를 기계적으로 환산한 점수가 아니라, 각자가 실제로 한 일을 함께 검토한 뒤 협의로 합의한 비율이다.
+정리 기준은 CRediT(Contributor Roles Taxonomy)다. 누가 무엇을 수행했는지는 학술 기여로 인정되는 역할명(Conceptualization and design, Methodology, Software, Validation, Investigation, Data curation 등)을 기준으로 정리했고, Resources / Supervision / Project administration 항목은 인정 역할에서 제외했다. 관리자의 방향성 제시와 진행 관리는 대부분 이 제외 항목(Supervision / Project administration)에 해당하므로 인정 역할에는 넣지 않았다. 다만 최종 기여 비율은 이 역할 표기를 기계적으로 환산한 점수가 아니라, 각자가 실제로 한 일을 함께 검토한 뒤 협의로 합의한 비율이다.
 
 ## 기여자 표기
 
 | 구분 | 인물 | 비고 |
 |---|---|---|
-| 제1저자 (논문 단독 저자) | 최호길 | 연구 기획, 방법론 설계, software 구현, 데이터 처리, 실험과 분석, 원고와 그림 |
-| 기여자 (비저자) | 현업 엔지니어 (성명 기입 예정) | 현장 문제 정의, 요구사항 도출, 초기 labeling, 결과 확인 |
-| 기여자 (비저자) | 관리자 (성명 기입 예정) | 연구 목표와 논문 구성 피드백, 결과 해석 검토, 원고 검토 |
+| 제1저자 (논문 단독 저자) | 최호길 | Conceptualization and design, Methodology, Software, Validation, Investigation, Data curation, Formal analysis, Analysis and conclusion, Writing-original draft, Visualization, Writing-review/editing |
+| 기여자 (비저자) | 현업 엔지니어 (성명 기입 예정) | Conceptualization and design, Validation, Investigation, Data curation |
+| 기여자 (비저자) | 관리자 (성명 기입 예정) | Conceptualization and design, Analysis and conclusion, Writing-review/editing |
 
 관리자와 현업 엔지니어의 실명은 미정이며, 제출 전 확정해 기입한다.
 
 ## CRediT 역할 매핑
 
-표기는 ●주도(Lead) / ○지원(Supporting) / −(없음)로 한다. Conceptualization은 현장 문제와 접근 방향을 엔지니어가 처음 제기(originate)하고 최호길이 이를 AI 연구로 정식화(formulate), 설계, 구현한 두 층위가 함께 작동했으므로 두 사람을 모두 주도(●)로 둔다. 이 표는 각자가 어떤 역할을 실제로 수행했는지를 보여주는 질적 근거이며, 뒤의 합의 비율은 이 표를 바탕으로 협의한 결과다.
+표기는 ●주도(Lead) / ○지원(Supporting) / −(없음)로 한다. Conceptualization and design은 현장 문제와 접근 방향을 엔지니어가 처음 제기(originate)하고 최호길이 이를 AI 연구로 정식화(formulate), 설계, 구현한 두 층위가 함께 작동했으므로 두 사람을 모두 주도(●)로 둔다. 이 표는 각자가 어떤 역할을 실제로 수행했는지를 보여주는 질적 근거이며, 뒤의 합의 비율은 이 표를 바탕으로 협의한 결과다.
 
 | CRediT 인정 역할 | 최호길 | 현업 엔지니어 | 관리자 |
 |---|:---:|:---:|:---:|
-| Conceptualization (개념과 목표 수립) | ● | ● | ○ |
+| Conceptualization and design (개념과 설계) | ● | ● | ○ |
 | Methodology (방법론 개발과 모델 설계) | ● | − | − |
 | Software (코드와 알고리즘 구현, 테스트) | ● | − | − |
 | Validation (재현성과 결과 검증) | ● | ○ | − |
 | Investigation (실험 수행과 데이터 수집) | ● | ○ | − |
 | Data curation (주석, 정리, 유지관리) | ● | ○ | − |
 | Formal analysis (통계와 계산 분석) | ● | − | − |
-| Analysis & conclusion (결과 비판적 검토) | ● | − | ○ |
+| Analysis and conclusion (결과 비판적 검토) | ● | − | ○ |
 | Writing-original draft (초고 작성) | ● | − | − |
 | Visualization (시각화와 그림) | ● | − | − |
 | Writing-review/editing (검토와 수정) | ● | − | ○ |
@@ -42,19 +42,19 @@
 
 기여 비율은 역할 표기를 점수로 환산해 자동으로 떨어뜨린 값이 아니라, 위 CRediT 역할 매핑을 질적 근거로 삼아 세 사람이 함께 검토하고 협의로 합의한 값이다.
 
-최호길은 인정 역할 11개 전부를 단독 또는 주도적으로 수행했고, 방법론, 구현, 검증, 분석, 작성, 시각화를 직접 맡았다. 현업 엔지니어는 현장 문제 정의와 요구사항 도출, 초기 labeling, 결과 확인을 지원했다. 관리자는 연구 목표와 논문 구성 피드백, 결과 해석과 결론 정리 검토, 원고 검토와 수정 방향 제시에 기여했다. 다만 관리자의 일반적인 방향성 제시와 진행 관리는 Supervision, Project administration에 해당하므로 기여 비율 산정에서는 제외했다. 이 기준으로 다음 비율을 합의했다.
+최호길은 인정 역할 11개 전부를 단독 또는 주도적으로 수행했다. 현업 엔지니어와 관리자의 기여 내용도 프로젝트 고유 표현이 아니라 CRediT 인정 역할명으로 정리했다. 다만 관리자의 일반적인 방향성 제시와 진행 관리는 Supervision, Project administration에 해당하므로 기여 비율 산정에서는 제외했다. 이 기준으로 다음 비율을 합의했다.
 
 | 기여자 | 합의 기여율 | 합의 근거(요약) |
 |---|---:|---|
-| 최호길 | 70% | 연구 기획, 방법론 설계, software 구현, 데이터 처리, 실험과 분석, 원고와 그림 전반 주도 |
-| 현업 엔지니어 | 15% | 현장 문제 정의, 요구사항 도출, 초기 labeling, 결과 확인 |
-| 관리자 | 15% | 연구 목표와 논문 구성 피드백, 결과 해석 검토, 원고 검토 |
+| 최호길 | 70% | Conceptualization and design, Methodology, Software, Validation, Investigation, Data curation, Formal analysis, Analysis and conclusion, Writing-original draft, Visualization, Writing-review/editing 주도 |
+| 현업 엔지니어 | 15% | Conceptualization and design, Validation, Investigation, Data curation 지원 |
+| 관리자 | 15% | Conceptualization and design, Analysis and conclusion, Writing-review/editing 지원 |
 | 합계 | 100% | |
 
 이 비율은 역할 점수의 산술적 귀결이 아니라 협의 합의값이므로, 역할 표기상 최호길의 비중이 가장 큰 점(인정 11개 역할 전부 주도)을 유지하면서도 두 기여자의 기여를 각 15%로 인정한 결과다.
 
 ## 기여 내용
 
-- 최호길 (70%): 연구 기획, 방법론 설계, software 구현, 데이터 처리, 실험과 검증, 정량 분석, 시각화, 원고 작성과 수정을 주도했다.
-- 현업 엔지니어 (15%): 현장 문제 정의와 요구사항 도출에 기여하고, 초기 labeling과 결과 확인을 지원했다.
-- 관리자 (15%): 연구 목표와 논문 구성에 대한 피드백을 제공하고, 결과 해석, 결론 정리, 원고 검토와 수정 방향을 지원했다. 일반적인 방향성 제시와 진행 관리는 Supervision, Project administration에 해당하므로 기여 비율 산정에서는 제외했다.
+- 최호길 (70%): Conceptualization and design, Methodology, Software, Validation, Investigation, Data curation, Formal analysis, Analysis and conclusion, Writing-original draft, Visualization, Writing-review/editing을 주도했다.
+- 현업 엔지니어 (15%): Conceptualization and design, Validation, Investigation, Data curation을 지원했다.
+- 관리자 (15%): Conceptualization and design, Analysis and conclusion, Writing-review/editing을 지원했다. Resources, Supervision, Project administration 성격의 활동은 기여 비율 산정에서 제외했다.
