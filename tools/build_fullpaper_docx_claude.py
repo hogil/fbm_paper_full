@@ -112,6 +112,26 @@ def _figure(doc, path, caption, wide=False):
     _inline(cap, _strip_md(caption), 9)
 
 
+def _figure_pair(doc, paths, caption, wide=False):
+    """Place 2 images side by side (horizontal) in one paragraph, then caption."""
+    p = _para(doc, C, after=2)
+    each_cm = 4.0
+    for k, path in enumerate(paths[:2]):
+        img = ROOT / path
+        if not img.exists():
+            alt = ROOT / "recommendation" / "figures" / Path(path).name
+            if alt.exists():
+                img = alt
+        if img.exists():
+            if k:
+                p.add_run("   ")
+            p.add_run().add_picture(str(img), width=Cm(each_cm))
+        else:
+            _run(p, f"[Missing figure: {path}]", 9, bold=True)
+    cap = _para(doc, C, after=4)
+    _inline(cap, _strip_md(caption), 9)
+
+
 def _fix_table_width(table, wide=False):
     """Pin table to a fixed layout at column (or full-page) width so autofit cannot
     overflow into the adjacent column/margin (FP Rule A/B gate). Long cells wrap instead."""
@@ -307,8 +327,7 @@ def build(input_path: Path, output_path: Path):
             continue
 
         if s.startswith("!["):
-            m = re.match(r"!\[[^\]]*\]\(([^)]+)\)", s)
-            path = m.group(1) if m else ""
+            paths = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", s)
             cap, la = "", idx + 1
             while la < len(lines) and not lines[la].strip():
                 la += 1
@@ -317,7 +336,10 @@ def build(input_path: Path, output_path: Path):
                 idx = la + 1
             else:
                 idx += 1
-            _figure(doc, path, cap, wide=in_wide)
+            if len(paths) >= 2:
+                _figure_pair(doc, paths, cap, wide=in_wide)
+            else:
+                _figure(doc, paths[0] if paths else "", cap, wide=in_wide)
             continue
 
         if re.match(r"^\*?\*?Figure \d+\.", s):
@@ -383,7 +405,7 @@ def build(input_path: Path, output_path: Path):
         fm = re.match(r"^\[\^(\d+)\]:\s*(.*)", s)
         if fm:
             if not foot_hdr:
-                cx.add_subheading(doc, "각주")
+                cx.add_subheading(doc, "Footnotes" if "_en" in input_path.stem.lower() else "각주")
                 foot_hdr = True
             p = _para(doc, L, after=2)
             _run(p, f"[{fm.group(1)}] ", 9, bold=True)
