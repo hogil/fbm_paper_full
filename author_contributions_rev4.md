@@ -8,29 +8,29 @@
 
 | 구분 | 인물 | 비고 |
 |---|---|---|
-| 제1저자 (논문 단독 저자) | 최호길 | 데이터 파이프라인, Known/Unknown 모델, chip multi-label, web app, 전 실험·분석, 논문·그림 |
-| 기여자 (비저자) | 현업 엔지니어 (성명 기입 예정) | 현장 문제·핵심 아이디어 처음 제기, 초기 labeling |
-| 기여자 (비저자) | 관리자 (성명 기입 예정) | 논문 작성 가이드 및 검토 review |
+| 제1저자 (논문 단독 저자) | 최호길 | 데이터 파이프라인, Known/Unknown 모델, chip multi-label, web app, 전 실험과 분석, 논문과 그림 |
+| 기여자 (비저자) | 현업 엔지니어 (성명 기입 예정) | 현장 문제와 핵심 아이디어 처음 제기, 초기 labeling |
+| 기여자 (비저자) | 관리자 (성명 기입 예정) | 논문 작성 가이드 및 초고 검토 |
 
 관리자와 현업 엔지니어의 실명은 미정이며, 제출 전 확정해 기입한다.
 
 ## CRediT 역할 매핑
 
-표기는 ●주도(Lead) / ○지원(Supporting) / −(없음)로 한다. Conceptualization은 현장 문제와 접근 방향을 엔지니어가 처음 제기(originate)하고 최호길이 이를 AI 연구로 정식화(formulate)·설계·구현한 두 층위가 함께 작동했으므로 두 사람을 모두 주도(●)로 둔다. 이 표는 각자가 어떤 역할을 실제로 수행했는지를 보여주는 질적 근거이며, 뒤의 합의 비율은 이 표를 바탕으로 협의한 결과다.
+표기는 ●주도(Lead) / ○지원(Supporting) / −(없음)로 한다. Conceptualization은 현장 문제와 접근 방향을 엔지니어가 처음 제기(originate)하고 최호길이 이를 AI 연구로 정식화(formulate), 설계, 구현한 두 층위가 함께 작동했으므로 두 사람을 모두 주도(●)로 둔다. 이 표는 각자가 어떤 역할을 실제로 수행했는지를 보여주는 질적 근거이며, 뒤의 합의 비율은 이 표를 바탕으로 협의한 결과다.
 
 | CRediT 인정 역할 | 최호길 | 현업 엔지니어 | 관리자 |
 |---|:---:|:---:|:---:|
-| Conceptualization (개념·목표 수립) | ● | ● | − |
-| Methodology (방법론 개발·모델 설계) | ● | − | − |
-| Software (코드·알고리즘 구현·테스트) | ● | − | − |
-| Validation (재현성·결과 검증) | ● | − | − |
-| Investigation (실험 수행·데이터 수집) | ● | ○ | − |
-| Data curation (주석·정리·유지관리) | ● | ○ | − |
-| Formal analysis (통계·계산 분석) | ● | − | − |
+| Conceptualization (개념과 목표 수립) | ● | ● | − |
+| Methodology (방법론 개발과 모델 설계) | ● | − | − |
+| Software (코드와 알고리즘 구현, 테스트) | ● | − | − |
+| Validation (재현성과 결과 검증) | ● | − | − |
+| Investigation (실험 수행과 데이터 수집) | ● | ○ | − |
+| Data curation (주석, 정리, 유지관리) | ● | ○ | − |
+| Formal analysis (통계와 계산 분석) | ● | − | − |
 | Analysis & conclusion (결과 비판적 검토) | ● | − | − |
-| Writing – original draft (초고 작성) | ● | − | − |
-| Visualization (시각화·그림) | ● | − | − |
-| Writing – review & editing (검토·수정) | ● | − | ○ |
+| Writing-original draft (초고 작성) | ● | − | − |
+| Visualization (시각화와 그림) | ● | − | − |
+| Writing-review/editing (검토와 수정) | ● | − | ○ |
 
 인정 역할에서 제외한 항목:
 
@@ -42,21 +42,19 @@
 
 기여 비율은 역할 표기를 점수로 환산해 자동으로 떨어뜨린 값이 아니라, 위 CRediT 역할 매핑을 질적 근거로 삼아 세 사람이 함께 검토하고 협의로 합의한 값이다.
 
-판단의 출발점은 분명하다. 최호길이 인정 역할 11개 전부를 단독 또는 주도적으로 수행했고, 방법론·구현·검증·분석·작성·시각화를 모두 직접 맡았으므로 연구 실무에서 압도적인 비중(dominant)을 차지한다. 현업 엔지니어는 현장 문제와 핵심 아이디어를 처음 제기해 Conceptualization을 공동 주도했고 초기 labeling으로 데이터 수집·정리에 기여했다. 관리자는 논문 작성 가이드와 검토(Writing – review & editing)로 기여했다. 이 세 갈래의 기여를 놓고, 엔지니어의 문제·아이디어 제기와 초기 labeling 기여, 그리고 관리자의 논문 가이드·검토 기여를 각각 의미 있게 인정하기로 하여, 협의를 통해 다음과 같이 비율을 합의했다.
+판단의 출발점은 분명하다. 최호길이 인정 역할 11개 전부를 단독 또는 주도적으로 수행했고, 방법론, 구현, 검증, 분석, 작성, 시각화를 모두 직접 맡았으므로 연구 실무에서 압도적인 비중(dominant)을 차지한다. 현업 엔지니어는 현장 문제와 핵심 아이디어를 처음 제기해 Conceptualization을 공동 주도했고 초기 labeling으로 데이터 수집과 정리에 기여했다. 관리자는 논문 작성 가이드와 초고 검토(Writing-review/editing)로 기여했다. 이 세 갈래의 기여를 놓고, 엔지니어의 문제 제기와 초기 labeling 기여, 그리고 관리자의 논문 가이드와 검토 기여를 각각 의미 있게 인정하기로 하여, 협의를 통해 다음과 같이 비율을 합의했다.
 
 | 기여자 | 합의 기여율 | 합의 근거(요약) |
 |---|---:|---|
-| 최호길 | 70% | 인정 역할 11개 전부를 단독·주도 수행, 데이터·모델·실험·분석·작성·그림 전반을 직접 담당 |
-| 현업 엔지니어 | 15% | 현장 문제·핵심 아이디어 처음 제기(Conceptualization 공동 주도), 초기 labeling 기여 |
-| 관리자 | 15% | 논문 작성 가이드 및 초고 검토(Writing – review & editing) 기여 |
+| 최호길 | 70% | 인정 역할 11개 전부를 단독 또는 주도 수행, 데이터, 모델, 실험, 분석, 작성, 그림 전반을 직접 담당 |
+| 현업 엔지니어 | 15% | 현장 문제와 핵심 아이디어 처음 제기(Conceptualization 공동 주도), 초기 labeling 기여 |
+| 관리자 | 15% | 논문 작성 가이드 및 초고 검토(Writing-review/editing) 기여 |
 | 합계 | 100% | |
 
 이 비율은 역할 점수의 산술적 귀결이 아니라 협의 합의값이므로, 역할 표기상 최호길의 비중이 가장 큰 점(인정 11개 역할 전부 주도)을 유지하면서도 두 기여자의 기여를 각 15%로 인정한 결과다.
 
 ## 기여 내용
 
-- 최호길 (70%): Conceptualization·Methodology·Software·Validation·Investigation·Data curation·Formal analysis·Writing(원고·시각화·검토)까지 인정 11개 역할을 전부 주도했다(데이터 파이프라인·Known/Unknown 모델·chip multi-label·web app·전 실험·논문 직접 수행).
-- 현업 엔지니어 (15%): 현장 문제와 핵심 아이디어(Known 접근·web app·평가용 대량 이미지)를 처음 제기한 Conceptualization 공동 주도에 더해, 초기 labeling으로 Investigation·Data curation을 지원했다.
-- 관리자 (15%): 논문 가이드·피드백 검토로 Writing – review & editing을 지원했고, 방향성 제시와 진행 관리는 Supervision / Project administration에 해당해 기여 비율 산정에서는 제외했다.
-
-<!-- rev4 changelog: rev3 구조(도입부·기여자 표기·CRediT 역할 매핑·비율 제외 항목·합의 비율 70/15/15)는 그대로 유지하고, '기여 내용' 절의 3문단 서술만 사용자 지시에 따라 각 기여자 1줄(CRediT 역할 기준) 대시 bullet으로 축약 교체 -->
+- 최호길 (70%): Conceptualization, Methodology, Software, Validation, Investigation, Data curation, Formal analysis, Analysis & conclusion, Writing-original draft, Visualization, Writing-review/editing을 주도했다. Failbit Map 데이터 파이프라인, Known/Unknown 모델, chip multi-label, web app, 전체 실험과 분석, 원고와 그림 작성 전반을 직접 수행했다.
+- 현업 엔지니어 (15%): 현장 문제와 핵심 아이디어(Known 접근, web app, 평가용 대량 이미지)를 처음 제기하여 Conceptualization을 공동 주도했고, 초기 labeling으로 Investigation과 Data curation을 지원했다.
+- 관리자 (15%): 논문 작성 가이드와 초고 검토를 통해 Writing-review/editing을 지원했다. 방향성 제시와 진행 관리는 Supervision, Project administration에 해당하므로 기여 비율 산정에서는 제외했다.
