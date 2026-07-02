@@ -7,8 +7,8 @@
 
 ---
 
-## A. 전체 구성 · 분량 (심사 제외 직결)
-- 본 공식 템플릿을 사용하여 작성한다. **양식·분량 미준수 시 심사에서 제외될 수 있다.**
+## A. 전체 구성 ,  분량 (심사 제외 직결)
+- 본 공식 템플릿을 사용하여 작성한다. **양식, 분량 미준수 시 심사에서 제외될 수 있다.**
 - 국문/영문 모두 허용. 언어에 따른 심사 가점 또는 불이익 없음.
 - **초록**: 2매. extended abstract 개념으로 `1 제목 → 2 abstract → 3 본문(서론/본론/결론) → 4 참고문헌` 구성.
 - **논문**: 4매 이상 10매 이하 (참고문헌 등 모든 내용 포함).
@@ -28,10 +28,13 @@
   - 장: `1.`, `2.`, `3.` ~
   - 절: `1.1.`, `2.1.` ~
 
-## C. 글꼴 · 정렬
+## C. 글꼴 ,  정렬
 - 영문 서체: **Times New Roman**, 국문 서체: **바탕체**, 줄간격 **1.0**.
-- 제목·저자명: **왼쪽 정렬**.
+- 제목, 저자명: **왼쪽 정렬**.
 - 본문 내용: **양쪽 정렬**.
+- **본문 문단 첫줄 0.5cm 들여쓰기** (★ 사용자 지시 2026-07-02).
+- **참고문헌은 hanging indent**: `[N]` 첫줄은 내어쓰기(들여쓰기 없음), 둘째 줄부터 0.5cm 들여쓰기.
+- **그림/표와 그 캡션은 들여쓰기 없이 왼쪽 정렬** (그림 이미지, 그림 캡션, 표, 표 캡션 전부).
 
 ## D. 글자 크기
 | 요소 | 크기 | 굵기 |
@@ -46,7 +49,7 @@
 | 그림 및 표 | 9 | — |
 | 각주 | 9 | — |
 
-## E. 제목 · 저자
+## E. 제목 ,  저자
 - 제목은 **2줄을 넘지 않게** 한다.
 - 저자명은 논문 제목 아래에 배치. 저자 소속 관련 정보는 **첫 페이지 하단에 별도 표기**.
 - 저자는 **주저자(제1저자)를 먼저** 쓰고, 기여도 순으로 나머지 공저자를 표기.
@@ -63,7 +66,7 @@
 - abstract 아래에 바로 본문 시작.
 - **2단(two-column) 단락 형식**을 따른다.
 
-## H. 그림 · 표
+## H. 그림 ,  표
 - 모든 그림에 캡션 제공, 각각 순차적으로 번호.
   - 그림: `Figure 1. 그림의 캡션`
   - 표: `Table 1. 표의 캡션`
@@ -89,7 +92,7 @@
 - 전체 구성: `1 제목 → 2 abstract → 3 본문(서론/본론/결론) → 4 참고문헌`.
 - 지정된 길이 및 형식 요구사항을 준수하지 않는 초록/논문은 **심사에서 제외**된다.
 
-## K. 출력 · 빌드 · 검증
+## K. 출력 ,  빌드 ,  검증
 - full paper 최종 산출은 반드시 **`.docx`** 로 만든다. Markdown은 작성/검토용이며 제출본은 Word 문서이다.
 - Codex 산출물은 `full_paper_revNNN_codex.*` 형식으로 관리한다.
 - best rev가 갱신될 때마다 해당 rev의 `.docx`를 재생성하고, 가능하면 PDF render와 page/contact-sheet 검증까지 수행한다.
@@ -143,35 +146,48 @@
 - **논문 질적 수준 30점**: 명확한 근거에서 결론을 도출해야 한다. 수치마다 field / generated / internal engineering measurement / future work 범위를 분리하고, unsupported claim은 넣지 않는다.
 - Reviewer agent는 위 30/30/10/30 배점으로 별도 scoring을 수행한다. 기존 internal usefulness/technical depth rubric보다 이 기준을 우선한다.
 
-## Q. 사용자 최신 편집 규칙 — rev214 구조·용어·문체
+## Q. 사용자 최신 편집 규칙 — rev214 구조, 용어, 문체
 - 초록은 `D:\project\fbm_paper\paper_codex_2page_rev167.docx`의 초록 흐름을 우선 기준으로 삼고, chip multi-label 결과만 필요한 만큼 추가한다.
 - `Known failure`는 첫 등장 시 "이미 알려진 불량인 Known failure"로, `Unknown failure`는 첫 등장 시 "신규 불량인 Unknown failure"로 설명한다. 이후에는 `Known failure`와 `Unknown failure`로 통일한다.
 - `field validation weighted` 같은 압축 표현을 쓰지 않는다. `weighted F1`은 "class 비중을 반영한 weighted F1 score"처럼 풀어 쓴다. 본문과 표에서 `F1` 단독 표기는 피하고 `F1 score`로 쓴다.
 - `운영형`은 의미가 모호하므로 남발하지 않는다. 필요한 경우 "현장에서 반복 사용할 수 있도록 만든" 식으로 직접 설명한다.
-- measure value, FTN, QTN, BIN은 처음 나올 때 chip별 계측값이라는 점과 현장에서 불량 수, 검사 수, bin 판정 등을 빠르게 확인하는 항목이라는 점을 간략히 설명한다.
+- measure value는 처음 나올 때 EDS 결과를 chip별 수치로 본 값이라는 점만 간략히 설명한다. 별도 항목명을 억지로 늘어놓지 않는다.
+- ★ **수율 0.02%p 케이스 제품명(사용자 직접 지시)**: 내부코드 `P3WN`을 본문에 쓰지 말고 **"HBM 제품"** 으로 표기한다(P3WN이 HBM 제품이라 사용자가 명시). 단 HBM 적용/평가를 과장하지 않고, 약 0.02%p는 그 한 제품(HBM) 사례 기준값으로만 쓴다(전 제품 평균, 연환산 아님).
+- ★ **viewer/data pipeline 운영 범위 표기(사용자 직접 지시)**: "DRAM D1a~D1d 관련 제품 파트" 등으로 쓰지 말고 **"DRAM D1a/b/c/d 전제품"** 으로 표기한다.
 - Introduction은 layer별 개발 상세를 나열하지 말고, 해결한 현업 문제와 실제 가치 중심으로 쓴다. 핵심은 데이터 구조, Known/Unknown 활용 문제 해결, 실제 데이터 기반 검증 결과다.
-- `기술 개요`는 서론 하위 절에 두지 않고 본론으로 보낸다. `관련 연구`는 독립 2장으로 두고, 기존 본론은 3장 이후로 배치한다.
+- ★ **FP Rule J 우선(심사 제외 게이트)**: 장(章)은 반드시 `서론 / 본론 / 결론` 3개로만 둔다. `관련 연구`는 별도 장이 아니라 **서론의 절(1.x)**, 실험 결과, 운영 적용은 **본론의 절(2.x)** 로 둔다. `기술 개요`는 서론 하위 절에 두지 않고 본론(제안 방법 앞)으로 보낸다. (통과한 2매 codex도 `1.서론 / 2.제안 방법 / 3.결론` 3장이었다. 관련연구, 실험결과를 독립 장으로 빼면 템플릿 위반 → 심사 제외.)
 - 분석 UI와 web app 구조, 운영 화면, 운영 성과는 결과/운영 적용 섹션에 둔다. Flash YE 확산 요청은 현재 운영 현황이 아니라 향후 연구에만 보수적으로 쓴다.
-- 결론 장은 최종 장 번호를 사용하고, 논의·한계와 향후 연구를 결론 장 아래에 둔다.
+- 결론은 3장이다. 논의, 한계와 향후 연구는 본론 끝 절(2.x) 또는 결론 직전에 둔다(별도 4, 5장으로 빼지 않는다).
 - `object-id map`은 compound나 mid-fusion, disagreement, raw grade, cross-attention 같은 새 claim으로 확장하지 않는다. PPT 범위대로 ROI-YOLO Stage-2를 chip 좌표 기반 fixed-crop 분류로 대체할 수 있는지 생성 데이터에서 확인한 항목으로만 쓴다.
 - `검토 라벨`, `판단 결과`, `라벨 체계 확정`, `범위를 맞춘 뒤`, `계측 근인`, `본 분석 구조의 확산 요청이 접수`, `후속 개발로 관리한다` 같은 AI식 또는 번역투 표현을 쓰지 않는다.
+- 본문, 표, 캡션, 제목, 답변에서 U+00B7 middle-dot separator를 쓰지 않는다. 쉼표, 괄호, 슬래시, 또는 자연스러운 문장으로 풀어 쓴다.
 - 그림 안 글자가 인쇄본에서 읽히지 않으면 감점 대상이다. 그림 크기를 키우거나 그림 안 글자 수를 줄이고, 2단 양식은 유지한다.
+- ★ **그림 품질 절대규칙(사용자 직접 지시)**:
+  - **Figure 1 (DRAM cell→FBM)**: transistor는 **표준 1T1C 회로 심볼** 그대로 — semiengineering 레퍼런스(memory1.png "Single Memory Cell") 형태: **Bit Line 상단 가로 / Word Line → gate 막대 / MOSFET(gate 막대 + 채널 contact + drain↑Bit Line, source↓capacitor) / Storage Capacitor 두 판 / Ground**. 콘덴서처럼 평행막대 두 개로 그리면 안 된다(과거 오류). **흑백**(알록달록 금지). cell block 격자는 박스 안에 정렬, **FTN/QTN/BIN 박스 없음**(c 패널 Grade 0~7만), 글자는 크게. 정본 = `ppt_figures/fig1_dram_to_fbm.png` = `recommendation/figures/p1_fig_dram_to_fbm_v2.png`(생성기 `tools/_gen_fig1_dram_fbm_v2.py`).
+  - **object-id map 그림은 하나만 둔다**: 생성 흐름(기존 Figure 4)과 분리력(기존 Figure 8) 둘 중 **분리력(raw vs object-id) 그림만 남기고**, 그것을 **Figure 4 위치로 올린다**. 기존 생성 흐름 fig4는 제거(그만큼 뒤 그림 번호가 당겨짐).
+  - ★ **모든 그림은 PPT에 있는 이미지를 그대로 쓴다**(내 맘대로 matplotlib 재생성 금지). 단 PPT라도 **발표 슬라이드 도식(ACCEPT/REJECT 색박스, 슬라이드 narration)은 그대로 넣지 말고 chart 부분만** 가져온다(예: fig7 = val-margin 막대 chart + NB-reject profile chart). 알록달록(컬러 남발) 금지, 글자 크기는 인쇄 시 읽히게(작으면 글자 수를 줄이거나 그림을 키운다). 가로로 너무 넓어 여백 낭비하지 않게 비율을 맞춘다.
+  - ★ **모든 figure 캡션은 영어로** 쓴다(사용자 직접 지시). 그림 안 텍스트도 영어 권장하고, 특히 **그림 안에 '결함'(defect)이 들어가면 안 된다 → '불량'/failure**(defect-ban은 그림 텍스트에도 적용).
+  - **PPT→figure 매핑**(면접 PPT `...최호길.pptx`): **fig6 FCM-PM = slide19/image26**(A:scratch, B:scratch_rot, FCM mixed A/B label, Pair Mask A/B — "mixed 2개" 충족) → `ppt_figures/fig6_fcm_pm_FROM_PPT.png`. fig3 ROI-YOLO = slide9/image6. fig5 chip label space = slide18/image18~25. object-id map 예시 = slide11/image8, image10.
+  - **fig2 pipeline**: 깔끔한 세로 flow(EDS raw log→Wafer data→Known/Unknown/Chip→Web viewer). codex 판(820×780, subtitle 가 box 밖으로 삐져나감)은 폐기 → **compact(760×540), subtitle 을 box 안에** 넣은 정본 = `ppt_figures/fig2_pipeline.png`(생성기 `tools/_gen_fig2_pipeline.py`). 흑백 톤. **화살표는 대각선 금지 → 직각 tree/bus 라우팅**(Wafer data 아래 분배 버스 3갈래, 3박스→수집 버스→Web viewer). 캡션(사용자 제공, 영어 그대로): *"Figure 2. Coordinate-preserving analysis pipeline. EDS raw logs and measure values are aligned with the Failbit Map and chip coordinates, then used by Known, Unknown, and chip multi-label paths. Confirmed cases from the web screen can be saved for later training data."*
+  - **fig9 web app(Wafer Map Explorer)**: ①②③④⑤⑥ 설명 callout 을 박은 주석본을 쓰지 말고 **캡쳐 원본 그대로**(주석 없는 raw screenshot) = `recommendation/figures/p1_fig_webapp_viewer.png`(=`ppt_figures/fig9_webapp_raw.png`, 1680×1050, wafer map+chip overlay 로드된 화면).
+  - ★ **codex 가 매 rev `figures/full_paper_rev{N}/` 를 `make_rev{N}_figures.py`로 재생성**해 내 fig01/fig02/fig09 를 crude 버전으로 덮어쓴다(rev224~230 모두 `figures/full_paper_rev224/` 공유 참조). **원복은 `python tools/apply_my_figures.py` 한 번** — 최신 codex md 가 가리키는 figure 폴더를 자동 감지해 내 정본(`ppt_figures/fig1_dram_to_fbm.png`→fig01, `ppt_figures/fig2_pipeline.png`→fig02, `recommendation/figures/p1_fig_webapp_viewer.png`→fig09)을 덮어쓴다. **최종 docx build 직전에도 반드시 이 스크립트를 먼저 실행**한다.
+  - 모든 그림: 인쇄 시 글자가 안 보이면 무조건 키우거나 글자 수를 줄인다. 정렬 안 맞고 요소가 박스를 벗어나면 감점.
 - 참고문헌 번호는 본문 첫 인용 순서를 따라야 하며, 실제 존재하는 문헌인지 확인한다.
+- ★ **제목 고정(절대규칙, 다시 바꾸지 말 것)**: 제목은 통과한 간결본(2매 codex)의 제목을 그대로 쓴다 — 국문 **"Failbit Map Known & Unknown 불량 분석 아키텍처"**, 영문 **"Hybrid Failbit Map Analysis Architecture for Known Classification and Unknown Discovery"**. "좌표 보존형 …웨이퍼, 칩 불량 분석 파이프라인" 등으로 바꾸지 않는다. chip multi-label은 본문, 초록 내용으로만 더하고 제목은 건드리지 않는다.
 
 ---
 
 <!-- 다음 batch 규칙은 여기 아래에 이어서 추가 -->
 
-## R. 대개편 — 챕터 구조·서론·용어·내용 (사용자 직접 지시, 2026-06-29)
+## R. 대개편 — 챕터 구조, 서론, 용어, 내용 (사용자 직접 지시, 2026-06-29)
 
-**R-1. 챕터 구조 재배치 (일반 논문 형식으로)**
-- `1. 서론` → `2. 관련 연구`(기존 1.2 이동·독립) → `3. 본론(제안 방법)`(기존 `1.1 기술 개요` 포함 + 기존 2장 method) → `4. 실험 결과`(기존 `2.1.5 분석 UI/web app`부터 + `2.2 결과`) → `5. 결론`(아래에 논의·한계·향후 연구).
-- `1.1 기술 개요`는 본론(3장)으로 이동.
-- `1.2 관련 연구`는 2장으로 독립(본론은 3장으로 밀림).
-- `2.1.5 분석 UI/web app`부터는 결과이므로 `4. 실험 결과`로 분리.
-- `3. 결론` → `5. 결론`. 논의·한계·향후 연구는 결론 밑으로(일반적 배치).
+**R-1. 챕터 구조 (사용자 최종 결정)**
+- 전체 구조는 `1. 서론`, `2. 본론`, `3. 결론`, `참고문헌`으로 둔다.
+- `1.1`은 배경, 문제, 기여, `1.2`는 관련 연구로 둔다.
+- `2.1`은 제안 방법(데이터, Known, Unknown, chip multi-label, web app), `2.2`는 결과 및 운영 적용, `2.3`은 논의 및 한계, `2.4`는 향후 연구로 둔다.
+- `3. 결론`은 최종 요약만 둔다.
 
-**R-2. 서론(1장) = 문제·실제 가치 중심**
+**R-2. 서론(1장) = 문제, 실제 가치 중심**
 - "무엇을 적용해 무슨 결과를 냈다" 식 나열 금지. **어떤 문제를 풀어 실제 가치가 무엇인지**를 제시.
 - 기여 3가지로: ① 핵심 알고리즘/아이디어/프레임워크, ② 현장에서 Known/Unknown 불량 분석 시 FBM 활용 문제를 어떻게 다뤘는지, ③ 실제 데이터 기반 검증 결과.
 - layer별 "무엇을 개발했다"는 2장(본론)에서 상세. 다른 논문 표현 참고.
@@ -179,7 +195,7 @@
 **R-3. 초록**
 - 기존 통과본 `D:\project\fbm_paper\paper_codex_2page_rev167.docx` 초록을 base로 두고 **chip multi-label만 추가**. (이 초록으로 이미 심사 통과.)
 
-**R-4. 용어·표기**
+**R-4. 용어, 표기**
 - "운영형" 단독 사용 금지 → "현장에서 실제 활용 가능하도록" 의미로 풀어쓰기.
 - `Known failure` 첫 등장: "**이미 알려진 불량인 Known failure**", 이후엔 failure.
 - `Unknown failure` 첫 등장: "**신규 불량인 Unknown failure**", 이후엔 failure.
@@ -187,10 +203,10 @@
 - "F1" → "**F1 score**".
 
 **R-5. 내용 보강 (설명)**
-- `measure value`, `FTN`, `QTN` 등은 간략 설명이라도 추가.
+- `measure value`는 간략 설명하되, 세부 항목명은 본문에 억지로 넣지 않는다.
 - 왜 현장이 오랫동안 measure value를 쓸 수밖에 없었는지 간단 서술 + (장단점과 별개로) Failbit Map 설명 시 "대량의 map을 만들 수도 없었고, 기술력 부족으로 이미지 분석도 못했다".
 - 16-class 사용 이유: "현업에서 이 정도면 불량이 커버된다고 16개를 부여했다".
-- Flash YE P1/P2 확산 요청 = 현황이므로 `4.실험결과`(시스템·운영)가 아니라 **향후 연구**에 둔다.
+- Flash YE P1/P2 확산 요청 = 현황이므로 `4.실험결과`(시스템, 운영)가 아니라 **향후 연구**에 둔다.
 
 **R-6. 그림**
 - 그림 안 text가 안 보이면 감점. **그림을 키우거나 그림 내 글자 수를 줄여 글자가 보이게** 한다.
@@ -200,4 +216,4 @@
 - 본문 언급 순서대로 번호가 매겨졌는지, 실제 존재하는 문헌인지 확인.
 
 **R-8. 운영**
-- 위 전부 절대 규칙. 에이전트 루프를 계속 돌리며 적용하고, 자연스러운 문체(번역투·구어체·영어 명사 3~5개 나열 배제, "현업 엔지니어가 명확하게 쓴 논문체")를 계속 유지한다.
+- 위 전부 절대 규칙. 에이전트 루프를 계속 돌리며 적용하고, 자연스러운 문체(번역투, 구어체, 영어 명사 3~5개 나열 배제, "현업 엔지니어가 명확하게 쓴 논문체")를 계속 유지한다.

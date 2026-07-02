@@ -91,7 +91,7 @@ def _strip_md(t):
 
 
 def _figure(doc, path, caption, wide=False):
-    p = _para(doc, C, after=2)
+    p = _para(doc, L, after=2)
     if FORCE_TWO_COLUMN:
         wide = False
     img = ROOT / path
@@ -108,13 +108,13 @@ def _figure(doc, path, caption, wide=False):
         p.add_run().add_picture(str(img), width=Cm(width_cm))
     else:
         _run(p, f"[Missing figure: {path}]", 9, bold=True)
-    cap = _para(doc, C, after=4)
+    cap = _para(doc, L, after=4)
     _inline(cap, _strip_md(caption), 9)
 
 
 def _figure_pair(doc, paths, caption, wide=False):
     """Place 2 images side by side (horizontal) in one paragraph, then caption."""
-    p = _para(doc, C, after=2)
+    p = _para(doc, L, after=2)
     each_cm = 4.0
     for k, path in enumerate(paths[:2]):
         img = ROOT / path
@@ -128,7 +128,7 @@ def _figure_pair(doc, paths, caption, wide=False):
             p.add_run().add_picture(str(img), width=Cm(each_cm))
         else:
             _run(p, f"[Missing figure: {path}]", 9, bold=True)
-    cap = _para(doc, C, after=4)
+    cap = _para(doc, L, after=4)
     _inline(cap, _strip_md(caption), 9)
 
 
@@ -139,6 +139,7 @@ def _fix_table_width(table, wide=False):
         wide = False
     table.autofit = False
     table.allow_autofit = False
+    table.alignment = cx.WD_TABLE_ALIGNMENT.LEFT
     total_cm = 17.8 if wide else 8.6
     ncol = max(1, len(table.columns))
     cw = Cm(total_cm / ncol)
@@ -415,11 +416,14 @@ def build(input_path: Path, output_path: Path):
 
         if re.match(r"^\[\d+\]\s", s):
             p = _para(doc, L, after=2)
+            p.paragraph_format.left_indent = Cm(0.5)
+            p.paragraph_format.first_line_indent = Cm(-0.5)
             _inline(p, s, 10)
             idx += 1
             continue
 
         p = _para(doc, J, after=3)
+        p.paragraph_format.first_line_indent = Cm(0.5)
         _inline(p, s, 10)
         idx += 1
 

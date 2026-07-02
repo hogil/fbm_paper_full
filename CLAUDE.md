@@ -1,11 +1,11 @@
 
 # Full Paper 작성 절대규칙 — Samsung Best Paper Awards
 
-> 별도 deliverable(추천서와 분리). **양식·분량 미준수 시 심사에서 제외**되므로 아래는 전부 절대규칙이다.
+> 별도 deliverable(추천서와 분리). **양식, 분량 미준수 시 심사에서 제외**되므로 아래는 전부 절대규칙이다.
 > 상세 정본: `PAPER_FULL_RULES.md`. 본 섹션은 항상-로드되는 enforced 요약본이며, 두 문서는 항상 동기화한다.
 
-## FP Rule A — 구성·분량 (심사 제외 직결)
-- 공식 템플릿 사용 필수. 국/영문 허용(언어 가점·불이익 없음).
+## FP Rule A — 구성, 분량 (심사 제외 직결)
+- 공식 템플릿 사용 필수. 국/영문 허용(언어 가점, 불이익 없음).
 - 초록 2매(extended abstract: `제목 → abstract → 본문(서론/본론/결론) → 참고문헌`). 논문 4~10매(참고문헌 등 모든 내용 포함).
 - 단순 아이디어/컨셉만 제출 시 심사 제외. 본문 인용은 문장 오른쪽 `[]` 번호.
 - 모든 단위 SI. 약어 첫 등장 시 전부 풀어쓰고, 미표준 약어는 명확히 정의.
@@ -15,16 +15,17 @@
 - 머리글 "Samsung Best Paper Awards" 12pt bold, 바닥글 쪽번호.
 - 본문 2단(단 간격 0.5cm). 목차: 장 `1.` `2.` / 절 `1.1.` `2.1.`.
 
-## FP Rule C — 글꼴·정렬
-- 영문 Times New Roman / 국문 바탕체, 줄간격 1.0. 제목·저자 좌측정렬 / 본문 양쪽정렬.
+## FP Rule C — 글꼴, 정렬
+- 영문 Times New Roman / 국문 바탕체, 줄간격 1.0. 제목, 저자 좌측정렬 / 본문 양쪽정렬.
+- 본문 문단 첫줄 0.5cm 들여쓰기. 참고문헌은 hanging indent(`[N]` 첫줄 내어쓰기, 둘째 줄부터 0.5cm). 그림/표와 캡션은 들여쓰기 없이 왼쪽 정렬 (★ 사용자 지시 2026-07-02).
 
 ## FP Rule D — 글자 크기
-- 제목 20 bold / 저자 12 bold / 섹션제목 12 bold / 소제목 10 bold / 본문 10 / Abstract 10 bold / 참고문헌 10 / 그림·표 9 / 각주 9.
+- 제목 20 bold / 저자 12 bold / 섹션제목 12 bold / 소제목 10 bold / 본문 10 / Abstract 10 bold / 참고문헌 10 / 그림, 표 9 / 각주 9.
 
-## FP Rule E — 제목·저자
+## FP Rule E — 제목, 저자
 - 제목 2줄 이내. 저자명 제목 아래, 소속은 첫 페이지 하단 별도 표기.
 - 제1저자 먼저 → 기여도 순. first name → last name 권장(이름 이니셜 금지, 중간 이니셜 허용).
-- 제목·섹션제목은 고유명사(BLEU 등) 외 전부 대문자 금지. 소속은 부서 → 소속사 순. 저자명 뒤·바닥글 소속 앞 위첨자 1,2,3.
+- 제목, 섹션제목은 고유명사(BLEU 등) 외 전부 대문자 금지. 소속은 부서 → 소속사 순. 저자명 뒤, 바닥글 소속 앞 위첨자 1,2,3.
 
 ## FP Rule F — Abstract
 - 굵은 글씨, 단락 구분 없이 15줄 이내.
@@ -32,24 +33,24 @@
 ## FP Rule G — 본문
 - abstract 바로 아래 시작, 2단 단락 형식.
 
-## FP Rule H — 그림·표
-- 모든 그림 캡션·순차번호. `Figure 1. 캡션`(그림 하단) / `Table 1. 캡션`(표 상단), 9pt. "Fig" 약어, 번호 뒤 마침표. 캡션에 중요성 설명 권장.
-- 표는 3선 테이블: 위·아래 가로선 진하게 + 헤더 행 밑줄만, 세로선·내부선 전부 없음.
+## FP Rule H — 그림, 표
+- 모든 그림 캡션, 순차번호. `Figure 1. 캡션`(그림 하단) / `Table 1. 캡션`(표 상단), 9pt. "Fig" 약어, 번호 뒤 마침표. 캡션에 중요성 설명 권장.
+- 표는 3선 테이블: 위, 아래 가로선 진하게 + 헤더 행 밑줄만, 세로선, 내부선 전부 없음.
 
 ## FP Rule I — 참고문헌
 - 성 먼저 + 콤마 + 이름 이니셜. 2인↑은 1저자명 + 'et al.'. Article Title 첫 자 대문자.
 - Journal/단행본 제목 이탤릭 + 모든 단어 첫 자 대문자(저널명 약어 가능). Vol. bold. 단행본은 (출판사명, 발행연도).
 
 ## FP Rule J — 전체 구성 재확인
-- `제목 → abstract → 본문(서론/본론/결론) → 참고문헌`. 길이·형식 미준수 = 심사 제외.
+- `제목 → abstract → 본문(서론/본론/결론) → 참고문헌`. 길이, 형식 미준수 = 심사 제외.
 
 ## FP Rule K — 출력은 Word(.docx), 양식 자동 적용 (★ 절대규칙 2026-06-06)
 - full paper 최종 산출은 반드시 **`.docx`** 로 만든다. md(`full_paper_rev{N}_claude.md`)는 정본/작성용이고, 제출본은 docx.
-- 변환기: **`tools/build_fullpaper_docx_claude.py`** (`python tools/build_fullpaper_docx_claude.py [입력.md]`). 이 빌더가 FP Rule A~J(A4·여백 1.5cm·머리글 "Samsung Best Paper Awards" 12pt bold·바닥글 쪽번호·2단·바탕체/Times·글자크기·3선표·표상단/그림하단 캡션 9pt)를 자동 적용한다.
+- 변환기: **`tools/build_fullpaper_docx_claude.py`** (`python tools/build_fullpaper_docx_claude.py [입력.md]`). 이 빌더가 FP Rule A~J(A4, 여백 1.5cm, 머리글 "Samsung Best Paper Awards" 12pt bold, 바닥글 쪽번호, 2단, 바탕체/Times, 글자크기, 3선표, 표상단/그림하단 캡션 9pt)를 자동 적용한다.
 - 빌더는 codex `tools/build_full_paper_docx.py` 의 양식 함수를 import 재사용한다 — **그 codex 파일은 수정 금지**. `*_codex*` 산출물 전부 불가침.
 - **best rev 가 갱신될 때마다 그 rev 의 `.docx` 를 재생성**한다(메인 thread 에서 python 1회, 창 안 뜸).
 
-## FP Rule L — 관리자 가이드 반영: 배경·현장문제·용어 (★ 절대규칙 2026-06-26)
+## FP Rule L — 관리자 가이드 반영: 배경, 현장문제, 용어 (★ 절대규칙 2026-06-26)
 - Introduction은 심사위원이 EDS, wafer/bin map, FBM, chip-level measure 업무를 모른다는 전제로 재구성한다. 최신 wafer/chip-level 불량 분석 연구 흐름을 먼저 설명하고, 그 다음 실제 현장 분석 흐름과 연구 gap을 설명한다.
 - 삼성그룹 단위 심사에서는 평가자가 삼성전자/메모리 반도체 업무를 모를 수 있으므로, Introduction과 method 첫 등장부는 비전공 평가자도 이해할 수 있는 정의를 먼저 제공한다.
 - 사내 공용어가 아니거나 저자가 새로 정의한 기술어는 약어만 먼저 쓰지 않는다. EDS, FBM, bin map, measure value, Known/Unknown failure, ROI-YOLO, object-id map, chip multi-label, FCM-PM, val_margin, Naive Bayes reject 등은 첫 등장 시 "무엇을 입력으로 받고, 무엇을 구분/제어하며, 왜 필요한지"를 설명한 뒤 약어를 사용한다.
@@ -58,13 +59,13 @@
 - DRAM cell, cell block, EDS, failbit, Failbit Map, measure value를 비전공 심사위원도 이해하도록 그림 또는 텍스트 도식으로 정의한다. Bin map 또는 chip fail/양호 map도 추가 후보로 둔다.
 - 논문 본문/표/캡션/키워드/그림 텍스트/metadata에서는 `defect` 용어를 쓰지 않고 `failure`, `fail`, 또는 `불량`을 쓴다. 참고문헌 원문 제목은 정확 표기 규칙이 우선한다.
 
-## FP Rule M — 관리자 가이드 반영: 구성·기여·결과 섹션 (★ 절대규칙 2026-06-26)
+## FP Rule M — 관리자 가이드 반영: 구성, 기여, 결과 섹션 (★ 절대규칙 2026-06-26)
 - FBM 기반 Known/Unknown failure 정의와 엔지니어 활용 난점을 명확히 설명한다. Known은 등록/label 존재 불량, Unknown은 아직 label 합의가 없는 신규/미분류 불량 후보로 둔다.
 - workflow architecture를 포함한다: `measure value / FBM / bin map → Known classification → 등록 불량 filtering → contrastive embedding / clustering → 신규 불량 등록 여부 담당자 확인 → web app 기능 제공`.
 - Contribution에는 web app 구현을 4번째 기여로, 실제 적용/평가 범위를 5번째 기여로 포함한다. 단, 과장 없이 source path 또는 사용자 제공 공식 근거 범위에서만 쓰며, HBM 적용/평가는 직접 근거가 제공되기 전까지 제외한다.
 - Method는 이론적 근거와 구조 설명 중심, Result는 그림/표/시스템 캡처/web app 화면/bin map/FBM 예시 중심으로 재배치한다.
 - wafer map, FBM, 반도체 불량 분석 관련 연구는 약 20편 수준으로 확장한다. 사용자가 준 H. Lee et al. 2024 chip-level wafer bin map 논문은 후보로 두되, title/venue/year는 원문 확인 후 정확히 반영한다.
-- 한계와 future work를 마지막에 분리해 쓰고, 추가 figure/reference를 넣더라도 4~10매 제한을 넘기지 않도록 기존 문단·표·그림을 압축/교체한다.
+- 한계와 future work를 마지막에 분리해 쓰고, 추가 figure/reference를 넣더라도 4~10매 제한을 넘기지 않도록 기존 문단, 표, 그림을 압축/교체한다.
 
 ## FP Rule N — 공식 심사 기준 (★ 절대규칙 2026-06-26, 채점 정본)
 - 심사 기준은 `기술의 우수성 30점 / 독창성 30점 / 파급효과 10점 / 논문 질적 수준 30점`이다.
@@ -72,15 +73,18 @@
 - 독창성: 좌표 보존형 FBM 분석 단위, Known/Unknown 분리, field review와 generated benchmark의 분리, chip-level object-id map, chip multi-label probability control, web review/label feedback loop 결합을 기존 기술과의 차별점으로 설명한다.
 - 파급효과: 제품 적용, 현업 이슈 해결, 운영/미래 가치를 근거 범위 안에서 쓴다. 48매 단위 검토에서 일 단위 약 2만 wafer 누적 비교 구조로 바뀐 점은 model throughput이 아니라 viewer/data pipeline 운영 파급효과로 설명한다.
 - 논문 질적 수준: 명확한 근거에서 결론을 도출해야 한다. field / generated / internal engineering measurement / future work 범위를 분리하고 unsupported claim은 넣지 않는다.
-- 게이트(FP Rule A~K 양식·10매·약어·금지 표현)는 채점 이전의 통과 조건으로 유지한다.
+- 게이트(FP Rule A~K 양식, 10매, 약어, 금지 표현)는 채점 이전의 통과 조건으로 유지한다.
 
 ## FP Rule O — 최신 사용자 편집 규칙 (★ 절대규칙 2026-06-29)
 - 초록은 `D:\project\fbm_paper\paper_codex_2page_rev167.docx`의 통과된 초록 흐름을 기준으로 삼고, chip multi-label 결과만 필요한 만큼 추가한다.
 - `Known failure`는 첫 등장 시 "이미 알려진 불량인 Known failure"로, `Unknown failure`는 첫 등장 시 "신규 불량인 Unknown failure"로 설명한다. 이후에는 `Known failure`와 `Unknown failure`로 통일한다.
 - `field validation weighted` 같은 압축 표현을 쓰지 않는다. `weighted F1`은 "class 비중을 반영한 weighted F1 score"처럼 풀어 쓰고, 본문과 표에서 `F1` 단독 표기는 피한다.
 - `운영형`, `검토 라벨`, `판단 결과`, `라벨 체계 확정`, `범위를 맞춘 뒤`, `계측 근인`, `본 분석 구조의 확산 요청이 접수`, `후속 개발로 관리한다` 같은 AI식 또는 번역투 표현을 쓰지 않는다.
-- measure value, FTN, QTN, BIN은 처음 나올 때 chip별 계측값이라는 점과 현장에서 불량 수, 검사 수, bin 판정 등을 빠르게 확인하는 항목이라는 점을 간략히 설명한다.
-- 서론은 layer별 개발 상세보다 현업 문제와 실제 가치 중심으로 쓴다. 기술 개요는 본론에, 관련 연구는 독립 2장에, UI/web app과 운영 성과는 결과/운영 적용 장에 둔다.
+- 본문, 표, 캡션, 제목, 답변에서 U+00B7 middle-dot separator를 쓰지 않는다. 쉼표, 괄호, 슬래시, 또는 자연스러운 문장으로 풀어 쓴다.
+- measure value는 처음 나올 때 EDS 결과를 chip별 수치로 본 값이라는 점만 간략히 설명한다. 별도 항목명을 억지로 늘어놓지 않는다.
+- 제목은 통과본 원본 제목으로 고정한다. 국문 제목은 `Failbit Map Known & Unknown 불량 분석 아키텍처`, 영문 제목은 `Hybrid Failbit Map Analysis Architecture for Known Classification and Unknown Discovery`로 유지하며 다시 바꾸지 않는다.
+- 전체 구조는 `1. 서론`, `2. 본론`, `3. 결론`, `참고문헌`으로 둔다. 관련 연구는 `1.2`, 제안 방법은 `2.1`, 결과 및 운영 적용은 `2.2`, 논의 및 한계는 `2.3`, 향후 연구는 `2.4`에 둔다.
+- 서론은 layer별 개발 상세보다 현업 문제와 실제 가치 중심으로 쓴다. 기술 개요는 본론에, UI/web app과 운영 성과는 `2.2 결과 및 운영 적용`에 둔다.
 - Flash YE 확산 요청은 현재 운영 현황이 아니라 향후 연구에만 보수적으로 쓴다.
 - object-id map은 PPT 범위대로 ROI-YOLO Stage-2를 chip 좌표 기반 fixed-crop 분류로 대체할 수 있는지 생성 데이터에서 확인한 항목으로만 쓴다. compound, disagreement, mid-fusion, cross-attention, raw grade류 새 claim을 넣지 않는다.
 - 그림 안 글자는 인쇄본에서 읽혀야 한다. 그림 크기를 키우거나 그림 안 글자 수를 줄이되 2단 양식은 유지한다.
@@ -144,8 +148,8 @@
 
 #### ★ 자문 교수 실명 표기 규칙 (역전 — 사용자 재결정 2026-06-19) ★
 사용자 재결정: **"사내 논문이라도 본문에 교수 자문 inline 표기는 수준이 떨어진다 — 빼라."** (과거 "교수실명은 그냥 적는거다" 지시는 이 재결정으로 폐기. full paper 본문에 `(연세대 인공지능학과 전해곤/박은병 교수 자문)` 류 개인 자문 표기를 넣지 않는다. 기술 정당화는 저자 본인 판단으로 서술; 참고문헌 [N] 인용은 가능하되 개인 자문 inline은 금지.)
-- backbone 선정 근거(자문 표기 없이): 약 1,500 규모라 전역 attention(ViT/Swin) 학습 부족, 결함이 국소 zone/chip에 몰려 CNN 국소 수용장 적합, FCMAE 가 국소 패턴 복원 강화 + 384 해상도 미세구조 보존, ConvNeXtV2 가 MaxViT 와 F1 0.87 동급이며 params −26%·FLOPs −39% 로 운영 효율 우위.
-- CutMix 선정 근거(자문 표기 없이): Mixup 은 픽셀을 중간값으로 섞어 존재하지 않는 중간 Grade 생성→categorical 의미 깨짐 / Diffusion 은 실제 2-combo 데이터(라벨) 부족으로 양질 생성 분포 확보 어려움(라벨·연산 부담) → 영역 단위 원값 보존 CutMix 계열 적합.
+- backbone 선정 근거(자문 표기 없이): 약 1,500 규모라 전역 attention(ViT/Swin) 학습 부족, 결함이 국소 zone/chip에 몰려 CNN 국소 수용장 적합, FCMAE 가 국소 패턴 복원 강화 + 384 해상도 미세구조 보존, ConvNeXtV2 가 MaxViT 와 F1 0.87 동급이며 params −26%, FLOPs −39% 로 운영 효율 우위.
+- CutMix 선정 근거(자문 표기 없이): Mixup 은 픽셀을 중간값으로 섞어 존재하지 않는 중간 Grade 생성→categorical 의미 깨짐 / Diffusion 은 실제 2-combo 데이터(라벨) 부족으로 양질 생성 분포 확보 어려움(라벨, 연산 부담) → 영역 단위 원값 보존 CutMix 계열 적합.
 
 
 
@@ -168,7 +172,7 @@
 사용자 직접 정정: **"P1 known 은 2 stage 실전데이터로 검증 한거고 cnn -> roi-yolo 에서 현재 다양한 평가를 위해 생성한 데이터셋으로 cnn->chip-cnn obj id map 으로 분류하려한다"**
 
 - P1 Known 의 **실전 검증 완료 성과**는 반드시 **CNN → ROI-YOLO 2-stage** 로 씁니다.
-- 해당 실전 검증 성과는 추천서 제출본에서 **[실전 현업 데이터] 사내 실제 불량 이미지 데이터, 16-class · 1,500 labeled samples · 4:1 stratified split, weighted F1 0.95** 로 중립 표기합니다. BBD/Overlay/CD 경험 근거처럼 오독되지 않도록 P1 Known 데이터 출처 설명에서 BBD 표현을 반복하지 않습니다.
+- 해당 실전 검증 성과는 추천서 제출본에서 **[실전 현업 데이터] 사내 실제 불량 이미지 데이터, 16-class ,  1,500 labeled samples ,  4:1 stratified split, weighted F1 0.95** 로 중립 표기합니다. BBD/Overlay/CD 경험 근거처럼 오독되지 않도록 P1 Known 데이터 출처 설명에서 BBD 표현을 반복하지 않습니다.
 - 현재 추가 개발 중인 구조는 기존 **CNN → ROI-YOLO** 구조를 대체/확장하기 위한 **CNN → chip-CNN obj-id map** 구조입니다.(**CNN → chip-CNN obj-id map** 확장하는이유도 설명)
 - `known-cnn` 폴더의 chip-CNN / obj-id map / chip 단위 결함 분류 수치는 **다양한 평가를 위해 생성한 데이터셋 기반의 추가 개발값**입니다.
 - 추천서 본문에서는 P1 Known 을 `실전 데이터로 검증된 CNN → ROI-YOLO 2-stage 성과 → 생성 데이터셋 기반 CNN → chip-CNN obj-id map 추가 개발` 순서로 씁니다.
