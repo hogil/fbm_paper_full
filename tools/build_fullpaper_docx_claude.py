@@ -91,7 +91,7 @@ def _strip_md(t):
 
 
 def _figure(doc, path, caption, wide=False):
-    p = _para(doc, L, after=2)
+    p = _para(doc, L, before=10, after=2)
     if FORCE_TWO_COLUMN:
         wide = False
     img = ROOT / path
@@ -108,13 +108,13 @@ def _figure(doc, path, caption, wide=False):
         p.add_run().add_picture(str(img), width=Cm(width_cm))
     else:
         _run(p, f"[Missing figure: {path}]", 9, bold=True)
-    cap = _para(doc, L, after=4)
+    cap = _para(doc, L, after=10)
     _inline(cap, _strip_md(caption), 9)
 
 
 def _figure_pair(doc, paths, caption, wide=False):
     """Place 2 images side by side (horizontal) in one paragraph, then caption."""
-    p = _para(doc, L, after=2)
+    p = _para(doc, L, before=10, after=2)
     each_cm = 4.0
     for k, path in enumerate(paths[:2]):
         img = ROOT / path
@@ -128,7 +128,7 @@ def _figure_pair(doc, paths, caption, wide=False):
             p.add_run().add_picture(str(img), width=Cm(each_cm))
         else:
             _run(p, f"[Missing figure: {path}]", 9, bold=True)
-    cap = _para(doc, L, after=4)
+    cap = _para(doc, L, after=10)
     _inline(cap, _strip_md(caption), 9)
 
 
@@ -316,14 +316,17 @@ def build(input_path: Path, output_path: Path):
 
         if s.startswith("## "):
             cx.add_heading(doc, s[3:].strip())
+            doc.paragraphs[-1].paragraph_format.space_before = Pt(10)
             idx += 1
             continue
         if s.startswith("#### "):
             cx.add_subheading(doc, s[5:].strip())
+            doc.paragraphs[-1].paragraph_format.space_before = Pt(10)
             idx += 1
             continue
         if s.startswith("### "):
             cx.add_subheading(doc, s[4:].strip())
+            doc.paragraphs[-1].paragraph_format.space_before = Pt(10)
             idx += 1
             continue
 
@@ -359,6 +362,8 @@ def build(input_path: Path, output_path: Path):
                 idx += 1
             if tl:
                 cx.add_markdown_table(doc, cap, tl)
+                # blank line above the caption; codex already adds an empty paragraph after the table
+                doc.paragraphs[-2].paragraph_format.space_before = Pt(10)
                 _fix_table_width(doc.tables[-1], wide=in_wide)
                 _bold_matching_rows(doc.tables[-1])
             else:
