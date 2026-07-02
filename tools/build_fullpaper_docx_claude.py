@@ -362,8 +362,10 @@ def build(input_path: Path, output_path: Path):
                 idx += 1
             if tl:
                 cx.add_markdown_table(doc, cap, tl)
-                # blank line above the caption; codex already adds an empty paragraph after the table
+                # blank line above the caption; codex already adds an empty paragraph after the table.
+                # keep_with_next off per user order (removes the on-screen black-square mark)
                 doc.paragraphs[-2].paragraph_format.space_before = Pt(10)
+                doc.paragraphs[-2].paragraph_format.keep_with_next = False
                 _fix_table_width(doc.tables[-1], wide=in_wide)
                 _bold_matching_rows(doc.tables[-1])
             else:
